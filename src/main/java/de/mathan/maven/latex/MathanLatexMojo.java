@@ -83,9 +83,6 @@ public class MathanLatexMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
-    @Parameter(defaultValue = "false")
-    private boolean keepIntermediates;
-
     private Map<String, Step> stepRegistry = new HashMap<>();
 
     public MathanLatexMojo() {
@@ -135,11 +132,16 @@ public class MathanLatexMojo extends AbstractMojo {
             getLog().info("[mathan] execution: " + step.getName());
             execute(step, targetDirectory, texFile);
         }
-        if (!keepIntermediates) {
-            File[] files = targetDirectory.listFiles(file -> !file.getName().endsWith("." + outputFormat));
-            if (files != null) {
-                Arrays.asList(files).forEach(FileUtils::deleteQuietly);
-            }
+        File outputFile = Utils.getFile(targetDirectory, outputFormat);
+        try {
+            FileUtils.copyFileToDirectory(outputFile, new File(project.getBasedir(), "target"));
+        } catch (IOException e) {
+            throw new MojoExecutionException(String.format("Could not copy output file %s to target.", outputFile.getAbsolutePath()), e);
+        }
+        try {
+            FileUtils.deleteDirectory(targetDirectory);
+        } catch (IOException e) {
+            getLog().warn(String.format("Could not delete directory %s", targetDirectory.getAbsolutePath()));
         }
     }
 
