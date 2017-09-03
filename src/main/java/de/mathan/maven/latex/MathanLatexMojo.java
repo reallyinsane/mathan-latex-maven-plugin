@@ -103,7 +103,7 @@ public class MathanLatexMojo extends AbstractMojo {
      * @param list tokens will be added to the end of this list
      *             in the order they are extracted
      */
-    public static void tokenizeEscapedString(String args, List<String> list) {
+    private static void tokenizeEscapedString(String args, List<String> list) {
         StringTokenizer st = new StringTokenizer(args, " ");
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
@@ -281,7 +281,7 @@ public class MathanLatexMojo extends AbstractMojo {
         }
     }
 
-    protected String getArguments(Step executionStep, File resource) {
+    private String getArguments(Step executionStep, File resource) {
         String args = executionStep.getArguments();
         if (args == null) {
             return null;
