@@ -37,7 +37,7 @@ public class MathanLatexMojo extends AbstractMojo {
     /**
      * The defualt execution chain defines the order of the tool execution.
      */
-    private static final String[] DEFAULT_EXECUTION_CHAIN = {
+    private static final String[] DEFAULT_BUILD_STEPS = {
             LaTeX, Step.STEP_BIBTEX.getId(), Step.STEP_MAKEINDEX.getId(), Step.STEP_MAKEINDEXNOMENCL.getId(), LaTeX,
             LaTeX};
 
@@ -170,6 +170,9 @@ public class MathanLatexMojo extends AbstractMojo {
             listLatexSteps.add(step);
         }
         // setup build steps
+        if (buildSteps == null) {
+            buildSteps = DEFAULT_BUILD_STEPS;
+        }
         List<Step> listBuildSteps = new ArrayList<>();
         for (String buildStep : buildSteps) {
             if (LaTeX.equals(buildStep)) {
