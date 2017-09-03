@@ -80,10 +80,13 @@ public class MathanLatexMojo extends AbstractMojo {
     @Parameter
     private Step[] steps;
 
-    private Map<String, Step> stepRegistry = new HashMap<>();
-
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
+
+    @Parameter(defaultValue = "false")
+    private boolean keepIntermediates;
+
+    private Map<String, Step> stepRegistry = new HashMap<>();
 
     public MathanLatexMojo() {
     }
@@ -131,6 +134,12 @@ public class MathanLatexMojo extends AbstractMojo {
         for (Step step : stepsToExecute) {
             getLog().info("[mathan] execution: " + step.getName());
             execute(step, targetDirectory, texFile);
+        }
+        if (!keepIntermediates) {
+            File[] files = targetDirectory.listFiles(file -> !file.getName().endsWith("." + outputFormat));
+            if (files != null) {
+                Arrays.asList(files).forEach(FileUtils::deleteQuietly);
+            }
         }
     }
 
