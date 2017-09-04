@@ -9,6 +9,11 @@ import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
+/**
+ * Utility class.
+ *
+ * @author Matthias Hanisch (reallyinsane)
+ */
 class Utils {
     /**
      * Splits the given string into tokens so that
@@ -46,6 +51,14 @@ class Utils {
         }
     }
 
+    /**
+     * Finds a file with the given file extension in the given directory, expecting to find either one or none.
+     * @param directory The directory to search a file in.
+     * @param extension The file extension.
+     * @return If a single file is found, the file is returned. If no file matching the file extension was found,
+     * <code>null</code> is returned.
+     * @throws MojoExecutionException If more than one file with the given file extension was found.
+     */
     static File getFile(File directory, String extension) throws MojoExecutionException {
         File[] files = directory.listFiles(new FileFilter() {
 
@@ -55,7 +68,7 @@ class Utils {
             }
         });
         if (files == null || files.length == 0) {
-            throw new MojoExecutionException("No " + extension + " file found");
+            return null;
         } else if (files.length > 1) {
             throw new MojoExecutionException("Multiple " + extension + " files found");
         } else {
@@ -63,47 +76,39 @@ class Utils {
         }
     }
 
-    static List<File> getSubdirectories(File texDirectory) {
-        File[] files = texDirectory.listFiles(e -> e.isDirectory() && !MathanLatexMojo.DIRECTORY_COMMONS.equals(e.getName()));
+    /**
+     * Returns the list of subdirectories of the given one. The name of the directory must not match the name
+     * of the directory for common resources, {@link MathanLatexMojo#commonsDirectory}.
+     *
+     * @param texDirectory The directory to search sub directories for.
+     * @return A list of sub directories or an empty list if there are no sub directories.
+     */
+    static List<File> getSubdirectories(File texDirectory, String commonsDirectory) {
+        File[] files = texDirectory.listFiles(e -> e.isDirectory() && !commonsDirectory.equals(e.getName()));
         if (files == null) {
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         } else {
             return Arrays.asList(files);
         }
     }
 
-    static File getCommonsDirectory(File texDirectory) {
-        File[] files = texDirectory.listFiles(e -> e.isDirectory() && MathanLatexMojo.DIRECTORY_COMMONS.equals(e.getName()));
-        if (files != null && files.length == 1) {
-            return files[0];
+    /**
+     * Checks if the given directory contains a sub directory with name {@link MathanLatexMojo#commonsDirectory} and
+     * returns it if found.
+     *
+     * @param texDirectory The directory to search the sub directory for.
+     * @return The commons sub directory or <code>null</code> if the directory does not exists.
+     */
+    static File getCommonsDirectory(File texDirectory, String commonsDirectory) {
+        if (commonsDirectory.isEmpty()) {
+            return null;
+        }
+        File directory = new File(texDirectory, commonsDirectory);
+        if (directory.exists()) {
+            return directory;
         } else {
             return null;
         }
     }
 
-    static String getArguments(Step executionStep, File resource) {
-        String args = executionStep.getArguments();
-        if (args == null) {
-            return null;
-        }
-        String name = resource.getName();
-        String baseName = name.substring(0, resource.getName().lastIndexOf('.'));
-        String inputName = baseName + "." + executionStep.getInputFormat();
-        String outputName = baseName + "." + executionStep.getOutputFormat();
-        if (baseName.indexOf(' ') >= 0) {
-            inputName = "\"" + inputName + "\"";
-            outputName = "\"" + outputName + "\"";
-        }
-
-        if (args.indexOf("%input") >= 0) {
-            args = args.replaceAll("%input", inputName);
-        }
-        if (args.indexOf("%base") >= 0) {
-            args = args.replaceAll("%base", baseName);
-        }
-        if (args.indexOf("%output") >= 0) {
-            args = args.replaceAll("%output", outputName);
-        }
-        return args;
-    }
 }

@@ -30,11 +30,6 @@ public class MathanLatexMojo extends AbstractMojo {
     private static final String LaTeX = "LaTeX";
 
     /**
-     * Identifier for a sub directory with common resources for all tex documents.
-     */
-    static final String DIRECTORY_COMMONS = "commons";
-
-    /**
      * The defualt execution chain defines the order of the tool execution.
      */
     private static final String[] DEFAULT_BUILD_STEPS = {
@@ -80,12 +75,35 @@ public class MathanLatexMojo extends AbstractMojo {
     @Parameter
     private Step[] steps;
 
+    /**
+     * For injecting the current maven project.
+     */
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
+    /**
+     * Parameter for controlling if intermediate files created during the build process should be kept or not. The
+     * latter is the default.
+     */
     @Parameter(defaultValue = "false")
     private boolean keepIntermediateFiles;
 
+    /**
+     * Parameter defining the source directory to search for LaTeX documents.
+     */
+    @Parameter(defaultValue = "src/main/tex")
+    private String sourceDirectory;
+
+    /**
+     * Parameter defining the name of the commons dub directory inside the source directory.
+     */
+    @Parameter(defaultValue = "commons")
+    private String commonsDirectory;
+
+    /**
+     * The registry of all steps available. This registry will contain the default steps provided by the mathan-latex-maven-plugin itself
+     * and the user defined steps provided with the parameter {@link #steps}.
+     */
     private Map<String, Step> stepRegistry = new HashMap<>();
 
     public MathanLatexMojo() {
@@ -99,66 +117,89 @@ public class MathanLatexMojo extends AbstractMojo {
         getLog().info("[mathan] build steps: " + String.join(",", buildSteps));
 
         File baseDirectory = project.getBasedir();
-        File texDirectory = new File(baseDirectory, "src/main/tex");
+        File texDirectory = new File(baseDirectory, sourceDirectory);
 
-        List<File> subDirectories = Utils.getSubdirectories(texDirectory);
-        File commonsDirectory = Utils.getCommonsDirectory(texDirectory);
+        // check if sub directories exist
+        List<File> subDirectories = Utils.getSubdirectories(texDirectory, commonsDirectory);
         if (subDirectories.isEmpty()) {
-            execute(stepsToExecute, texDirectory, null);
+            // if there are no sub directories, just one build execution is needed
+            executeSteps(stepsToExecute, texDirectory, null);
         } else {
+            // if there are sub directories, run a build execution for each sub directory
             for (File subDirectory : subDirectories) {
-                execute(stepsToExecute, subDirectory, commonsDirectory);
+                executeSteps(stepsToExecute, subDirectory, Utils.getCommonsDirectory(texDirectory, commonsDirectory));
             }
         }
+        // remove intermediate files
         if (!keepIntermediateFiles) {
-            File latexTarget = new File(project.getBasedir(), "target/latex");
+            File workingDirectory = new File(project.getBasedir(), "target/latex");
             try {
-                FileUtils.deleteDirectory(latexTarget);
+                FileUtils.deleteDirectory(workingDirectory);
             } catch (IOException e) {
-                getLog().warn(String.format("Could not delete directory %s", latexTarget.getAbsolutePath()));
+                getLog().warn(String.format("Could not delete directory %s", workingDirectory.getAbsolutePath()));
             }
         }
     }
 
-    private void execute(List<Step> stepsToExecute, File source, File commons) throws MojoExecutionException {
-        File targetDirectory = new File(project.getBasedir(), "target/latex/" + source.getName());
-        if (!targetDirectory.mkdirs()) {
-            throw new MojoExecutionException(String.format("Could not create directory %s", targetDirectory.getAbsolutePath()));
+    /**
+     * Executes the configured steps for a certain directory with a LaTeX source document. If available resources
+     * from the commons directory will be added to the execution. In this case files from the source directory will
+     * overwrite files from the common directory.
+     *
+     * @param stepsToExecute The steps to execute.
+     * @param source         The directory containing the LaTeX source document.
+     * @param commons        The commons directory or <code>null</code> if no commons directory exists.
+     * @throws MojoExecutionException Most likely when an IOException occurred during the build.
+     */
+    private void executeSteps(List<Step> stepsToExecute, File source, File commons) throws MojoExecutionException {
+        File workingDirectory = new File(project.getBasedir(), "target/latex/" + source.getName());
+        if (!workingDirectory.mkdirs()) {
+            throw new MojoExecutionException(String.format("Could not create directory %s", workingDirectory.getAbsolutePath()));
         }
         if (commons != null) {
             try {
-                FileUtils.copyDirectory(commons, targetDirectory);
+                FileUtils.copyDirectory(commons, workingDirectory);
             } catch (IOException e) {
-                throw new MojoExecutionException(String.format("Could not copy context from %s to %s", commons.getAbsolutePath(), targetDirectory.getAbsolutePath()));
+                throw new MojoExecutionException(String.format("Could not copy context from %s to %s", commons.getAbsolutePath(), workingDirectory.getAbsolutePath()));
             }
         }
         try {
-            FileUtils.copyDirectory(source, targetDirectory);
+            FileUtils.copyDirectory(source, workingDirectory);
         } catch (IOException e) {
-            throw new MojoExecutionException(String.format("Could not copy context from %s to %s", source.getAbsolutePath(), targetDirectory.getAbsolutePath()));
+            throw new MojoExecutionException(String.format("Could not copy context from %s to %s", source.getAbsolutePath(), workingDirectory.getAbsolutePath()));
         }
-        File texFile = Utils.getFile(targetDirectory, "tex");
+        File texFile = Utils.getFile(workingDirectory, "tex"); //TODO: parameterize the name of the source document?
+        if (texFile == null) {
+            throw new MojoExecutionException(String.format("No LaTeX source document found in %s", source.getAbsolutePath()));
+        }
         getLog().info(String.format("[mathan] processing %s", texFile.getName()));
         for (Step step : stepsToExecute) {
             getLog().info("[mathan] execution: " + step.getName());
-            execute(step, targetDirectory, texFile);
+            executeStep(step, workingDirectory, texFile);
         }
-        File outputFile = Utils.getFile(targetDirectory, outputFormat);
-        try {
-            FileUtils.copyFileToDirectory(outputFile, new File(project.getBasedir(), "target"));
-        } catch (IOException e) {
-            throw new MojoExecutionException(String.format("Could not copy output file %s to target.", outputFile.getAbsolutePath()), e);
+        File outputFile = Utils.getFile(workingDirectory, outputFormat);
+        if (outputFile != null) {
+            try {
+                FileUtils.copyFileToDirectory(outputFile, new File(project.getBasedir(), "target"));
+            } catch (IOException e) {
+                throw new MojoExecutionException(String.format("Could not copy output file %s to target.", outputFile.getAbsolutePath()), e);
+            }
         }
         if (!keepIntermediateFiles) {
             try {
-                FileUtils.deleteDirectory(targetDirectory);
+                FileUtils.deleteDirectory(workingDirectory);
             } catch (IOException e) {
-                getLog().warn(String.format("Could not delete directory %s", targetDirectory.getAbsolutePath()));
+                getLog().warn(String.format("Could not delete directory %s", workingDirectory.getAbsolutePath()));
             }
         }
     }
 
     private List<Step> configureSteps() throws MojoExecutionException {
+        // check source directory
+        File srcDir = new File(project.getBasedir(), sourceDirectory);
+        if (!srcDir.exists() || !srcDir.isDirectory()) {
+            throw new MojoExecutionException(String.format("Source directory '%s' does not exist.", sourceDirectory));
+        }
         // check output format
         if (outputFormat.length() == 0) {
             throw new MojoExecutionException("No outputFormat specified. Supported values are: dvi, pdf, ps.");
@@ -189,7 +230,7 @@ public class MathanLatexMojo extends AbstractMojo {
         for (String latexStep : latexSteps) {
             Step step = stepRegistry.get(latexStep);
             if (step == null) {
-                throw new MojoExecutionException(String.format("Step '%s' defined in 'latexSteps' is unknown. Consider to provide the definition of the step with the configuration 'steps'."));
+                throw new MojoExecutionException(String.format("Step '%s' defined in 'latexSteps' is unknown. Consider to provide the definition of the step with the configuration 'steps'.", latexStep));
             }
             listLatexSteps.add(step);
         }
@@ -204,7 +245,7 @@ public class MathanLatexMojo extends AbstractMojo {
             } else {
                 Step step = stepRegistry.get(buildStep);
                 if (step == null) {
-                    throw new MojoExecutionException(String.format("Step '%s' defined in 'buildSteps' is unknown. Consider to provide the definition of the step with the configuration 'steps'."));
+                    throw new MojoExecutionException(String.format("Step '%s' defined in 'buildSteps' is unknown. Consider to provide the definition of the step with the configuration 'steps'.", buildStep));
                 }
                 listBuildSteps.add(step);
             }
@@ -212,25 +253,40 @@ public class MathanLatexMojo extends AbstractMojo {
         return listBuildSteps;
     }
 
-    private void execute(Step executionStep, File texDir, File texFile) throws MojoExecutionException {
+    /**
+     * Executes a single step and executes the configured command with the specified input file. If the step is
+     * {@link Step#isOptional() is optional} the step is not executed if the input file is not found. E.g. if
+     * bibtex step is executed and there are no references defined.
+     *
+     * @param executionStep    The step to execute.
+     * @param workingDirectory The working directory for the command execution.
+     * @param inputFile        The input file to use.
+     * @throws MojoExecutionException If an error occurred during the execution of the command.
+     */
+    private void executeStep(Step executionStep, File workingDirectory, File inputFile) throws MojoExecutionException {
+        //TODO: check is step is optional && if input file is available
         String executableName = executionStep.getName();
         String os = System.getProperty("os.name").toLowerCase();
-        if (os.indexOf("windows") >= 0) {
+        if (os.contains("windows")) {
             executableName += ".exe";
         }
-        File exec = new File(texBin, executableName);
+        File exec = new File(texBin, executableName); //TODO: bin strategy? configuration, environment variable, available on path?
         // split command into array
         List<String> list = new ArrayList<>();
         list.add(exec.getAbsolutePath());
-        Utils.tokenizeEscapedString(Utils.getArguments(executionStep, texFile), list);
+        Utils.tokenizeEscapedString(Step.getArguments(executionStep, inputFile), list);
         String[] command = (String[]) list.toArray(new String[0]);
 
         String prefix = "[mathan][" + executionStep.getName() + "]";
 
+        int exitValue = 0;
         try {
-            int exitValue = new ProcessExecutor().command(command).directory(texDir).redirectOutput(new LatexPluginLogOutputStream(getLog(), prefix)).redirectError(new LatexPluginLogOutputStream(getLog(), prefix, true)).destroyOnExit().execute().getExitValue();
+            exitValue = new ProcessExecutor().command(command).directory(workingDirectory).redirectOutput(LatexPluginLogOutputStream.toMavenDebug(getLog(), prefix)).redirectError(LatexPluginLogOutputStream.toMavenError(getLog(), prefix)).destroyOnExit().execute().getExitValue();
         } catch (Exception e) {
             throw new MojoExecutionException("Building the project: ", e);
+        }
+        if (exitValue != -1) {
+            throw new MojoExecutionException(String.format("Execution of step %s failed. Process finished with exit code %s.", executionStep.getId(), exitValue));
         }
     }
 
