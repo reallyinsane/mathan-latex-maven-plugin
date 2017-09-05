@@ -44,6 +44,10 @@ public class Step {
         this.optional = optional;
     }
 
+    static File getInputFile(Step step, File texFile) {
+        return new File(texFile.getParent(), texFile.getName().substring(0, texFile.getName().indexOf(".tex")) + "." + step.getInputFormat());
+    }
+
     static String getArguments(Step executionStep, File resource) {
         String args = executionStep.getArguments();
         if (args == null) {

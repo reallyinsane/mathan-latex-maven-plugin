@@ -174,7 +174,6 @@ public class MathanLatexMojo extends AbstractMojo {
         }
         getLog().info(String.format("[mathan] processing %s", texFile.getName()));
         for (Step step : stepsToExecute) {
-            getLog().info("[mathan] execution: " + step.getName());
             executeStep(step, workingDirectory, texFile);
         }
         File outputFile = Utils.getFile(workingDirectory, outputFormat);
@@ -260,10 +259,10 @@ public class MathanLatexMojo extends AbstractMojo {
      *
      * @param executionStep    The step to execute.
      * @param workingDirectory The working directory for the command execution.
-     * @param inputFile        The input file to use.
+     * @param texFile        The input file to use.
      * @throws MojoExecutionException If an error occurred during the execution of the command.
      */
-    private void executeStep(Step executionStep, File workingDirectory, File inputFile) throws MojoExecutionException {
+    private void executeStep(Step executionStep, File workingDirectory, File texFile) throws MojoExecutionException {
         //TODO: check is step is optional && if input file is available
         String executableName = executionStep.getName();
         String os = System.getProperty("os.name").toLowerCase();
@@ -274,19 +273,28 @@ public class MathanLatexMojo extends AbstractMojo {
         // split command into array
         List<String> list = new ArrayList<>();
         list.add(exec.getAbsolutePath());
-        Utils.tokenizeEscapedString(Step.getArguments(executionStep, inputFile), list);
+        Utils.tokenizeEscapedString(Step.getArguments(executionStep, texFile), list);
         String[] command = (String[]) list.toArray(new String[0]);
 
-        String prefix = "[mathan][" + executionStep.getName() + "]";
+        String prefix = "[mathan][" + executionStep.getId() + "]";
 
-        int exitValue = 0;
-        try {
-            exitValue = new ProcessExecutor().command(command).directory(workingDirectory).redirectOutput(LatexPluginLogOutputStream.toMavenDebug(getLog(), prefix)).redirectError(LatexPluginLogOutputStream.toMavenError(getLog(), prefix)).destroyOnExit().execute().getExitValue();
-        } catch (Exception e) {
-            throw new MojoExecutionException("Building the project: ", e);
-        }
-        if (exitValue != -1) {
-            throw new MojoExecutionException(String.format("Execution of step %s failed. Process finished with exit code %s.", executionStep.getId(), exitValue));
+        File inputFile = Step.getInputFile(executionStep, texFile);
+        if (inputFile.exists()) {
+            int exitValue = 0;
+            try {
+                getLog().info("[mathan] execution: " + executionStep.getId());
+                exitValue = new ProcessExecutor().command(command).directory(workingDirectory).redirectOutput(LatexPluginLogOutputStream.toMavenDebug(getLog(), prefix)).redirectError(LatexPluginLogOutputStream.toMavenError(getLog(), prefix)).destroyOnExit().execute().getExitValue();
+            } catch (Exception e) {
+                throw new MojoExecutionException("Building the project: ", e);
+            }
+            if (exitValue != 0) {
+                throw new MojoExecutionException(String.format("Execution of step %s failed. Process finished with exit code %s.", executionStep.getId(), exitValue));
+            }
+        } else if (executionStep.isOptional()) {
+            getLog().info("[mathan] execution skipped: " + executionStep.getId());
+        } else {
+            getLog().error(String.format("[mathan] input file %s is missing for step %s ", inputFile.getName(), executionStep.getName()));
+            throw new MojoExecutionException(String.format("Input file for step %s not found", executionStep.getId()));
         }
     }
 
