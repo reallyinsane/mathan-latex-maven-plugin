@@ -101,6 +101,12 @@ public class MathanLatexMojo extends AbstractMojo {
     private String commonsDirectory;
 
     /**
+     * Parameter defining an optional index style file for makeindex.
+     */
+    @Parameter(defaultValue = "")
+    private String makeIndexStyleFile;
+
+    /**
      * The registry of all steps available. This registry will contain the default steps provided by the mathan-latex-maven-plugin itself
      * and the user defined steps provided with the parameter {@link #steps}.
      */
@@ -153,7 +159,7 @@ public class MathanLatexMojo extends AbstractMojo {
      */
     private void executeSteps(List<Step> stepsToExecute, File source, File commons) throws MojoExecutionException {
         File workingDirectory = new File(project.getBasedir(), "target/latex/" + source.getName());
-        if (!workingDirectory.mkdirs()) {
+        if (!workingDirectory.exists() && !workingDirectory.mkdirs()) {
             throw new MojoExecutionException(String.format("Could not create directory %s", workingDirectory.getAbsolutePath()));
         }
         if (commons != null) {
@@ -249,7 +255,19 @@ public class MathanLatexMojo extends AbstractMojo {
                 listBuildSteps.add(step);
             }
         }
+        // configure pre-defined steps
+        configureMakeIndex();
         return listBuildSteps;
+    }
+
+    private void configureMakeIndex() {
+        String arguments = Step.STEP_MAKEINDEX.getArguments();
+        if (makeIndexStyleFile == null || makeIndexStyleFile.isEmpty()) {
+            arguments = arguments.replaceAll("-s\\s+%style", "");
+        } else {
+            arguments = arguments.replaceAll("%style", makeIndexStyleFile);
+        }
+        Step.STEP_MAKEINDEX.setArguments(arguments);
     }
 
     /**
