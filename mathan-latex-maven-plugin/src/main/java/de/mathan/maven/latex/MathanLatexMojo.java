@@ -12,6 +12,10 @@ import org.zeroturnaround.exec.ProcessExecutor;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import static com.sun.org.apache.xalan.internal.xsltc.compiler.sym.error;
 
 /**
  * The MathanLatexMojo provides the goal "latex" to generate dvi, ps or pdf out of LaTeX (.tex) documents. Therefore
@@ -41,7 +45,7 @@ public class MathanLatexMojo extends AbstractMojo {
      */
     private static final List<Step> DEFAULT_EXECUTABLES = Arrays.asList(
             Step.STEP_BIBER, Step.STEP_BIBTEX, Step.STEP_DVIPDFM, Step.STEP_DVIPS, Step.STEP_LATEX, Step.STEP_LULATEX,
-            Step.STEP_MAKEINDEX, Step.STEP_MAKEINDEXNOMENCL, Step.STEP_PDFLATEX, Step.STEP_PS2PDF, Step.STEP_PSLATEX,
+            Step.STEP_MAKEINDEX, Step.STEP_MAKEINDEXNOMENCL, Step.STEP_PDFLATEX, Step.STEP_PS2PDF,
             Step.STEP_XELATEX);
 
     /**
@@ -53,7 +57,7 @@ public class MathanLatexMojo extends AbstractMojo {
     /**
      * The bin directory of the LaTeX distribution.
      */
-    @Parameter(required = true)
+    @Parameter
     private String texBin;
 
     /**
@@ -199,6 +203,11 @@ public class MathanLatexMojo extends AbstractMojo {
         }
     }
 
+    /**
+     * Configures the steps to execute and checks the configuration for the build.
+     * @return The steps to execute.
+     * @throws MojoExecutionException If the configuration is invalid.
+     */
     private List<Step> configureSteps() throws MojoExecutionException {
         // check source directory
         File srcDir = new File(project.getBasedir(), sourceDirectory);
@@ -224,7 +233,7 @@ public class MathanLatexMojo extends AbstractMojo {
                     latexSteps = new String[]{Step.STEP_LATEX.getId()};
                     break;
                 case "ps":
-                    latexSteps = new String[]{Step.STEP_PSLATEX.getId()};
+                    latexSteps = new String[] {Step.STEP_LATEX.getId(), Step.STEP_DVIPS.getId()};
                     break;
                 case "pdf":
                     latexSteps = new String[]{Step.STEP_PDFLATEX.getId()};
@@ -243,6 +252,7 @@ public class MathanLatexMojo extends AbstractMojo {
         if (buildSteps == null) {
             buildSteps = DEFAULT_BUILD_STEPS;
         }
+        List<Step> listExecutables = new ArrayList<>(listLatexSteps);
         List<Step> listBuildSteps = new ArrayList<>();
         for (String buildStep : buildSteps) {
             if (LaTeX.equals(buildStep)) {
@@ -253,13 +263,60 @@ public class MathanLatexMojo extends AbstractMojo {
                     throw new MojoExecutionException(String.format("Step '%s' defined in 'buildSteps' is unknown. Consider to provide the definition of the step with the configuration 'steps'.", buildStep));
                 }
                 listBuildSteps.add(step);
+                listExecutables.add(step);
             }
         }
         // configure pre-defined steps
         configureMakeIndex();
+        // check if executables are available
+        checkExecutables(listExecutables);
         return listBuildSteps;
     }
 
+    /**
+     * Checks, if the given executables can be executed by finding the executables either in the configured {@link #texBin bin directory} or
+     * on PATH.
+     * @param listExecutables The executables to check.
+     * @throws MojoExecutionException If at least one executable cannot be executed.
+     */
+    private void checkExecutables(List<Step> listExecutables) throws MojoExecutionException {
+        List<Step> stepsToFail = listExecutables.stream().filter(step -> getExecutable(step) == null).collect(Collectors.toList());
+        stepsToFail.forEach(step-> getLog().error(String.format("Step %s cannot be executed. Executable neither found in configured texBin '%s' nor on PATH", step.getId(), texBin)));
+        if(!stepsToFail.isEmpty()) {
+            throw new MojoExecutionException("The executable of at least one step could not be found.");
+        }
+    }
+
+    /**
+     * Returns the File for the executable of the given step or <code>null</code> if the executable could not be found.
+     * @param step The step to check.
+     * @return The executable file or <code>null</code>.
+     */
+    private File getExecutable(Step step) {
+        File executable;
+        // try to find executable in confugured bin directory of the tex distribution
+        if(texBin!=null&&!texBin.isEmpty()) {
+            executable = new File(texBin, step.getOSName());
+            if(executable.exists()) {
+                return executable;
+            }
+        }
+        // try to find the executable on the path
+        String envPath = System.getenv("PATH");
+        String[] paths = envPath.split(File.pathSeparator);
+        for(String path:paths) {
+            executable = new File(path, step.getOSName());
+            if(executable.exists()) {
+                return executable;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Special configuration fot the step {@link Step#STEP_MAKEINDEX}. If a {@link #makeIndexStyleFile} is set, this
+     * is appended to the arguments of the executable. Otherwise no makeindex style file will be used.
+     */
     private void configureMakeIndex() {
         String arguments = Step.STEP_MAKEINDEX.getArguments();
         if (makeIndexStyleFile == null || makeIndexStyleFile.isEmpty()) {
@@ -282,12 +339,8 @@ public class MathanLatexMojo extends AbstractMojo {
      */
     private void executeStep(Step executionStep, File workingDirectory, File texFile) throws MojoExecutionException {
         //TODO: check is step is optional && if input file is available
-        String executableName = executionStep.getName();
-        String os = System.getProperty("os.name").toLowerCase();
-        if (os.contains("windows")) {
-            executableName += ".exe";
-        }
-        File exec = new File(texBin, executableName); //TODO: bin strategy? configuration, environment variable, available on path?
+        String executableName = executionStep.getOSName();
+        File exec = getExecutable(executionStep);
         // split command into array
         List<String> list = new ArrayList<>();
         list.add(exec.getAbsolutePath());

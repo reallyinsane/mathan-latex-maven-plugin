@@ -11,7 +11,6 @@ import java.io.File;
 public class Step {
 
     static final Step STEP_LATEX = new Step("latex", "latex", "tex", "dvi", "-interaction=nonstopmode --src-specials %input", false);
-    static final Step STEP_PSLATEX = new Step("pslatex", "pslatex", "tex", "ps", "-interaction=nonstopmode --src-specials %input", false);
     static final Step STEP_PDFLATEX = new Step("pdflatex", "pdflatex", "tex", "pdf", "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
     static final Step STEP_XELATEX = new Step("xelatex", "xelatex", "tex", "pdf", "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
     static final Step STEP_LULATEX = new Step("lulatex", "lulatex", "tex", "pdf", "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
@@ -116,5 +115,13 @@ public class Step {
         this.optional = optional;
     }
 
+    String getOSName() {
+        String os = System.getProperty("os.name").toLowerCase();
+        if (os.contains("windows")) {
+            return name+".exe";
+        } else {
+            return name;
+        }
+    }
 
 }

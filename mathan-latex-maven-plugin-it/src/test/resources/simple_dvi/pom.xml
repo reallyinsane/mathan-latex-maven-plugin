@@ -1,0 +1,19 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>de.mathan.maven.test</groupId>
+    <artifactId>latex-test-dvi-simple</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>de.mathan.maven</groupId>
+                <artifactId>mathan-latex-maven-plugin</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+                <configuration>
+                    <outputFormat>dvi</outputFormat>
+                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
