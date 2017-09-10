@@ -43,6 +43,10 @@ public class SimpleTest {
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
         verifier.assertFilePresent("target/sample." + outputFormat);
+        // as there is no bibtex, makeindex file these steps will be skipped
+        verifier.verifyTextInLog("[mathan] execution skipped: bibtex");
+        verifier.verifyTextInLog("[mathan] execution skipped: makeindex");
+        verifier.verifyTextInLog("[mathan] execution skipped: makeindexnomencl");
     }
 
 }

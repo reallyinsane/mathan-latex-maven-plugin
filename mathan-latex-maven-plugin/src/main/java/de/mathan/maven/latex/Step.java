@@ -23,11 +23,34 @@ public class Step {
     static final Step STEP_MAKEINDEXNOMENCL = new Step("makeindexnomencl", "makeindex", "nlo", "nls", "%input -s nomencl.ist -o %output", true);
 
 
+    /**
+     * A unique id.
+     */
     private String id;
+    /**
+     * The name of the executable to run.
+     */
     private String name;
+    /**
+     * The arguments for the executable. The following placeholders can be used:
+     * <ul>
+     *     <li>%input: The name of the input file (including file extension)</li>
+     *     <li>%output: The name of the output file (including file extension)</li>
+     *     <li>%base: The name of the input file (without file extension)</li>
+     * </ul>
+     */
     private String arguments;
+    /**
+     * File extension of the input format.
+     */
     private String inputFormat;
+    /**
+     * File extension of the output format.
+     */
     private String outputFormat;
+    /**
+     * Flag indicating if the step is optional. The step may be skipped if the required input file does not exist. (e.g. bibtex)
+     */
     private boolean optional;
 
     public Step() {

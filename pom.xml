@@ -5,6 +5,8 @@
     <artifactId>mathan-latex-maven-plugin-reactor</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
+    <description>Reactor for plugin an integration tests</description>
+    <name>Mathan LaTeX Maven Plugin Rector</name>
     <modules>
         <module>mathan-latex-maven-plugin</module>
         <module>mathan-latex-maven-plugin-it</module>

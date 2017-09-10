@@ -5,6 +5,7 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
 
 /**
  * Helper class for redirecting output/error from {@link org.zeroturnaround.exec.ProcessExecutor} to Maven log.
+ * @author Matthias Hanisch (reallyinsane)
  */
 class LatexPluginLogOutputStream extends LogOutputStream {
     private final String prefix;
