@@ -1,4 +1,4 @@
-package de.mathan.maven.latex;
+package io.mathan.maven.latex;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.AbstractMojo;

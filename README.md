@@ -8,7 +8,7 @@ So this maven plugin changes this as the plugin will assume a lot of defaults fo
 <build>
   <plugins>
     <plugin>
-      <groupId>de.mathan.maven</groupId>
+      <groupId>io.mathan.maven</groupId>
       <artifactId>mathan-latex-maven-plugin</artifactId>
       <version>1.0.0</version>
     </plugin>

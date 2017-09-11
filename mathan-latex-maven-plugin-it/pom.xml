@@ -4,13 +4,21 @@
     <artifactId>mathan-latex-maven-plugin-it</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <parent>
-        <groupId>de.mathan.maven</groupId>
+        <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin-reactor</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+    <url>https://github.com/reallyinsane/mathan-latex-maven-plugin</url>
     <dependencies>
         <dependency>
-            <groupId>de.mathan.maven</groupId>
+            <groupId>io.mathan.maven</groupId>
             <artifactId>mathan-latex-maven-plugin</artifactId>
             <version>0.0.1-SNAPSHOT</version>
             <scope>test</scope>

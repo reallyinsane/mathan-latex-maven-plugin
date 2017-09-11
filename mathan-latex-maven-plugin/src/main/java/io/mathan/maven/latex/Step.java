@@ -1,4 +1,4 @@
-package de.mathan.maven.latex;
+package io.mathan.maven.latex;
 
 import java.io.File;
 

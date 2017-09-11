@@ -1,4 +1,4 @@
-package de.mathan.maven.latex;
+package io.mathan.maven.latex;
 
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
