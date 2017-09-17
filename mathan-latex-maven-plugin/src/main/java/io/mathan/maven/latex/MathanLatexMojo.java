@@ -186,7 +186,10 @@ public class MathanLatexMojo extends AbstractMojo {
         File outputFile = Utils.getFile(workingDirectory, outputFormat);
         if (outputFile != null) {
             try {
-                FileUtils.copyFileToDirectory(outputFile, new File(project.getBasedir(), "target"));
+                File targetDirectory = new File(project.getBasedir(), "target");
+                FileUtils.copyFileToDirectory(outputFile, targetDirectory);
+                File artifact = new File(targetDirectory, outputFile.getName());
+                project.getArtifact().setFile(artifact);
             } catch (IOException e) {
                 throw new MojoExecutionException(String.format("Could not copy output file %s to target.", outputFile.getAbsolutePath()), e);
             }
@@ -277,37 +280,11 @@ public class MathanLatexMojo extends AbstractMojo {
      * @throws MojoExecutionException If at least one executable cannot be executed.
      */
     private void checkExecutables(List<Step> listExecutables) throws MojoExecutionException {
-        List<Step> stepsToFail = listExecutables.stream().filter(step -> getExecutable(step) == null).collect(Collectors.toList());
+        List<Step> stepsToFail = listExecutables.stream().filter(step -> Utils.getExecutable(texBin, step.getOSName()) == null).collect(Collectors.toList());
         stepsToFail.forEach(step-> getLog().error(String.format("Step %s cannot be executed. Executable neither found in configured texBin '%s' nor on PATH", step.getId(), texBin)));
         if(!stepsToFail.isEmpty()) {
             throw new MojoExecutionException("The executable of at least one step could not be found.");
         }
-    }
-
-    /**
-     * Returns the File for the executable of the given step or <code>null</code> if the executable could not be found.
-     * @param step The step to check.
-     * @return The executable file or <code>null</code>.
-     */
-    private File getExecutable(Step step) {
-        File executable;
-        // try to find executable in confugured bin directory of the tex distribution
-        if(texBin!=null&&!texBin.isEmpty()) {
-            executable = new File(texBin, step.getOSName());
-            if(executable.exists()) {
-                return executable;
-            }
-        }
-        // try to find the executable on the path
-        String envPath = System.getenv("PATH");
-        String[] paths = envPath.split(File.pathSeparator);
-        for(String path:paths) {
-            executable = new File(path, step.getOSName());
-            if(executable.exists()) {
-                return executable;
-            }
-        }
-        return null;
     }
 
     /**
@@ -337,7 +314,7 @@ public class MathanLatexMojo extends AbstractMojo {
     private void executeStep(Step executionStep, File workingDirectory, File texFile) throws MojoExecutionException {
         //TODO: check is step is optional && if input file is available
         String executableName = executionStep.getOSName();
-        File exec = getExecutable(executionStep);
+        File exec = Utils.getExecutable(texBin, executionStep.getOSName());
         // split command into array
         List<String> list = new ArrayList<>();
         list.add(exec.getAbsolutePath());
