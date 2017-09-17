@@ -110,5 +110,30 @@ class Utils {
             return null;
         }
     }
-
+    /**
+     * Returns the File for the executable or <code>null</code> if the executable could not be found.
+     * @param texBin The bin directory of the LaTeX distribution.
+     * @param name The name of the executable to find.
+     * @return The executable file or <code>null</code>.
+     */
+    static File getExecutable(String texBin, String name) {
+        File executable;
+        // try to find executable in configured bin directory of the tex distribution
+        if(texBin!=null&&!texBin.isEmpty()) {
+            executable = new File(texBin, name);
+            if(executable.exists()) {
+                return executable;
+            }
+        }
+        // try to find the executable on the path
+        String envPath = System.getenv("PATH");
+        String[] paths = envPath.split(File.pathSeparator);
+        for(String path:paths) {
+            executable = new File(path, name);
+            if(executable.exists()) {
+                return executable;
+            }
+        }
+        return null;
+    }
 }

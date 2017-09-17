@@ -32,7 +32,7 @@ public class SimpleTest {
         File dir = ResourceExtractor.simpleExtractResources(getClass(), "/simple_invalid");
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         try {
-            verifier.executeGoal("mathan:latex");
+            verifier.executeGoal("package");
         } catch (VerificationException e) {
             verifier.verifyTextInLog("Invalid outputFormat");
         }
