@@ -93,24 +93,6 @@ class Utils {
     }
 
     /**
-     * Checks if the given directory contains a sub directory with name {@link MathanLatexMojo#commonsDirectory} and
-     * returns it if found.
-     *
-     * @param texDirectory The directory to search the sub directory for.
-     * @return The commons sub directory or <code>null</code> if the directory does not exists.
-     */
-    static File getCommonsDirectory(File texDirectory, String commonsDirectory) {
-        if (commonsDirectory.isEmpty()) {
-            return null;
-        }
-        File directory = new File(texDirectory, commonsDirectory);
-        if (directory.exists()) {
-            return directory;
-        } else {
-            return null;
-        }
-    }
-    /**
      * Returns the File for the executable or <code>null</code> if the executable could not be found.
      * @param texBin The bin directory of the LaTeX distribution.
      * @param name The name of the executable to find.
