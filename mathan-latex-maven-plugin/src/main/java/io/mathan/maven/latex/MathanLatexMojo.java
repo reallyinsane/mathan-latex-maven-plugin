@@ -1,5 +1,8 @@
 package io.mathan.maven.latex;
 
+import io.mathan.maven.latex.internal.LatexPluginLogOutputStream;
+import io.mathan.maven.latex.internal.Step;
+import io.mathan.maven.latex.internal.Utils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.maven.model.Dependency;

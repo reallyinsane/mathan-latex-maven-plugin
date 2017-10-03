@@ -1,4 +1,4 @@
-package io.mathan.maven.latex;
+package io.mathan.maven.latex.internal;
 
 import org.apache.maven.plugin.logging.Log;
 import org.zeroturnaround.exec.stream.LogOutputStream;
@@ -7,7 +7,7 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
  * Helper class for redirecting output/error from {@link org.zeroturnaround.exec.ProcessExecutor} to Maven log.
  * @author Matthias Hanisch (reallyinsane)
  */
-class LatexPluginLogOutputStream extends LogOutputStream {
+public class LatexPluginLogOutputStream extends LogOutputStream {
     private final String prefix;
     private final Log log;
     private final boolean error;
@@ -25,7 +25,7 @@ class LatexPluginLogOutputStream extends LogOutputStream {
      * @param prefix The prefix to put on each line redirected.
      * @return The created instance.
      */
-    static LogOutputStream toMavenError(Log log, String prefix) {
+    public static LogOutputStream toMavenError(Log log, String prefix) {
         return new LatexPluginLogOutputStream(log, prefix, true);
     }
 
@@ -36,7 +36,7 @@ class LatexPluginLogOutputStream extends LogOutputStream {
      * @param prefix The prefix to put on each line redirected.
      * @return The created instance.
      */
-    static LogOutputStream toMavenDebug(Log log, String prefix) {
+    public static LogOutputStream toMavenDebug(Log log, String prefix) {
         return new LatexPluginLogOutputStream(log, prefix, false);
     }
 

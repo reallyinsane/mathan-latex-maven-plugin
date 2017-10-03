@@ -1,5 +1,6 @@
-package io.mathan.maven.latex;
+package io.mathan.maven.latex.internal;
 
+import io.mathan.maven.latex.MathanLatexMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
@@ -14,7 +15,7 @@ import java.util.StringTokenizer;
  *
  * @author Matthias Hanisch (reallyinsane)
  */
-class Utils {
+public class Utils {
     /**
      * Splits the given string into tokens so that
      * sections of the string that are enclosed into quotes will
@@ -27,7 +28,7 @@ class Utils {
      * @param list tokens will be added to the end of this list
      *             in the order they are extracted
      */
-    static void tokenizeEscapedString(String args, List<String> list) {
+    public static void tokenizeEscapedString(String args, List<String> list) {
         StringTokenizer st = new StringTokenizer(args, " ");
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
@@ -59,7 +60,7 @@ class Utils {
      * <code>null</code> is returned.
      * @throws MojoExecutionException If more than one file with the given file extension was found.
      */
-    static File getFile(File directory, String extension) throws MojoExecutionException {
+    public static File getFile(File directory, String extension) throws MojoExecutionException {
         File[] files = directory.listFiles(new FileFilter() {
 
             @Override
@@ -83,7 +84,7 @@ class Utils {
      * @param texDirectory The directory to search sub directories for.
      * @return A list of sub directories or an empty list if there are no sub directories.
      */
-    static List<File> getSubdirectories(File texDirectory, String commonsDirectory) {
+    public static List<File> getSubdirectories(File texDirectory, String commonsDirectory) {
         File[] files = texDirectory.listFiles(e -> e.isDirectory() && !commonsDirectory.equals(e.getName()));
         if (files == null) {
             return Collections.emptyList();
@@ -98,7 +99,7 @@ class Utils {
      * @param name The name of the executable to find.
      * @return The executable file or <code>null</code>.
      */
-    static File getExecutable(String texBin, String name) {
+    public static File getExecutable(String texBin, String name) {
         File executable;
         // try to find executable in configured bin directory of the tex distribution
         if(texBin!=null&&!texBin.isEmpty()) {
