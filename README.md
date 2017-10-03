@@ -34,13 +34,13 @@ The following configuration parameters can be used to change the default behavio
 Parameter|Description|Default
 ---------|-----------|-------
 outputFormat|The desired output format. Can be either `dvi`, `ps` or `pdf`|`pdf`
+sourceDirectory|Where to find *.tex documents.|'src/main/tex`
 texBin|The bin directory of the tex distribution.|Searches on `PATH` environment.
+texFile|Name of the main *.tex file to use| defaults to a single .tex file found in `sourceDirectory`
 latexSteps|The latex commands to execute to generate the output document.|This is `latex` for `dvi`, `latex,dvips` for `ps` and `pdflatex` for `pdf`.
 buildSteps|The build steps executed for a single document. The keyword `LaTeX` defines all steps configured with `latexSteps`|`LaTeX`, `bibtex`, `makeindex`, `makeindexnomencl`, `LaTeX`, `LaTeX`
 steps|Configuration for user-defined steps.| none
 keepIntermediateFile|Sets wether intermediate files created during the build should be kept.|`false`
-sourceDirectory|Where to find *.tex documents.|'src/main/tex`
-commonsDirectory|Name of the sub directory with common resources.|`commons`
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
 
 
