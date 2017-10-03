@@ -1,18 +1,32 @@
 package io.mathan.maven.latex;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.repository.LocalArtifactRequest;
+import org.eclipse.aether.repository.LocalArtifactResult;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.resolution.ArtifactResult;
 import org.zeroturnaround.exec.ProcessExecutor;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * The MathanLatexMojo provides the goal "latex" to generate dvi, ps or pdf out of LaTeX (.tex) documents. Therefore
@@ -96,16 +110,36 @@ public class MathanLatexMojo extends AbstractMojo {
     private String sourceDirectory;
 
     /**
-     * Parameter defining the name of the commons dub directory inside the source directory.
-     */
-    @Parameter(defaultValue = "commons")
-    private String commonsDirectory;
-
-    /**
      * Parameter defining an optional index style file for makeindex.
      */
     @Parameter(defaultValue = "")
     private String makeIndexStyleFile;
+
+
+    /**
+     * The entry point to Maven Artifact Resolver, i.e. the component doing all the work.
+     *
+     */
+    @Component
+    private RepositorySystem repoSystem;
+
+    /**
+     * The current repository/network configuration of Maven.
+     *
+     */
+    @Parameter(defaultValue = "${repositorySystemSession}", readonly = true, required = true)
+    private RepositorySystemSession repoSession;
+
+    /**
+     * The project's remote repositories to use for the resolution.
+     *
+     */
+    @Parameter(defaultValue = "${project.remoteProjectRepositories}", required = true, readonly = true)
+    private List<RemoteRepository> remoteRepos;
+
+    @Parameter(defaultValue = "")
+    private String texFile;
+
 
     /**
      * The registry of all steps available. This registry will contain the default steps provided by the mathan-latex-maven-plugin itself
@@ -126,17 +160,7 @@ public class MathanLatexMojo extends AbstractMojo {
         File baseDirectory = project.getBasedir();
         File texDirectory = new File(baseDirectory, sourceDirectory);
 
-        // check if sub directories exist
-        List<File> subDirectories = Utils.getSubdirectories(texDirectory, commonsDirectory);
-        if (subDirectories.isEmpty()) {
-            // if there are no sub directories, just one build execution is needed
-            executeSteps(stepsToExecute, texDirectory, null);
-        } else {
-            // if there are sub directories, run a build execution for each sub directory
-            for (File subDirectory : subDirectories) {
-                executeSteps(stepsToExecute, subDirectory, Utils.getCommonsDirectory(texDirectory, commonsDirectory));
-            }
-        }
+        executeSteps(stepsToExecute, texDirectory);
         // remove intermediate files
         if (!keepIntermediateFiles) {
             File workingDirectory = new File(project.getBasedir(), "target/latex");
@@ -155,40 +179,43 @@ public class MathanLatexMojo extends AbstractMojo {
      *
      * @param stepsToExecute The steps to execute.
      * @param source         The directory containing the LaTeX source document.
-     * @param commons        The commons directory or <code>null</code> if no commons directory exists.
      * @throws MojoExecutionException Most likely when an IOException occurred during the build.
      */
-    private void executeSteps(List<Step> stepsToExecute, File source, File commons) throws MojoExecutionException {
-        File workingDirectory = new File(project.getBasedir(), "target/latex/" + source.getName());
+    private void executeSteps(List<Step> stepsToExecute, File source) throws MojoExecutionException {
+        File workingDirectory = new File(project.getBasedir(), "target/latex/");
         if (!workingDirectory.exists() && !workingDirectory.mkdirs()) {
             throw new MojoExecutionException(String.format("Could not create directory %s", workingDirectory.getAbsolutePath()));
         }
-        if (commons != null) {
-            try {
-                FileUtils.copyDirectory(commons, workingDirectory);
-            } catch (IOException e) {
-                throw new MojoExecutionException(String.format("Could not copy context from %s to %s", commons.getAbsolutePath(), workingDirectory.getAbsolutePath()));
-            }
+        List<Dependency> dependencies= project.getDependencies();
+        for(Dependency dependency:dependencies) {
+            resolveDependency(dependency, workingDirectory);
         }
         try {
             FileUtils.copyDirectory(source, workingDirectory);
         } catch (IOException e) {
             throw new MojoExecutionException(String.format("Could not copy context from %s to %s", source.getAbsolutePath(), workingDirectory.getAbsolutePath()));
         }
-        File texFile = Utils.getFile(workingDirectory, "tex"); //TODO: parameterize the name of the source document?
-        if (texFile == null) {
+        File mainFile;
+        if(texFile==null||texFile.isEmpty()) {
+            mainFile= Utils.getFile(workingDirectory, "tex"); //TODO: parameterize the name of the source document?
+        } else {
+            mainFile= new File(workingDirectory, texFile);
+        }
+
+        if (mainFile == null||!mainFile.exists()) {
             throw new MojoExecutionException(String.format("No LaTeX source document found in %s", source.getAbsolutePath()));
         }
-        getLog().info(String.format("[mathan] processing %s", texFile.getName()));
+        getLog().info(String.format("[mathan] processing %s", mainFile.getName()));
         for (Step step : stepsToExecute) {
-            executeStep(step, workingDirectory, texFile);
+            executeStep(step, workingDirectory, mainFile);
         }
         File outputFile = Utils.getFile(workingDirectory, outputFormat);
         if (outputFile != null) {
             try {
                 File targetDirectory = new File(project.getBasedir(), "target");
-                FileUtils.copyFileToDirectory(outputFile, targetDirectory);
-                File artifact = new File(targetDirectory, outputFile.getName());
+                String artifactName = String.format("%s-%s.%s", project.getArtifactId(), project.getVersion(), outputFormat);
+                File artifact = new File(targetDirectory, artifactName);
+                FileUtils.copyFile(outputFile, artifact);
                 project.getArtifact().setFile(artifact);
             } catch (IOException e) {
                 throw new MojoExecutionException(String.format("Could not copy output file %s to target.", outputFile.getAbsolutePath()), e);
@@ -198,8 +225,60 @@ public class MathanLatexMojo extends AbstractMojo {
             try {
                 FileUtils.deleteDirectory(workingDirectory);
             } catch (IOException e) {
-                getLog().warn(String.format("Could not delete directory %s", workingDirectory.getAbsolutePath()));
+                getLog().warn(String.format("Could not delete directory %s", workingDirectory.getAbsolutePath()), e);
             }
+        }
+    }
+
+    private void resolveDependency(Dependency dependency, File workingDirectory) throws MojoExecutionException {
+        Artifact artifact= new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), "jar", dependency.getVersion());
+        LocalArtifactRequest localRequest = new LocalArtifactRequest();
+        localRequest.setArtifact(artifact);
+        getLog().info(String.format("[mathan] resolving artifact %s from local", artifact));
+        LocalArtifactResult localResult= repoSession.getLocalRepositoryManager().find(repoSession, localRequest);
+        if(localResult.isAvailable()) {
+            try {
+                extractArchive(localResult.getFile(), workingDirectory);
+            } catch (IOException e) {
+                throw new MojoExecutionException(String.format("Could not copy artifact %s", artifact), e);
+            }
+        } else {
+            ArtifactRequest request = new ArtifactRequest();
+            request.setArtifact(artifact);
+            request.setRepositories(remoteRepos);
+            getLog().info(String.format("[mathan] resolving artifact %s from %s", artifact, remoteRepos));
+            ArtifactResult result;
+            try {
+                result = repoSystem.resolveArtifact(repoSession, request);
+            } catch (ArtifactResolutionException e) {
+                throw new MojoExecutionException(String.format("Could not resolve artifact %s", artifact), e);
+            }
+            if(result.isResolved()) {
+                try {
+                    extractArchive(result.getArtifact().getFile(), workingDirectory);
+                } catch (IOException e) {
+                    throw new MojoExecutionException(String.format("Could not copy artifact %s", artifact), e);
+                }
+            } else {
+                throw new MojoExecutionException(String.format("Could not resolve artifact %s", artifact));
+            }
+        }
+
+    }
+
+    private void extractArchive(File archive, File workingDirectory) throws IOException {
+        ZipFile zip = new ZipFile(archive);
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+        while(entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if(entry.isDirectory()||entry.getName().contains("/")) {
+                continue;
+            }
+            InputStream in = zip.getInputStream(entry);
+            OutputStream out = new FileOutputStream(new File(workingDirectory, entry.getName()));
+            IOUtils.copy(in, out);
+            in.close();
+            out.close();
         }
     }
 
@@ -312,8 +391,6 @@ public class MathanLatexMojo extends AbstractMojo {
      * @throws MojoExecutionException If an error occurred during the execution of the command.
      */
     private void executeStep(Step executionStep, File workingDirectory, File texFile) throws MojoExecutionException {
-        //TODO: check is step is optional && if input file is available
-        String executableName = executionStep.getOSName();
         File exec = Utils.getExecutable(texBin, executionStep.getOSName());
         // split command into array
         List<String> list = new ArrayList<>();

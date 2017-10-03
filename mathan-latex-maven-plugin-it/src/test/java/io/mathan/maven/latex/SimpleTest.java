@@ -42,7 +42,7 @@ public class SimpleTest {
         File dir = ResourceExtractor.simpleExtractResources(getClass(), "/simple_" + outputFormat);
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
-        verifier.assertFilePresent("target/sample." + outputFormat);
+        verifier.assertFilePresent("target/simple_"+outputFormat+"-0.0.2-SNAPSHOT." + outputFormat);
         // as there is no bibtex, makeindex file these steps will be skipped
         verifier.verifyTextInLog("[mathan] execution skipped: bibtex");
         verifier.verifyTextInLog("[mathan] execution skipped: makeindex");
