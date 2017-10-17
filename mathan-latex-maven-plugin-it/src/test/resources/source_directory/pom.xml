@@ -1,0 +1,21 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.mathan.maven.test</groupId>
+    <artifactId>source_directory</artifactId>
+    <version>0.0.2-SNAPSHOT</version>
+    <packaging>pdf</packaging>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>io.mathan.maven</groupId>
+                <artifactId>mathan-latex-maven-plugin</artifactId>
+                <version>0.0.2-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
+                    <sourceDirectory>src/main/custom</sourceDirectory>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
