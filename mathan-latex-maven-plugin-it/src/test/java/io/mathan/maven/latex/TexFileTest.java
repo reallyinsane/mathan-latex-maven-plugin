@@ -9,7 +9,7 @@ import java.io.File;
 public class TexFileTest {
     @Test
     public void pdf() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/tex_file");
+        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/configuration/texfile");
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
         verifier.assertFilePresent("target/tex_file-0.0.2-SNAPSHOT.pdf");

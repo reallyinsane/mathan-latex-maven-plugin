@@ -11,7 +11,7 @@ import java.io.File;
 public class SourceDirectoryTest {
     @Test
     public void pdf() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/source_directory");
+        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/configuration/sourcedirectory");
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
         verifier.assertFilePresent("target/source_directory-0.0.2-SNAPSHOT.pdf");

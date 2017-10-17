@@ -30,7 +30,7 @@ public class SimpleTest {
 
     @Test
     public void invalidOutputFormat() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/simple_invalid");
+        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/configuration/outputformat/invalid");
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         try {
             verifier.executeGoal("package");
@@ -40,7 +40,7 @@ public class SimpleTest {
     }
 
     private void testSuccess(String outputFormat) throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/simple_" + outputFormat);
+        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/configuration/outputformat/" + outputFormat);
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
         verifier.assertFilePresent("target/simple_"+outputFormat+"-0.0.2-SNAPSHOT." + outputFormat);

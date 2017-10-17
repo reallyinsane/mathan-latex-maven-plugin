@@ -5,16 +5,15 @@ import org.apache.maven.it.util.ResourceExtractor;
 import org.junit.Test;
 
 import java.io.File;
-import java.util.Arrays;
 
 public class DependencyTest {
 
     @Test
     public void includeTex() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/tex/simple");
+        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/dependencies/dependency");
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("install");
-        dir = ResourceExtractor.simpleExtractResources(getClass(), "/dependency");
+        dir = ResourceExtractor.simpleExtractResources(getClass(), "/dependencies/main");
         verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
 
