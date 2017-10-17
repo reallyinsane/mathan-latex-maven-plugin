@@ -1,5 +1,6 @@
 package io.mathan.maven.latex;
 
+import io.mathan.maven.latex.internal.Constants;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
@@ -14,17 +15,17 @@ public class SimpleTest {
 
     @Test
     public void pdf() throws Exception {
-        testSuccess("pdf");
+        testSuccess(Constants.FORMAT_PDF);
     }
 
     @Test
     public void ps() throws Exception {
-        testSuccess("ps");
+        testSuccess(Constants.FORMAT_PS);
     }
 
     @Test
     public void dvi() throws Exception {
-        testSuccess("dvi");
+        testSuccess(Constants.FORMAT_DVI);
     }
 
     @Test
