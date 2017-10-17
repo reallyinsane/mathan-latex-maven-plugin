@@ -1,18 +1,36 @@
 package io.mathan.maven.latex;
 
+import io.mathan.maven.latex.internal.Constants;
+import io.mathan.maven.latex.internal.LatexPluginLogOutputStream;
+import io.mathan.maven.latex.internal.Step;
+import io.mathan.maven.latex.internal.Utils;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.eclipse.aether.RepositorySystem;
+import org.eclipse.aether.RepositorySystemSession;
+import org.eclipse.aether.artifact.Artifact;
+import org.eclipse.aether.artifact.DefaultArtifact;
+import org.eclipse.aether.repository.LocalArtifactRequest;
+import org.eclipse.aether.repository.LocalArtifactResult;
+import org.eclipse.aether.repository.RemoteRepository;
+import org.eclipse.aether.resolution.ArtifactRequest;
+import org.eclipse.aether.resolution.ArtifactResolutionException;
+import org.eclipse.aether.resolution.ArtifactResult;
 import org.zeroturnaround.exec.ProcessExecutor;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * The MathanLatexMojo provides the goal "latex" to generate dvi, ps or pdf out of LaTeX (.tex) documents. Therefore
@@ -25,17 +43,16 @@ import java.util.stream.Collectors;
 @Mojo(name = "latex")
 public class MathanLatexMojo extends AbstractMojo {
 
-    /**
-     * Identifier used as placeholder for the exeution of the latex tools to produce the output documment.
-     */
-    private static final String LaTeX = "LaTeX";
+    private static final String DEPENDENCY_INCLUDES_DEFAULT = String.join(",", Constants.FORMAT_TEX,
+            Constants.FORMAT_CLS,Constants.FORMAT_CLO,Constants.FORMAT_STY,Constants.FORMAT_BIB,Constants.FORMAT_BST,
+            Constants.FORMAT_IDX,Constants.FORMAT_IST,Constants.FORMAT_GLO,Constants.FORMAT_EPS,Constants.FORMAT_PDF);
 
     /**
      * The defualt execution chain defines the order of the tool execution.
      */
     private static final String[] DEFAULT_BUILD_STEPS = {
-            LaTeX, Step.STEP_BIBTEX.getId(), Step.STEP_MAKEINDEX.getId(), Step.STEP_MAKEINDEXNOMENCL.getId(), LaTeX,
-            LaTeX};
+            Constants.LaTeX, Step.STEP_BIBTEX.getId(), Step.STEP_MAKEINDEX.getId(), Step.STEP_MAKEINDEXNOMENCL.getId(), Constants.LaTeX,
+            Constants.LaTeX};
 
     /**
      * This list includes the predefined execution steps supported by this plugin.
@@ -48,7 +65,7 @@ public class MathanLatexMojo extends AbstractMojo {
     /**
      * The output format. Supported are dvi, pdf and ps.
      */
-    @Parameter(defaultValue = "pdf")
+    @Parameter(defaultValue = Constants.FORMAT_PDF)
     private String outputFormat;
 
     /**
@@ -65,7 +82,7 @@ public class MathanLatexMojo extends AbstractMojo {
 
     /**
      * The list of tools to be executed in the build. (including bibtex, biber, makeindex, etc.). The step to create
-     * the output format is set using the placeholder {@link #LaTeX}.
+     * the output format is set using the placeholder {@link Constants#LaTeX}.
      */
     @Parameter
     private String[] buildSteps;
@@ -96,16 +113,39 @@ public class MathanLatexMojo extends AbstractMojo {
     private String sourceDirectory;
 
     /**
-     * Parameter defining the name of the commons dub directory inside the source directory.
-     */
-    @Parameter(defaultValue = "commons")
-    private String commonsDirectory;
-
-    /**
      * Parameter defining an optional index style file for makeindex.
      */
-    @Parameter(defaultValue = "")
+    @Parameter
     private String makeIndexStyleFile;
+
+
+    /**
+     * The entry point to Maven Artifact Resolver, i.e. the component doing all the work.
+     *
+     */
+    @Component
+    private RepositorySystem repoSystem;
+
+    /**
+     * The current repository/network configuration of Maven.
+     *
+     */
+    @Parameter(defaultValue = "${repositorySystemSession}", readonly = true, required = true)
+    private RepositorySystemSession repoSession;
+
+    /**
+     * The project's remote repositories to use for the resolution.
+     *
+     */
+    @Parameter(defaultValue = "${project.remoteProjectRepositories}", required = true, readonly = true)
+    private List<RemoteRepository> remoteRepos;
+
+    @Parameter
+    private String texFile;
+
+    @Parameter
+    private String dependencyIncludes;
+
 
     /**
      * The registry of all steps available. This registry will contain the default steps provided by the mathan-latex-maven-plugin itself
@@ -126,17 +166,7 @@ public class MathanLatexMojo extends AbstractMojo {
         File baseDirectory = project.getBasedir();
         File texDirectory = new File(baseDirectory, sourceDirectory);
 
-        // check if sub directories exist
-        List<File> subDirectories = Utils.getSubdirectories(texDirectory, commonsDirectory);
-        if (subDirectories.isEmpty()) {
-            // if there are no sub directories, just one build execution is needed
-            executeSteps(stepsToExecute, texDirectory, null);
-        } else {
-            // if there are sub directories, run a build execution for each sub directory
-            for (File subDirectory : subDirectories) {
-                executeSteps(stepsToExecute, subDirectory, Utils.getCommonsDirectory(texDirectory, commonsDirectory));
-            }
-        }
+        executeSteps(stepsToExecute, texDirectory);
         // remove intermediate files
         if (!keepIntermediateFiles) {
             File workingDirectory = new File(project.getBasedir(), "target/latex");
@@ -155,38 +185,45 @@ public class MathanLatexMojo extends AbstractMojo {
      *
      * @param stepsToExecute The steps to execute.
      * @param source         The directory containing the LaTeX source document.
-     * @param commons        The commons directory or <code>null</code> if no commons directory exists.
      * @throws MojoExecutionException Most likely when an IOException occurred during the build.
      */
-    private void executeSteps(List<Step> stepsToExecute, File source, File commons) throws MojoExecutionException {
-        File workingDirectory = new File(project.getBasedir(), "target/latex/" + source.getName());
+    private void executeSteps(List<Step> stepsToExecute, File source) throws MojoExecutionException {
+        File workingDirectory = new File(project.getBasedir(), "target/latex/");
         if (!workingDirectory.exists() && !workingDirectory.mkdirs()) {
             throw new MojoExecutionException(String.format("Could not create directory %s", workingDirectory.getAbsolutePath()));
         }
-        if (commons != null) {
-            try {
-                FileUtils.copyDirectory(commons, workingDirectory);
-            } catch (IOException e) {
-                throw new MojoExecutionException(String.format("Could not copy context from %s to %s", commons.getAbsolutePath(), workingDirectory.getAbsolutePath()));
-            }
+        List<String> extensionsToInclude = Arrays.asList(dependencyIncludes.split(","));
+        List<Dependency> dependencies= project.getDependencies();
+        for(Dependency dependency:dependencies) {
+            resolveDependency(dependency, workingDirectory, extensionsToInclude);
         }
         try {
             FileUtils.copyDirectory(source, workingDirectory);
         } catch (IOException e) {
             throw new MojoExecutionException(String.format("Could not copy context from %s to %s", source.getAbsolutePath(), workingDirectory.getAbsolutePath()));
         }
-        File texFile = Utils.getFile(workingDirectory, "tex"); //TODO: parameterize the name of the source document?
-        if (texFile == null) {
+        File mainFile;
+        if(texFile==null||texFile.isEmpty()) {
+            mainFile= Utils.getFile(workingDirectory, Constants.FORMAT_TEX); //TODO: parameterize the name of the source document?
+        } else {
+            mainFile= new File(workingDirectory, texFile);
+        }
+
+        if (mainFile == null||!mainFile.exists()) {
             throw new MojoExecutionException(String.format("No LaTeX source document found in %s", source.getAbsolutePath()));
         }
-        getLog().info(String.format("[mathan] processing %s", texFile.getName()));
+        getLog().info(String.format("[mathan] processing %s", mainFile.getName()));
         for (Step step : stepsToExecute) {
-            executeStep(step, workingDirectory, texFile);
+            executeStep(step, workingDirectory, mainFile);
         }
         File outputFile = Utils.getFile(workingDirectory, outputFormat);
         if (outputFile != null) {
             try {
-                FileUtils.copyFileToDirectory(outputFile, new File(project.getBasedir(), "target"));
+                File targetDirectory = new File(project.getBasedir(), "target");
+                String artifactName = String.format("%s-%s.%s", project.getArtifactId(), project.getVersion(), outputFormat);
+                File artifact = new File(targetDirectory, artifactName);
+                FileUtils.copyFile(outputFile, artifact);
+                project.getArtifact().setFile(artifact);
             } catch (IOException e) {
                 throw new MojoExecutionException(String.format("Could not copy output file %s to target.", outputFile.getAbsolutePath()), e);
             }
@@ -195,7 +232,62 @@ public class MathanLatexMojo extends AbstractMojo {
             try {
                 FileUtils.deleteDirectory(workingDirectory);
             } catch (IOException e) {
-                getLog().warn(String.format("Could not delete directory %s", workingDirectory.getAbsolutePath()));
+                getLog().warn(String.format("Could not delete directory %s", workingDirectory.getAbsolutePath()), e);
+            }
+        }
+    }
+
+    private void resolveDependency(Dependency dependency, File workingDirectory, List<String> extensionsToInclude) throws MojoExecutionException {
+        Artifact artifact= new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), "jar", dependency.getVersion());
+        LocalArtifactRequest localRequest = new LocalArtifactRequest();
+        localRequest.setArtifact(artifact);
+        getLog().info(String.format("[mathan] resolving artifact %s from local", artifact));
+        LocalArtifactResult localResult= repoSession.getLocalRepositoryManager().find(repoSession, localRequest);
+        if(localResult.isAvailable()) {
+            try {
+                extractArchive(localResult.getFile(), workingDirectory, extensionsToInclude);
+            } catch (IOException e) {
+                throw new MojoExecutionException(String.format("Could not copy artifact %s", artifact), e);
+            }
+        } else {
+            ArtifactRequest request = new ArtifactRequest();
+            request.setArtifact(artifact);
+            request.setRepositories(remoteRepos);
+            getLog().info(String.format("[mathan] resolving artifact %s from %s", artifact, remoteRepos));
+            ArtifactResult result;
+            try {
+                result = repoSystem.resolveArtifact(repoSession, request);
+            } catch (ArtifactResolutionException e) {
+                throw new MojoExecutionException(String.format("Could not resolve artifact %s", artifact), e);
+            }
+            if(result.isResolved()) {
+                try {
+                    extractArchive(result.getArtifact().getFile(), workingDirectory, extensionsToInclude);
+                } catch (IOException e) {
+                    throw new MojoExecutionException(String.format("Could not copy artifact %s", artifact), e);
+                }
+            } else {
+                throw new MojoExecutionException(String.format("Could not resolve artifact %s", artifact));
+            }
+        }
+
+    }
+
+    private void extractArchive(File archive, File workingDirectory, List<String> extensionsToInclude) throws IOException {
+        ZipFile zip = new ZipFile(archive);
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+        while(entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if(entry.isDirectory()||entry.getName().contains("/")) {
+                continue;
+            }
+            if(entry.getName().indexOf('.')!=-1&&extensionsToInclude.contains(entry.getName().substring(entry.getName().lastIndexOf('.')+1))) {
+                getLog().info(String.format("[mathan] including resource %s", entry.getName()));
+                InputStream in = zip.getInputStream(entry);
+                OutputStream out = new FileOutputStream(new File(workingDirectory, entry.getName()));
+                IOUtils.copy(in, out);
+                in.close();
+                out.close();
             }
         }
     }
@@ -215,8 +307,11 @@ public class MathanLatexMojo extends AbstractMojo {
         if (outputFormat.length() == 0) {
             throw new MojoExecutionException("No outputFormat specified. Supported values are: dvi, pdf, ps.");
         }
-        if (!Arrays.asList("dvi", "pdf", "ps").contains(outputFormat)) {
+        if (!Arrays.asList(Constants.FORMAT_DVI, Constants.FORMAT_PDF, Constants.FORMAT_PS).contains(outputFormat)) {
             throw new MojoExecutionException(String.format("Invalid outputFormat '%s' specified. Supported values are: dvi, pdf, ps.", outputFormat));
+        }
+        if(dependencyIncludes==null) {
+            dependencyIncludes = DEPENDENCY_INCLUDES_DEFAULT;
         }
         // setup step registry
         DEFAULT_EXECUTABLES.forEach(e -> stepRegistry.put(e.getId(), e));
@@ -226,13 +321,13 @@ public class MathanLatexMojo extends AbstractMojo {
         // setup latex steps
         if (latexSteps == null) {
             switch (outputFormat) {
-                case "dvi":
+                case Constants.FORMAT_DVI:
                     latexSteps = new String[]{Step.STEP_LATEX.getId()};
                     break;
-                case "ps":
+                case Constants.FORMAT_PS:
                     latexSteps = new String[] {Step.STEP_LATEX.getId(), Step.STEP_DVIPS.getId()};
                     break;
-                case "pdf":
+                case Constants.FORMAT_PDF:
                     latexSteps = new String[]{Step.STEP_PDFLATEX.getId()};
                     break;
             }
@@ -252,7 +347,7 @@ public class MathanLatexMojo extends AbstractMojo {
         List<Step> listExecutables = new ArrayList<>(listLatexSteps);
         List<Step> listBuildSteps = new ArrayList<>();
         for (String buildStep : buildSteps) {
-            if (LaTeX.equals(buildStep)) {
+            if (Constants.LaTeX.equals(buildStep)) {
                 listBuildSteps.addAll(listLatexSteps);
             } else {
                 Step step = stepRegistry.get(buildStep);
@@ -277,37 +372,11 @@ public class MathanLatexMojo extends AbstractMojo {
      * @throws MojoExecutionException If at least one executable cannot be executed.
      */
     private void checkExecutables(List<Step> listExecutables) throws MojoExecutionException {
-        List<Step> stepsToFail = listExecutables.stream().filter(step -> getExecutable(step) == null).collect(Collectors.toList());
+        List<Step> stepsToFail = listExecutables.stream().filter(step -> Utils.getExecutable(texBin, step.getOSName()) == null).collect(Collectors.toList());
         stepsToFail.forEach(step-> getLog().error(String.format("Step %s cannot be executed. Executable neither found in configured texBin '%s' nor on PATH", step.getId(), texBin)));
         if(!stepsToFail.isEmpty()) {
             throw new MojoExecutionException("The executable of at least one step could not be found.");
         }
-    }
-
-    /**
-     * Returns the File for the executable of the given step or <code>null</code> if the executable could not be found.
-     * @param step The step to check.
-     * @return The executable file or <code>null</code>.
-     */
-    private File getExecutable(Step step) {
-        File executable;
-        // try to find executable in confugured bin directory of the tex distribution
-        if(texBin!=null&&!texBin.isEmpty()) {
-            executable = new File(texBin, step.getOSName());
-            if(executable.exists()) {
-                return executable;
-            }
-        }
-        // try to find the executable on the path
-        String envPath = System.getenv("PATH");
-        String[] paths = envPath.split(File.pathSeparator);
-        for(String path:paths) {
-            executable = new File(path, step.getOSName());
-            if(executable.exists()) {
-                return executable;
-            }
-        }
-        return null;
     }
 
     /**
@@ -335,20 +404,18 @@ public class MathanLatexMojo extends AbstractMojo {
      * @throws MojoExecutionException If an error occurred during the execution of the command.
      */
     private void executeStep(Step executionStep, File workingDirectory, File texFile) throws MojoExecutionException {
-        //TODO: check is step is optional && if input file is available
-        String executableName = executionStep.getOSName();
-        File exec = getExecutable(executionStep);
+        File exec = Utils.getExecutable(texBin, executionStep.getOSName());
         // split command into array
         List<String> list = new ArrayList<>();
         list.add(exec.getAbsolutePath());
         Utils.tokenizeEscapedString(Step.getArguments(executionStep, texFile), list);
-        String[] command = (String[]) list.toArray(new String[0]);
+        String[] command = list.toArray(new String[0]);
 
         String prefix = "[mathan][" + executionStep.getId() + "]";
 
         File inputFile = Step.getInputFile(executionStep, texFile);
         if (inputFile.exists()) {
-            int exitValue = 0;
+            int exitValue;
             try {
                 getLog().info("[mathan] execution: " + executionStep.getId());
                 exitValue = new ProcessExecutor().command(command).directory(workingDirectory).redirectOutput(LatexPluginLogOutputStream.toMavenDebug(getLog(), prefix)).redirectError(LatexPluginLogOutputStream.toMavenError(getLog(), prefix)).destroyOnExit().execute().getExitValue();

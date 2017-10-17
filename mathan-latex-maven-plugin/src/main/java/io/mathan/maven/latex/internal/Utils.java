@@ -1,11 +1,9 @@
-package io.mathan.maven.latex;
+package io.mathan.maven.latex.internal;
 
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
 import java.io.FileFilter;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -14,7 +12,7 @@ import java.util.StringTokenizer;
  *
  * @author Matthias Hanisch (reallyinsane)
  */
-class Utils {
+public class Utils {
     /**
      * Splits the given string into tokens so that
      * sections of the string that are enclosed into quotes will
@@ -27,14 +25,14 @@ class Utils {
      * @param list tokens will be added to the end of this list
      *             in the order they are extracted
      */
-    static void tokenizeEscapedString(String args, List<String> list) {
+    public static void tokenizeEscapedString(String args, List<String> list) {
         StringTokenizer st = new StringTokenizer(args, " ");
         while (st.hasMoreTokens()) {
             String token = st.nextToken();
             if (token.charAt(0) == '"' && token.charAt(token.length() - 1) == '"') {
                 list.add(token.substring(1, token.length() - 1));
             } else if (token.charAt(0) == '"') {
-                StringBuffer sb = new StringBuffer();
+                StringBuilder sb = new StringBuilder();
                 sb.append(token.substring(1));
                 token = st.nextToken();
                 while (!token.endsWith("\"") && st.hasMoreTokens()) {
@@ -59,14 +57,8 @@ class Utils {
      * <code>null</code> is returned.
      * @throws MojoExecutionException If more than one file with the given file extension was found.
      */
-    static File getFile(File directory, String extension) throws MojoExecutionException {
-        File[] files = directory.listFiles(new FileFilter() {
-
-            @Override
-            public boolean accept(File pathname) {
-                return pathname.getName().endsWith("." + extension);
-            }
-        });
+    public static File getFile(File directory, String extension) throws MojoExecutionException {
+        File[] files = directory.listFiles(pathname -> pathname.getName().endsWith("." + extension));
         if (files == null || files.length == 0) {
             return null;
         } else if (files.length > 1) {
@@ -77,38 +69,29 @@ class Utils {
     }
 
     /**
-     * Returns the list of subdirectories of the given one. The name of the directory must not match the name
-     * of the directory for common resources, {@link MathanLatexMojo#commonsDirectory}.
-     *
-     * @param texDirectory The directory to search sub directories for.
-     * @return A list of sub directories or an empty list if there are no sub directories.
+     * Returns the File for the executable or <code>null</code> if the executable could not be found.
+     * @param texBin The bin directory of the LaTeX distribution.
+     * @param name The name of the executable to find.
+     * @return The executable file or <code>null</code>.
      */
-    static List<File> getSubdirectories(File texDirectory, String commonsDirectory) {
-        File[] files = texDirectory.listFiles(e -> e.isDirectory() && !commonsDirectory.equals(e.getName()));
-        if (files == null) {
-            return Collections.emptyList();
-        } else {
-            return Arrays.asList(files);
+    public static File getExecutable(String texBin, String name) {
+        File executable;
+        // try to find executable in configured bin directory of the tex distribution
+        if(texBin!=null&&!texBin.isEmpty()) {
+            executable = new File(texBin, name);
+            if(executable.exists()) {
+                return executable;
+            }
         }
+        // try to find the executable on the path
+        String envPath = System.getenv("PATH");
+        String[] paths = envPath.split(File.pathSeparator);
+        for(String path:paths) {
+            executable = new File(path, name);
+            if(executable.exists()) {
+                return executable;
+            }
+        }
+        return null;
     }
-
-    /**
-     * Checks if the given directory contains a sub directory with name {@link MathanLatexMojo#commonsDirectory} and
-     * returns it if found.
-     *
-     * @param texDirectory The directory to search the sub directory for.
-     * @return The commons sub directory or <code>null</code> if the directory does not exists.
-     */
-    static File getCommonsDirectory(File texDirectory, String commonsDirectory) {
-        if (commonsDirectory.isEmpty()) {
-            return null;
-        }
-        File directory = new File(texDirectory, commonsDirectory);
-        if (directory.exists()) {
-            return directory;
-        } else {
-            return null;
-        }
-    }
-
 }

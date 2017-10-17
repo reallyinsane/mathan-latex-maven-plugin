@@ -1,5 +1,6 @@
 package io.mathan.maven.latex;
 
+import io.mathan.maven.latex.internal.Constants;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
@@ -14,17 +15,17 @@ public class SimpleTest {
 
     @Test
     public void pdf() throws Exception {
-        testSuccess("pdf");
+        testSuccess(Constants.FORMAT_PDF);
     }
 
     @Test
     public void ps() throws Exception {
-        testSuccess("ps");
+        testSuccess(Constants.FORMAT_PS);
     }
 
     @Test
     public void dvi() throws Exception {
-        testSuccess("dvi");
+        testSuccess(Constants.FORMAT_DVI);
     }
 
     @Test
@@ -32,7 +33,7 @@ public class SimpleTest {
         File dir = ResourceExtractor.simpleExtractResources(getClass(), "/simple_invalid");
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         try {
-            verifier.executeGoal("mathan:latex");
+            verifier.executeGoal("package");
         } catch (VerificationException e) {
             verifier.verifyTextInLog("Invalid outputFormat");
         }
@@ -42,7 +43,7 @@ public class SimpleTest {
         File dir = ResourceExtractor.simpleExtractResources(getClass(), "/simple_" + outputFormat);
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
-        verifier.assertFilePresent("target/sample." + outputFormat);
+        verifier.assertFilePresent("target/simple_"+outputFormat+"-0.0.2-SNAPSHOT." + outputFormat);
         // as there is no bibtex, makeindex file these steps will be skipped
         verifier.verifyTextInLog("[mathan] execution skipped: bibtex");
         verifier.verifyTextInLog("[mathan] execution skipped: makeindex");

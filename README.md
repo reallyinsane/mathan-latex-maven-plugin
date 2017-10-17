@@ -25,7 +25,7 @@ mvn mathan:latex
 
 Tex sources
 -----------
-You should place the .tex document in the source folder `src/main/tex`. You can also use sub folders - then a build will be executed for each sub folder. If so you can also define a sub folder `commons` to define common resources to be used for each build.
+You should place the .tex document in the source folder `src/main/tex`. 
 
 Configuration
 -------------

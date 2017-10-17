@@ -1,4 +1,4 @@
-package io.mathan.maven.latex;
+package io.mathan.maven.latex.internal;
 
 import java.io.File;
 
@@ -10,17 +10,17 @@ import java.io.File;
  */
 public class Step {
 
-    static final Step STEP_LATEX = new Step("latex", "latex", "tex", "dvi", "-interaction=nonstopmode --src-specials %input", false);
-    static final Step STEP_PDFLATEX = new Step("pdflatex", "pdflatex", "tex", "pdf", "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
-    static final Step STEP_XELATEX = new Step("xelatex", "xelatex", "tex", "pdf", "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
-    static final Step STEP_LULATEX = new Step("lulatex", "lulatex", "tex", "pdf", "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
-    static final Step STEP_BIBTEX = new Step("bibtex", "bibtex", "bib", "aux", "%base", true);
-    static final Step STEP_BIBER = new Step("biber", "biber", "bcf", "bbl", "%input", true);
-    static final Step STEP_MAKEINDEX = new Step("makeindex", "makeindex", "idx", "ind", "%input -s %style", true);
-    static final Step STEP_DVIPS = new Step("dvips", "dvips", "dvi", "ps", "-R0 -o %output %input", false);
-    static final Step STEP_DVIPDFM = new Step("dvipdfm", "dbipdfm", "dvi", "pdf", "%input", false);
-    static final Step STEP_PS2PDF = new Step("ps2pdf", "ps2pdf", "ps", "pdf", "%input", false);
-    static final Step STEP_MAKEINDEXNOMENCL = new Step("makeindexnomencl", "makeindex", "nlo", "nls", "%input -s nomencl.ist -o %output", true);
+    public static final Step STEP_LATEX = new Step("latex", "latex", Constants.FORMAT_TEX, Constants.FORMAT_DVI, "-interaction=nonstopmode --src-specials %input", false);
+    public static final Step STEP_PDFLATEX = new Step("pdflatex", "pdflatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
+    public static final Step STEP_XELATEX = new Step("xelatex", "xelatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
+    public static final Step STEP_LULATEX = new Step("lulatex", "lulatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %input", false);
+    public static final Step STEP_BIBTEX = new Step("bibtex", "bibtex", Constants.FORMAT_BIB, Constants.FORMAT_AUX, "%base", true);
+    public static final Step STEP_BIBER = new Step("biber", "biber", Constants.FORMAT_BCF, Constants.FORMAT_BBL, "%input", true);
+    public static final Step STEP_MAKEINDEX = new Step("makeindex", "makeindex", Constants.FORMAT_IDX, "ind", "%input -s %style", true);
+    public static final Step STEP_DVIPS = new Step("dvips", "dvips", Constants.FORMAT_DVI, Constants.FORMAT_PS, "-R0 -o %output %input", false);
+    public static final Step STEP_DVIPDFM = new Step("dvipdfm", "dbipdfm", Constants.FORMAT_DVI, Constants.FORMAT_PDF, "%input", false);
+    public static final Step STEP_PS2PDF = new Step("ps2pdf", "ps2pdf", Constants.FORMAT_PS, Constants.FORMAT_PDF, "%input", false);
+    public static final Step STEP_MAKEINDEXNOMENCL = new Step("makeindexnomencl", "makeindex", Constants.FORMAT_NLO, Constants.FORMAT_NLS, "%input -s nomencl.ist -o %output", true);
 
 
     /**
@@ -66,11 +66,11 @@ public class Step {
         this.optional = optional;
     }
 
-    static File getInputFile(Step step, File texFile) {
+    public static File getInputFile(Step step, File texFile) {
         return new File(texFile.getParent(), texFile.getName().substring(0, texFile.getName().indexOf(".tex")) + "." + step.getInputFormat());
     }
 
-    static String getArguments(Step executionStep, File resource) {
+    public static String getArguments(Step executionStep, File resource) {
         String args = executionStep.getArguments();
         if (args == null) {
             return null;
@@ -90,7 +90,7 @@ public class Step {
         return args;
     }
 
-    String getId() {
+    public String getId() {
         return id;
     }
 
@@ -98,7 +98,7 @@ public class Step {
         this.id = id;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
@@ -106,7 +106,7 @@ public class Step {
         this.name = name;
     }
 
-    String getArguments() {
+    public String getArguments() {
         return arguments;
     }
 
@@ -114,7 +114,7 @@ public class Step {
         this.arguments = arguments;
     }
 
-    String getInputFormat() {
+    private String getInputFormat() {
         return inputFormat;
     }
 
@@ -122,7 +122,7 @@ public class Step {
         this.inputFormat = inputFormat;
     }
 
-    String getOutputFormat() {
+    private String getOutputFormat() {
         return outputFormat;
     }
 
@@ -138,7 +138,7 @@ public class Step {
         this.optional = optional;
     }
 
-    String getOSName() {
+    public String getOSName() {
         String os = System.getProperty("os.name").toLowerCase();
         if (os.contains("windows")) {
             return name+".exe";
