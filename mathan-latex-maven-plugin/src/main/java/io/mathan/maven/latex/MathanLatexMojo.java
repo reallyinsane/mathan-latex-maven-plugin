@@ -283,6 +283,7 @@ public class MathanLatexMojo extends AbstractMojo {
                 FileReader reader = new FileReader(stepLog);
                 IOUtils.copy(reader, completeLog);
                 reader.close();
+                stepLog.delete();
             } catch (IOException e) {
                 throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
             }

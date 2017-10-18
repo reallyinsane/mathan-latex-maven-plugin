@@ -16,11 +16,11 @@ public class Step {
     public static final Step STEP_LULATEX = new Step("lulatex", "lulatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %input", false, "log");
     public static final Step STEP_BIBTEX = new Step("bibtex", "bibtex", Constants.FORMAT_BIB, Constants.FORMAT_AUX, "%base", true, "blg");
     public static final Step STEP_BIBER = new Step("biber", "biber", Constants.FORMAT_BCF, Constants.FORMAT_BBL, "%input", true, "blg");
-    public static final Step STEP_MAKEINDEX = new Step("makeindex", "makeindex", Constants.FORMAT_IDX, "ind", "%input -s %style", true, null);
+    public static final Step STEP_MAKEINDEX = new Step("makeindex", "makeindex", Constants.FORMAT_IDX, "ind", "%input -s %style", true, "ilg");
     public static final Step STEP_DVIPS = new Step("dvips", "dvips", Constants.FORMAT_DVI, Constants.FORMAT_PS, "-R0 -o %output %input", false, "log");
     public static final Step STEP_DVIPDFM = new Step("dvipdfm", "dbipdfm", Constants.FORMAT_DVI, Constants.FORMAT_PDF, "%input", false, "log");
     public static final Step STEP_PS2PDF = new Step("ps2pdf", "ps2pdf", Constants.FORMAT_PS, Constants.FORMAT_PDF, "%input", false, "log");
-    public static final Step STEP_MAKEINDEXNOMENCL = new Step("makeindexnomencl", "makeindex", Constants.FORMAT_NLO, Constants.FORMAT_NLS, "%input -s nomencl.ist -o %output", true, null);
+    public static final Step STEP_MAKEINDEXNOMENCL = new Step("makeindexnomencl", "makeindex", Constants.FORMAT_NLO, Constants.FORMAT_NLS, "%input -s nomencl.ist -o %output", true, "ilg");
 
 
     /**
