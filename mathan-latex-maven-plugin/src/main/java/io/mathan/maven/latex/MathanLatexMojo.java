@@ -213,8 +213,26 @@ public class MathanLatexMojo extends AbstractMojo {
             throw new MojoExecutionException(String.format("No LaTeX source document found in %s", source.getAbsolutePath()));
         }
         getLog().info(String.format("[mathan] processing %s", mainFile.getName()));
+        FileWriter completeLog;
+        File stepLog = new File(workingDirectory, mainFile.getName().substring(0, mainFile.getName().lastIndexOf('.'))+".log");
+        try {
+             completeLog = new FileWriter(new File(workingDirectory, "mathan-latex-mojo.log"), true);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not create mathan-latext-mojo.log", e);
+        }
         for (Step step : stepsToExecute) {
             executeStep(step, workingDirectory, mainFile);
+            try {
+                //TODO: Use different log files (.log, .blg, ?)
+                appendLogTo(completeLog, stepLog);
+            } catch (IOException e) {
+                throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
+            }
+        }
+        try {
+            completeLog.close();
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
         }
         File outputFile = Utils.getFile(workingDirectory, outputFormat);
         if (outputFile != null) {
@@ -237,7 +255,16 @@ public class MathanLatexMojo extends AbstractMojo {
         }
     }
 
+    private void appendLogTo(FileWriter completeLog, File stepLog) throws IOException {
+        if(stepLog.exists()) {
+            FileReader reader = new FileReader(stepLog);
+            IOUtils.copy(reader, completeLog);
+            reader.close();
+        }
+    }
+
     private void resolveDependency(Dependency dependency, File workingDirectory, List<String> extensionsToInclude) throws MojoExecutionException {
+        //TODO: Check if zip should be supported also
         Artifact artifact= new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), "jar", dependency.getVersion());
         LocalArtifactRequest localRequest = new LocalArtifactRequest();
         localRequest.setArtifact(artifact);
@@ -418,6 +445,7 @@ public class MathanLatexMojo extends AbstractMojo {
             int exitValue;
             try {
                 getLog().info("[mathan] execution: " + executionStep.getId());
+                getLog().info(Arrays.toString(command));
                 exitValue = new ProcessExecutor().command(command).directory(workingDirectory).redirectOutput(LatexPluginLogOutputStream.toMavenDebug(getLog(), prefix)).redirectError(LatexPluginLogOutputStream.toMavenError(getLog(), prefix)).destroyOnExit().execute().getExitValue();
             } catch (Exception e) {
                 throw new MojoExecutionException("Building the project: ", e);
