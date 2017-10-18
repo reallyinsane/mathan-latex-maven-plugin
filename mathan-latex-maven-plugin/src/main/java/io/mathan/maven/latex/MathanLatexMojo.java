@@ -214,26 +214,16 @@ public class MathanLatexMojo extends AbstractMojo {
         }
         getLog().info(String.format("[mathan] processing %s", mainFile.getName()));
         FileWriter completeLog;
-        File stepLog = new File(workingDirectory, mainFile.getName().substring(0, mainFile.getName().lastIndexOf('.'))+".log");
-        try {
-             completeLog = new FileWriter(new File(workingDirectory, "mathan-latex-mojo.log"), true);
-        } catch (IOException e) {
-            throw new MojoExecutionException("Could not create mathan-latext-mojo.log", e);
-        }
-        for (Step step : stepsToExecute) {
+        String pureName =mainFile.getName().substring(0, mainFile.getName().lastIndexOf('.'));
+        completeLog = createLog(workingDirectory);
+        int stepCount = stepsToExecute.size();
+        for(int i = 0; i< stepCount; i++) {
+            Step step = stepsToExecute.get(i);
+            logHeader(completeLog, i+1, stepCount, step);
             executeStep(step, workingDirectory, mainFile);
-            try {
-                //TODO: Use different log files (.log, .blg, ?)
-                appendLogTo(completeLog, stepLog);
-            } catch (IOException e) {
-                throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
-            }
+            appendLogTo(completeLog, workingDirectory, pureName, step);
         }
-        try {
-            completeLog.close();
-        } catch (IOException e) {
-            throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
-        }
+        closeLog(completeLog);
         File outputFile = Utils.getFile(workingDirectory, outputFormat);
         if (outputFile != null) {
             try {
@@ -255,11 +245,47 @@ public class MathanLatexMojo extends AbstractMojo {
         }
     }
 
-    private void appendLogTo(FileWriter completeLog, File stepLog) throws IOException {
+    private FileWriter createLog(File workingDirectory) throws MojoExecutionException {
+        FileWriter completeLog;
+        try {
+             completeLog = new FileWriter(new File(workingDirectory, "mathan-latex-mojo.log"), true);
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not create mathan-latext-mojo.log", e);
+        }
+        return completeLog;
+    }
+
+    private void closeLog(FileWriter completeLog) throws MojoExecutionException {
+        try {
+            completeLog.close();
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
+        }
+    }
+
+    private void logHeader(FileWriter completeLog, int i, int stepCount, Step step) throws MojoExecutionException {
+        try {
+            completeLog.write("##################################################\n");
+            completeLog.write(String.format("# Step %s/%s %s\n",i, stepCount, step.getId()));
+            completeLog.write("##################################################\n");
+        } catch (IOException e) {
+            throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
+        }
+    }
+
+    private void appendLogTo(FileWriter completeLog, File workingDirectory, String pureName, Step step) throws MojoExecutionException {
+        if(step.getLogExtension()==null) {
+            return;
+        }
+        File stepLog = new File(workingDirectory,pureName+"."+step.getLogExtension());
         if(stepLog.exists()) {
-            FileReader reader = new FileReader(stepLog);
-            IOUtils.copy(reader, completeLog);
-            reader.close();
+            try {
+                FileReader reader = new FileReader(stepLog);
+                IOUtils.copy(reader, completeLog);
+                reader.close();
+            } catch (IOException e) {
+                throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
+            }
         }
     }
 
