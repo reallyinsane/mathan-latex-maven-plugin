@@ -6,15 +6,15 @@ import org.junit.Test;
 
 import java.io.File;
 
-public class BiberTest {
+public class MakeindexTest {
     @Test
     public void pdf() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/features/biber");
+        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/features/makeindex");
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal("mathan:latex");
-        verifier.assertFilePresent("target/biber-0.0.2-SNAPSHOT.pdf");
-        verifier.verifyTextInLog("[mathan] execution: biber");
-        verifier.verifyTextInLog("[mathan] execution skipped: makeindex");
+        verifier.assertFilePresent("target/makeindex-0.0.2-SNAPSHOT.pdf");
+        verifier.verifyTextInLog("[mathan] execution skipped: bibtex");
+        verifier.verifyTextInLog("[mathan] execution: makeindex");
         verifier.verifyTextInLog("[mathan] execution skipped: makeindexnomencl");
     }
 }
