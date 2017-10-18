@@ -1,4 +1,4 @@
-package io.mathan.maven.latex;
+package io.mathan.maven.latex.configuration;
 
 import io.mathan.maven.latex.internal.Constants;
 import org.apache.maven.it.VerificationException;
@@ -11,7 +11,7 @@ import java.io.File;
 /**
  * Simple test generating an output file for each supported file without bibtex/makeindex.
  */
-public class SimpleTest {
+public class OutputformatTest {
 
     @Test
     public void pdf() throws Exception {

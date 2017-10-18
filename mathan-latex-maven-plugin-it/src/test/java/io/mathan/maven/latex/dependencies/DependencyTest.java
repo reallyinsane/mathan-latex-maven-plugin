@@ -1,4 +1,4 @@
-package io.mathan.maven.latex;
+package io.mathan.maven.latex.dependencies;
 
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
