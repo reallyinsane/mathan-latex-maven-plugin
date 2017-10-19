@@ -35,7 +35,7 @@ Parameter|Description|Default
 ---------|-----------|-------
 outputFormat|The desired output format. Can be either `dvi`, `ps` or `pdf`|`pdf`
 sourceDirectory|Where to find *.tex documents.|'src/main/tex`
-texBin|The bin directory of the tex distribution.|Searches on `PATH` environment.
+texBin|The bin directory of the tex distribution.|Searches on `PATH` environment and looks for system property `texBin`
 texFile|Name of the main *.tex file to use| defaults to a single .tex file found in `sourceDirectory`
 latexSteps|The latex commands to execute to generate the output document.|This is `latex` for `dvi`, `latex,dvips` for `ps` and `pdflatex` for `pdf`.
 buildSteps|The build steps executed for a single document. The keyword `LaTeX` defines all steps configured with `latexSteps`|`LaTeX`, `bibtex`, `makeindex`, `makeindexnomencl`, `LaTeX`, `LaTeX`
