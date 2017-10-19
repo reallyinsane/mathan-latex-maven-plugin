@@ -19,7 +19,6 @@
                 <version>0.0.2-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
                     <texFile>main.tex</texFile>
                 </configuration>
             </plugin>

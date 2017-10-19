@@ -11,7 +11,6 @@
                 <version>0.0.2-SNAPSHOT</version>
                 <configuration>
                     <outputFormat>invalid</outputFormat>
-                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
                 </configuration>
             </plugin>
         </plugins>

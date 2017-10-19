@@ -10,7 +10,6 @@
                 <artifactId>mathan-latex-maven-plugin</artifactId>
                 <version>0.0.2-SNAPSHOT</version>
                 <configuration>
-                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
                     <!-- This test defines a different set of build steps to use biber instead of bibtex -->
                     <buildSteps>LaTeX,biber,makeindex,makeindexnomencl,LaTeX,LaTeX</buildSteps>
                 </configuration>

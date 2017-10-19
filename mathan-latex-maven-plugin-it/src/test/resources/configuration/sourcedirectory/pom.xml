@@ -12,7 +12,6 @@
                 <version>0.0.2-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
                     <!-- This test uses a different sourceDirectory than the default src/main/tex -->
                     <sourceDirectory>src/main/custom</sourceDirectory>
                 </configuration>

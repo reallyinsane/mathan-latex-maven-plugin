@@ -9,9 +9,6 @@
                 <groupId>io.mathan.maven</groupId>
                 <artifactId>mathan-latex-maven-plugin</artifactId>
                 <version>0.0.2-SNAPSHOT</version>
-                <configuration>
-                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
-                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -12,7 +12,6 @@
                 <version>0.0.2-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
                     <!-- This test defines a certain master .tex file as there are multiple located in the
                          sourceDirectory src/main/tex -->
                     <texFile>master.tex</texFile>

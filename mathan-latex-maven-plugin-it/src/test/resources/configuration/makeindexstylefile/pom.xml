@@ -10,7 +10,6 @@
                 <artifactId>mathan-latex-maven-plugin</artifactId>
                 <version>0.0.2-SNAPSHOT</version>
                 <configuration>
-                    <texBin>D:\apps\tools\miketex\miktex\bin</texBin>
                     <makeIndexStyleFile>sample.ist</makeIndexStyleFile>
                 </configuration>
             </plugin>
