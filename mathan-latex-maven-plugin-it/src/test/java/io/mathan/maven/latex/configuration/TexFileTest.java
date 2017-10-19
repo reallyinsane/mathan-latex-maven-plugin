@@ -1,20 +1,16 @@
 package io.mathan.maven.latex.configuration;
 
-import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
+import io.mathan.maven.latex.AbstractIntegrationTest;
+import io.mathan.maven.latex.internal.Step;
 import org.junit.Test;
 
-import java.io.File;
-
-public class TexFileTest {
+public class TexFileTest extends AbstractIntegrationTest {
     @Test
-    public void pdf() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/configuration/texfile");
-        Verifier verifier = new Verifier(dir.getAbsolutePath());
-        verifier.executeGoal("mathan:latex");
-        verifier.assertFilePresent("target/tex_file-0.0.2-SNAPSHOT.pdf");
-        verifier.verifyTextInLog("[mathan] execution skipped: bibtex");
-        verifier.verifyTextInLog("[mathan] execution skipped: makeindex");
-        verifier.verifyTextInLog("[mathan] execution skipped: makeindexnomencl");
+    public void textfileExists() throws Exception {
+        ITVerifier verifier = verifier("configuration", "texfile");
+        verifier
+                .verifySkipped(Step.STEP_BIBTEX)
+                .verifySkipped(Step.STEP_MAKEINDEX)
+                .verifySkipped(Step.STEP_MAKEINDEXNOMENCL);
     }
 }

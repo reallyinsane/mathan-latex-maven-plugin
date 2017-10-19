@@ -1,20 +1,13 @@
 package io.mathan.maven.latex.features;
 
-import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
+import io.mathan.maven.latex.AbstractIntegrationTest;
+import io.mathan.maven.latex.internal.Step;
 import org.junit.Test;
 
-import java.io.File;
-
-public class BibtexTest {
+public class BibtexTest extends AbstractIntegrationTest {
     @Test
     public void pdf() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/features/bibtex");
-        Verifier verifier = new Verifier(dir.getAbsolutePath());
-        verifier.executeGoal("mathan:latex");
-        verifier.assertFilePresent("target/bibtex-0.0.2-SNAPSHOT.pdf");
-        verifier.verifyTextInLog("[mathan] execution: bibtex");
-        verifier.verifyTextInLog("[mathan] execution skipped: makeindex");
-        verifier.verifyTextInLog("[mathan] execution skipped: makeindexnomencl");
+        ITVerifier verifier = verifier("features", "bibtex");
+        verifier.verifyExecution(Step.STEP_BIBTEX);
     }
 }

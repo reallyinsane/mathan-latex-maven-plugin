@@ -1,53 +1,42 @@
 package io.mathan.maven.latex.configuration;
 
+import io.mathan.maven.latex.AbstractIntegrationTest;
 import io.mathan.maven.latex.internal.Constants;
+import io.mathan.maven.latex.internal.Step;
 import org.apache.maven.it.VerificationException;
-import org.apache.maven.it.Verifier;
-import org.apache.maven.it.util.ResourceExtractor;
 import org.junit.Test;
-
-import java.io.File;
 
 /**
  * Simple test generating an output file for each supported file without bibtex/makeindex.
  */
-public class OutputformatTest {
+public class OutputformatTest extends AbstractIntegrationTest{
 
     @Test
     public void pdf() throws Exception {
-        testSuccess(Constants.FORMAT_PDF);
+        testSuccess(Constants.FORMAT_PDF, Step.STEP_PDFLATEX);
     }
 
     @Test
     public void ps() throws Exception {
-        testSuccess(Constants.FORMAT_PS);
+        testSuccess(Constants.FORMAT_PS, Step.STEP_LATEX, Step.STEP_DVIPS);
     }
 
     @Test
     public void dvi() throws Exception {
-        testSuccess(Constants.FORMAT_DVI);
+        testSuccess(Constants.FORMAT_DVI, Step.STEP_LATEX);
     }
 
-    @Test
-    public void invalidOutputFormat() throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/configuration/outputformat/invalid");
-        Verifier verifier = new Verifier(dir.getAbsolutePath());
-        try {
-            verifier.executeGoal("package");
-        } catch (VerificationException e) {
-            verifier.verifyTextInLog("Invalid outputFormat");
+
+    @Test(expected = VerificationException.class)
+    public void invalid() throws Exception {
+        verifier("configuration/outputformat", "invalid");
+    }
+
+    private void testSuccess(String outputFormat, Step... steps) throws Exception {
+        ITVerifier verifier = verifier("configuration/outputformat", outputFormat, "mathan:latex", outputFormat);
+        for(Step step:steps) {
+            verifier.verifyExecution(step);
         }
-    }
-
-    private void testSuccess(String outputFormat) throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), "/configuration/outputformat/" + outputFormat);
-        Verifier verifier = new Verifier(dir.getAbsolutePath());
-        verifier.executeGoal("mathan:latex");
-        verifier.assertFilePresent("target/simple_"+outputFormat+"-0.0.2-SNAPSHOT." + outputFormat);
-        // as there is no bibtex, makeindex file these steps will be skipped
-        verifier.verifyTextInLog("[mathan] execution skipped: bibtex");
-        verifier.verifyTextInLog("[mathan] execution skipped: makeindex");
-        verifier.verifyTextInLog("[mathan] execution skipped: makeindexnomencl");
     }
 
 }
