@@ -83,6 +83,15 @@ public class Utils {
                 return executable;
             }
         }
+        // check if there is a system property called texBin
+        String texBinSystemProperty = System.getProperty("texBin");
+        if(texBinSystemProperty!=null&&!texBinSystemProperty.isEmpty()) {
+            executable = new File(texBinSystemProperty, name);
+            if(executable.exists()) {
+                return executable;
+            }
+        }
+
         // try to find the executable on the path
         String envPath = System.getenv("PATH");
         String[] paths = envPath.split(File.pathSeparator);
