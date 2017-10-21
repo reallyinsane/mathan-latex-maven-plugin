@@ -55,7 +55,7 @@ Samples / Integration tests
 The following integration tests are samples how to use mathan-latex-maven-plugin also.
 
 Project|Description
--------+-----------
+-------|-----------
 [configuration/dependencyincludes](mathan-latex-maven-plugin-it/src/test/resources/configuration/dependencyincludes)| Sample using .bib resources from dependency only. 
 [configuration/keepintermediatefiles](mathan-latex-maven-plugin-it/src/test/resources/configuration/keepintermediatefiles)| Sample not removing intermediate files created.
 [configuration/makeindexstylefile](mathan-latex-maven-plugin-it/src/test/resources/configuration/makeindexstylefile)| Sample using a style file for makeindex.
