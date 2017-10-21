@@ -50,3 +50,23 @@ In case you want to use resources for multiple latex project you can declare dep
 `dependencyIncludes` resources from the artifact of the dependencies (at the moment .jar files only) will be included
 during the latex build. 
 
+Samples / Integration tests
+---------------------------
+The following integration tests are samples how to use mathan-latex-maven-plugin also.
+
+Project|Description
+-------+-----------
+[configuration/dependencyincludes](mathan-latex-maven-plugin-it/src/test/resources/configuration/dependencyincludes)| 
+[configuration/keepintermediatefiles](mathan-latex-maven-plugin-it/src/test/resources/configuration/keepintermediatefiles)|
+[configuration/makeindexstylefile](mathan-latex-maven-plugin-it/src/test/resources/configuration/makeindexstylefile)|
+[configuration/outputformat](mathan-latex-maven-plugin-it/src/test/resources/configuration/outputformat)|
+[configuration/sourcedirectory](mathan-latex-maven-plugin-it/src/test/resources/configuration/sourcedirectory)|
+[configuration|texfile](mathan-latex-maven-plugin-it/src/test/resources/configuration|texfile)|
+[dependencies/dependency](mathan-latex-maven-plugin-it/src/test/resources/dependencies/dependency)|
+[dependencies/main](mathan-latex-maven-plugin-it/src/test/resources/dependencies/main)|
+[features/biber](mathan-latex-maven-plugin-it/src/test/resources/features/biber)|
+[features/bibtex](mathan-latex-maven-plugin-it/src/test/resources/features/bibtex)|
+[features/makeindex](mathan-latex-maven-plugin-it/src/test/resources/features/makeindex)|
+[features/nomenlc](mathan-latex-maven-plugin-it/src/test/resources/features/nomenlc)|
+
+
