@@ -44,4 +44,9 @@ keepIntermediateFile|Sets wether intermediate files created during the build sho
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
 dependencyIncludes|List of file extensions to be included from dependencies.| tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf
 
+Dependencies
+------------
+In case you want to use resources for multiple latex project you can declare dependencies. Using the property
+`dependencyIncludes` resources from the artifact of the dependencies (at the moment .jar files only) will be included
+during the latex build. 
 
