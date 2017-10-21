@@ -42,5 +42,6 @@ buildSteps|The build steps executed for a single document. The keyword `LaTeX` d
 steps|Configuration for user-defined steps.| none
 keepIntermediateFile|Sets wether intermediate files created during the build should be kept.|`false`
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
+dependencyIncludes|List of file extensions to be included from dependencies.| tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf
 
 
