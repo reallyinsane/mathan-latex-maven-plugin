@@ -61,7 +61,7 @@ Project|Description
 [configuration/makeindexstylefile](mathan-latex-maven-plugin-it/src/test/resources/configuration/makeindexstylefile)| Sample using a style file for makeindex.
 [configuration/outputformat](mathan-latex-maven-plugin-it/src/test/resources/configuration/outputformat)| Sample using all supported output formats.
 [configuration/sourcedirectory](mathan-latex-maven-plugin-it/src/test/resources/configuration/sourcedirectory)| Sample using custom source directory.
-[configuration/texfile](mathan-latex-maven-plugin-it/src/test/resources/configuration|texfile)| Sample specifiny master tex file.
+[configuration/texfile](mathan-latex-maven-plugin-it/src/test/resources/configuration/texfile)| Sample specifiny master tex file.
 [dependencies/dependency](mathan-latex-maven-plugin-it/src/test/resources/dependencies/dependency)| Depencency providing resource in a jar.
 [dependencies/main](mathan-latex-maven-plugin-it/src/test/resources/dependencies/main)| Sample using a resource from a dependency.
 [features/biber](mathan-latex-maven-plugin-it/src/test/resources/features/biber)| Sample using biber.
