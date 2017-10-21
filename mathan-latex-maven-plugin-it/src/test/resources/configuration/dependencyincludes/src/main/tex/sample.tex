@@ -1,5 +1,6 @@
 \documentclass{book}
-\usepackage{cite}
+\usepackage[backend=bibtex,style=alphabetic]{biblatex}
+\addbibresource{custom.bib}
 
 \begin{document}
 
@@ -13,13 +14,7 @@
 
 Here is some text. \cite{One}
 
-
-\newpage
-
-
-\bibliography{sample}
-\bibliographystyle{plain}
-
+\printbibliography
 
 \end{document}
 \endinput

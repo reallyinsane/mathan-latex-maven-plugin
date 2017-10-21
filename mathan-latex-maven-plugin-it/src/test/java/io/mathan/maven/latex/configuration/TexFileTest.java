@@ -9,7 +9,6 @@ public class TexFileTest extends AbstractIntegrationTest {
     public void textfileExists() throws Exception {
         ITVerifier verifier = verifier("configuration", "texfile");
         verifier
-                .verifySkipped(Step.STEP_BIBTEX)
                 .verifySkipped(Step.STEP_MAKEINDEX)
                 .verifySkipped(Step.STEP_MAKEINDEXNOMENCL);
     }

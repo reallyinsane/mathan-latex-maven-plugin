@@ -44,8 +44,8 @@ import java.util.zip.ZipFile;
 public class MathanLatexMojo extends AbstractMojo {
 
     private static final String DEPENDENCY_INCLUDES_DEFAULT = String.join(",", Constants.FORMAT_TEX,
-            Constants.FORMAT_CLS,Constants.FORMAT_CLO,Constants.FORMAT_STY,Constants.FORMAT_BIB,Constants.FORMAT_BST,
-            Constants.FORMAT_IDX,Constants.FORMAT_IST,Constants.FORMAT_GLO,Constants.FORMAT_EPS,Constants.FORMAT_PDF);
+            Constants.FORMAT_CLS, Constants.FORMAT_CLO, Constants.FORMAT_STY, Constants.FORMAT_BIB, Constants.FORMAT_BST,
+            Constants.FORMAT_IDX, Constants.FORMAT_IST, Constants.FORMAT_GLO, Constants.FORMAT_EPS, Constants.FORMAT_PDF);
 
     /**
      * The defualt execution chain defines the order of the tool execution.
@@ -193,8 +193,8 @@ public class MathanLatexMojo extends AbstractMojo {
             throw new MojoExecutionException(String.format("Could not create directory %s", workingDirectory.getAbsolutePath()));
         }
         List<String> extensionsToInclude = Arrays.asList(dependencyIncludes.split(","));
-        List<Dependency> dependencies= project.getDependencies();
-        for(Dependency dependency:dependencies) {
+        List<Dependency> dependencies = project.getDependencies();
+        for (Dependency dependency : dependencies) {
             resolveDependency(dependency, workingDirectory, extensionsToInclude);
         }
         try {
@@ -203,23 +203,23 @@ public class MathanLatexMojo extends AbstractMojo {
             throw new MojoExecutionException(String.format("Could not copy context from %s to %s", source.getAbsolutePath(), workingDirectory.getAbsolutePath()));
         }
         File mainFile;
-        if(texFile==null||texFile.isEmpty()) {
-            mainFile= Utils.getFile(workingDirectory, Constants.FORMAT_TEX); //TODO: parameterize the name of the source document?
+        if (texFile == null || texFile.isEmpty()) {
+            mainFile = Utils.getFile(workingDirectory, Constants.FORMAT_TEX); //TODO: parameterize the name of the source document?
         } else {
-            mainFile= new File(workingDirectory, texFile);
+            mainFile = new File(workingDirectory, texFile);
         }
 
-        if (mainFile == null||!mainFile.exists()) {
+        if (mainFile == null || !mainFile.exists()) {
             throw new MojoExecutionException(String.format("No LaTeX source document found in %s", source.getAbsolutePath()));
         }
         getLog().info(String.format("[mathan] processing %s", mainFile.getName()));
         FileWriter completeLog;
-        String pureName =mainFile.getName().substring(0, mainFile.getName().lastIndexOf('.'));
+        String pureName = mainFile.getName().substring(0, mainFile.getName().lastIndexOf('.'));
         completeLog = createLog(workingDirectory);
         int stepCount = stepsToExecute.size();
-        for(int i = 0; i< stepCount; i++) {
+        for (int i = 0; i < stepCount; i++) {
             Step step = stepsToExecute.get(i);
-            logHeader(completeLog, i+1, stepCount, step);
+            logHeader(completeLog, i + 1, stepCount, step);
             executeStep(step, workingDirectory, mainFile);
             appendLogTo(completeLog, workingDirectory, pureName, step);
         }
@@ -248,7 +248,7 @@ public class MathanLatexMojo extends AbstractMojo {
     private FileWriter createLog(File workingDirectory) throws MojoExecutionException {
         FileWriter completeLog;
         try {
-             completeLog = new FileWriter(new File(workingDirectory, "mathan-latex-mojo.log"), true);
+            completeLog = new FileWriter(new File(workingDirectory, "mathan-latex-mojo.log"), true);
         } catch (IOException e) {
             throw new MojoExecutionException("Could not create mathan-latext-mojo.log", e);
         }
@@ -266,7 +266,7 @@ public class MathanLatexMojo extends AbstractMojo {
     private void logHeader(FileWriter completeLog, int i, int stepCount, Step step) throws MojoExecutionException {
         try {
             completeLog.write("##################################################\n");
-            completeLog.write(String.format("# Step %s/%s %s\n",i, stepCount, step.getId()));
+            completeLog.write(String.format("# Step %s/%s %s\n", i, stepCount, step.getId()));
             completeLog.write("##################################################\n");
         } catch (IOException e) {
             throw new MojoExecutionException("Could not write mathan-latext-mojo.log", e);
@@ -274,11 +274,11 @@ public class MathanLatexMojo extends AbstractMojo {
     }
 
     private void appendLogTo(FileWriter completeLog, File workingDirectory, String pureName, Step step) throws MojoExecutionException {
-        if(step.getLogExtension()==null) {
+        if (step.getLogExtension() == null) {
             return;
         }
-        File stepLog = new File(workingDirectory,pureName+"."+step.getLogExtension());
-        if(stepLog.exists()) {
+        File stepLog = new File(workingDirectory, pureName + "." + step.getLogExtension());
+        if (stepLog.exists()) {
             try {
                 FileReader reader = new FileReader(stepLog);
                 IOUtils.copy(reader, completeLog);
@@ -292,12 +292,12 @@ public class MathanLatexMojo extends AbstractMojo {
 
     private void resolveDependency(Dependency dependency, File workingDirectory, List<String> extensionsToInclude) throws MojoExecutionException {
         //TODO: Check if zip should be supported also
-        Artifact artifact= new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), "jar", dependency.getVersion());
+        Artifact artifact = new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), "jar", dependency.getVersion());
         LocalArtifactRequest localRequest = new LocalArtifactRequest();
         localRequest.setArtifact(artifact);
         getLog().info(String.format("[mathan] resolving artifact %s from local", artifact));
-        LocalArtifactResult localResult= repoSession.getLocalRepositoryManager().find(repoSession, localRequest);
-        if(localResult.isAvailable()) {
+        LocalArtifactResult localResult = repoSession.getLocalRepositoryManager().find(repoSession, localRequest);
+        if (localResult.isAvailable()) {
             try {
                 extractArchive(localResult.getFile(), workingDirectory, extensionsToInclude);
             } catch (IOException e) {
@@ -314,7 +314,7 @@ public class MathanLatexMojo extends AbstractMojo {
             } catch (ArtifactResolutionException e) {
                 throw new MojoExecutionException(String.format("Could not resolve artifact %s", artifact), e);
             }
-            if(result.isResolved()) {
+            if (result.isResolved()) {
                 try {
                     extractArchive(result.getArtifact().getFile(), workingDirectory, extensionsToInclude);
                 } catch (IOException e) {
@@ -330,12 +330,12 @@ public class MathanLatexMojo extends AbstractMojo {
     private void extractArchive(File archive, File workingDirectory, List<String> extensionsToInclude) throws IOException {
         ZipFile zip = new ZipFile(archive);
         Enumeration<? extends ZipEntry> entries = zip.entries();
-        while(entries.hasMoreElements()) {
+        while (entries.hasMoreElements()) {
             ZipEntry entry = entries.nextElement();
-            if(entry.isDirectory()||entry.getName().contains("/")) {
+            if (entry.isDirectory() || entry.getName().contains("/")) {
                 continue;
             }
-            if(entry.getName().indexOf('.')!=-1&&extensionsToInclude.contains(entry.getName().substring(entry.getName().lastIndexOf('.')+1))) {
+            if (entry.getName().indexOf('.') != -1 && extensionsToInclude.contains(entry.getName().substring(entry.getName().lastIndexOf('.') + 1))) {
                 getLog().info(String.format("[mathan] including resource %s", entry.getName()));
                 InputStream in = zip.getInputStream(entry);
                 OutputStream out = new FileOutputStream(new File(workingDirectory, entry.getName()));
@@ -364,7 +364,7 @@ public class MathanLatexMojo extends AbstractMojo {
         if (!Arrays.asList(Constants.FORMAT_DVI, Constants.FORMAT_PDF, Constants.FORMAT_PS).contains(outputFormat)) {
             throw new MojoExecutionException(String.format("Invalid outputFormat '%s' specified. Supported values are: dvi, pdf, ps.", outputFormat));
         }
-        if(dependencyIncludes==null) {
+        if (dependencyIncludes == null) {
             dependencyIncludes = DEPENDENCY_INCLUDES_DEFAULT;
         }
         // setup step registry
@@ -379,7 +379,7 @@ public class MathanLatexMojo extends AbstractMojo {
                     latexSteps = new String[]{Step.STEP_LATEX.getId()};
                     break;
                 case Constants.FORMAT_PS:
-                    latexSteps = new String[] {Step.STEP_LATEX.getId(), Step.STEP_DVIPS.getId()};
+                    latexSteps = new String[]{Step.STEP_LATEX.getId(), Step.STEP_DVIPS.getId()};
                     break;
                 case Constants.FORMAT_PDF:
                     latexSteps = new String[]{Step.STEP_PDFLATEX.getId()};
@@ -427,8 +427,8 @@ public class MathanLatexMojo extends AbstractMojo {
      */
     private void checkExecutables(List<Step> listExecutables) throws MojoExecutionException {
         List<Step> stepsToFail = listExecutables.stream().filter(step -> Utils.getExecutable(texBin, step.getOSName()) == null).collect(Collectors.toList());
-        stepsToFail.forEach(step-> getLog().error(String.format("Step %s cannot be executed. Executable neither found in configured texBin '%s' nor on PATH", step.getId(), texBin)));
-        if(!stepsToFail.isEmpty()) {
+        stepsToFail.forEach(step -> getLog().error(String.format("Step %s cannot be executed. Executable neither found in configured texBin '%s' nor on PATH", step.getId(), texBin)));
+        if (!stepsToFail.isEmpty()) {
             throw new MojoExecutionException("The executable of at least one step could not be found.");
         }
     }
@@ -454,7 +454,7 @@ public class MathanLatexMojo extends AbstractMojo {
      *
      * @param executionStep    The step to execute.
      * @param workingDirectory The working directory for the command execution.
-     * @param texFile        The input file to use.
+     * @param texFile          The input file to use.
      * @throws MojoExecutionException If an error occurred during the execution of the command.
      */
     private void executeStep(Step executionStep, File workingDirectory, File texFile) throws MojoExecutionException {
@@ -468,23 +468,24 @@ public class MathanLatexMojo extends AbstractMojo {
         String prefix = "[mathan][" + executionStep.getId() + "]";
 
         File inputFile = Step.getInputFile(executionStep, texFile);
-        if (inputFile.exists()) {
-            int exitValue;
-            try {
-                getLog().info("[mathan] execution: " + executionStep.getId());
-                getLog().info(Arrays.toString(command));
-                exitValue = new ProcessExecutor().command(command).directory(workingDirectory).redirectOutput(LatexPluginLogOutputStream.toMavenDebug(getLog(), prefix)).redirectError(LatexPluginLogOutputStream.toMavenError(getLog(), prefix)).destroyOnExit().execute().getExitValue();
-            } catch (Exception e) {
+        int exitValue = 0;
+        try {
+            getLog().info("[mathan] execution: " + executionStep.getId());
+            getLog().info(Arrays.toString(command));
+            exitValue = new ProcessExecutor().command(command).directory(workingDirectory).redirectOutput(LatexPluginLogOutputStream.toMavenDebug(getLog(), prefix)).redirectError(LatexPluginLogOutputStream.toMavenError(getLog(), prefix)).destroyOnExit().execute().getExitValue();
+        } catch (Exception e) {
+            if (executionStep.isOptional()) {
+                getLog().info("[mathan] execution skipped: " + executionStep.getId());
+            } else {
                 throw new MojoExecutionException("Building the project: ", e);
             }
-            if (exitValue != 0) {
+        }
+        if(exitValue!=0) {
+            if(inputFile.exists()) {
                 throw new MojoExecutionException(String.format("Execution of step %s failed. Process finished with exit code %s.", executionStep.getId(), exitValue));
+            } else {
+                getLog().info("[mathan] execution skipped: " + executionStep.getId());
             }
-        } else if (executionStep.isOptional()) {
-            getLog().info("[mathan] execution skipped: " + executionStep.getId());
-        } else {
-            getLog().error(String.format("[mathan] input file %s is missing for step %s ", inputFile.getName(), executionStep.getName()));
-            throw new MojoExecutionException(String.format("Input file for step %s not found", executionStep.getId()));
         }
     }
 
