@@ -146,6 +146,15 @@ public class MathanLatexMojo extends AbstractMojo {
     @Parameter
     private String dependencyIncludes;
 
+    /**
+     * Parameter for controlling if build should be stopped in case the execution of a single step finished with an
+     * unexpected (non-zero) exit code. By default this parameter is set to <code>true</code> but in some cases it may
+     * be useful to set it to <code>false</code>. This can be necessary if a tool finishes successfully but returns
+     * a non-zero exit code.
+     */
+    @Parameter(defaultValue = "true")
+    private boolean haltOnError;
+
 
     /**
      * The registry of all steps available. This registry will contain the default steps provided by the mathan-latex-maven-plugin itself
@@ -224,7 +233,7 @@ public class MathanLatexMojo extends AbstractMojo {
             appendLogTo(completeLog, workingDirectory, pureName, step);
         }
         closeLog(completeLog);
-        File outputFile = Utils.getFile(workingDirectory, outputFormat);
+        File outputFile = new File(workingDirectory,pureName+"."+outputFormat);
         if (outputFile != null) {
             try {
                 File targetDirectory = new File(project.getBasedir(), "target");
@@ -482,7 +491,11 @@ public class MathanLatexMojo extends AbstractMojo {
         }
         if(exitValue!=0) {
             if(inputFile.exists()) {
-                throw new MojoExecutionException(String.format("Execution of step %s failed. Process finished with exit code %s.", executionStep.getId(), exitValue));
+                if(haltOnError) {
+                    throw new MojoExecutionException(String.format("Execution of step %s failed. Process finished with exit code %s.", executionStep.getId(), exitValue));
+                } else {
+                    getLog().info(String.format("[mathan] execution finished with exit code=%s: %s",exitValue,executionStep.getId()));
+                }
             } else {
                 getLog().info("[mathan] execution skipped: " + executionStep.getId());
             }

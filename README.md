@@ -40,9 +40,10 @@ texFile|Name of the main *.tex file to use| defaults to a single .tex file found
 latexSteps|The latex commands to execute to generate the output document.|This is `latex` for `dvi`, `latex,dvips` for `ps` and `pdflatex` for `pdf`.
 buildSteps|The build steps executed for a single document. The keyword `LaTeX` defines all steps configured with `latexSteps`|`LaTeX`, `bibtex`, `makeindex`, `makeindexnomencl`, `LaTeX`, `LaTeX`
 steps|Configuration for user-defined steps.| none
-keepIntermediateFile|Sets wether intermediate files created during the build should be kept.|`false`
+keepIntermediateFile|Sets whether intermediate files created during the build should be kept.|`false`
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
 dependencyIncludes|List of file extensions to be included from dependencies.| tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf
+haltOnError|Sets whether the build should be stopped in case a single step finished with a non-zero exit code|true
 
 Dependencies
 ------------
