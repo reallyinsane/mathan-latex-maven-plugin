@@ -42,14 +42,14 @@ buildSteps|The build steps executed for a single document. The keyword `LaTeX` d
 steps|Configuration for user-defined steps.| none
 keepIntermediateFile|Sets whether intermediate files created during the build should be kept.|`false`
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
-dependencyIncludes|List of file extensions to be included from dependencies.| tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf
+resources|A [FileSet](https://maven.apache.org/shared/file-management/apidocs/org/apache/maven/shared/model/fileset/FileSet.html) defining the resources to include from given dependencies.| By default all files with the following extensions will be included: tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf
 haltOnError|Sets whether the build should be stopped in case a single step finished with a non-zero exit code|true
 
 Dependencies
 ------------
-In case you want to use resources for multiple latex project you can declare dependencies. Using the property
-`dependencyIncludes` resources from the artifact of the dependencies (at the moment .jar files only) will be included
-during the latex build. 
+In case you want to use resources for multiple latex project you can declare dependencies. The configuration property
+`resources` is a [FileSet](https://maven.apache.org/shared/file-management/apidocs/org/apache/maven/shared/model/fileset/FileSet.html).
+You can configure it like described [here](https://maven.apache.org/shared/file-management/examples/mojo.html).
 
 Samples / Integration tests
 ---------------------------

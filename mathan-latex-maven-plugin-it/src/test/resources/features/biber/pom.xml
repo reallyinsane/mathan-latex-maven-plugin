@@ -8,7 +8,7 @@
             <plugin>
                 <groupId>io.mathan.maven</groupId>
                 <artifactId>mathan-latex-maven-plugin</artifactId>
-                <version>0.9.0</version>
+                <version>0.9.0-SNAPSHOT</version>
                 <configuration>
                     <!-- This test defines a different set of build steps to use biber instead of bibtex -->
                     <buildSteps>LaTeX,biber,makeindex,makeindexnomencl,LaTeX,LaTeX</buildSteps>

@@ -1,11 +1,17 @@
 package io.mathan.maven.latex.internal;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.shared.model.fileset.util.FileSetManager;
 
-import java.io.File;
-import java.io.FileFilter;
+import java.io.*;
+import java.util.Enumeration;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipFile;
 
 /**
  * Utility class.
@@ -102,5 +108,39 @@ public class Utils {
             }
         }
         return null;
+    }
+
+    /**
+     * Extracts the content of the given ZIP archive to a temporary directory and returns it.
+     * @param archive The ZIP archive.
+     * @return The created temporary directory containing the ZIP archive content.
+     * @throws IOException If the temporary directory could not be created or an error occurred during extraction of
+     * the ZIP.
+     */
+    public static File extractArchive(File archive) throws IOException {
+        File temporaryDirectory = new File(FileUtils.getTempDirectory(), UUID.randomUUID().toString());
+        if(!temporaryDirectory.mkdir()) {
+            throw new IOException("Could not create temporary directory "+temporaryDirectory.getAbsolutePath());
+        }
+        ZipFile zip = new ZipFile(archive);
+        Enumeration<? extends ZipEntry> entries = zip.entries();
+
+        while (entries.hasMoreElements()) {
+            ZipEntry entry = entries.nextElement();
+            if(entry.isDirectory()) {
+                File directory = new File(temporaryDirectory, entry.getName());
+                if(!directory.mkdirs()) {
+                    throw new IOException("Could not create directory "+directory.getAbsolutePath());
+                }
+            } else {
+                InputStream in = zip.getInputStream(entry);
+                File file = new File(temporaryDirectory, entry.getName());
+                FileOutputStream out = new FileOutputStream(file);
+                IOUtils.copy(in, out);
+                in.close();
+                out.close();
+            }
+        }
+        return temporaryDirectory;
     }
 }

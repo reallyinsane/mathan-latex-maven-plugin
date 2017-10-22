@@ -85,6 +85,12 @@
             <artifactId>aether-util</artifactId>
             <version>1.0.2.v20150114</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.maven.shared</groupId>
+            <artifactId>file-management</artifactId>
+            <version>3.0.0</version>
+
+        </dependency>
     </dependencies>
     <build>
         <resources>
