@@ -14,6 +14,8 @@ import org.apache.maven.plugins.annotations.Component;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
+import org.apache.maven.shared.model.fileset.FileSet;
+import org.apache.maven.shared.model.fileset.util.FileSetManager;
 import org.eclipse.aether.RepositorySystem;
 import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.artifact.Artifact;
@@ -29,8 +31,6 @@ import org.zeroturnaround.exec.ProcessExecutor;
 import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * The MathanLatexMojo provides the goal "latex" to generate dvi, ps or pdf out of LaTeX (.tex) documents. Therefore
@@ -43,9 +43,10 @@ import java.util.zip.ZipFile;
 @Mojo(name = "latex")
 public class MathanLatexMojo extends AbstractMojo {
 
-    private static final String DEPENDENCY_INCLUDES_DEFAULT = String.join(",", Constants.FORMAT_TEX,
-            Constants.FORMAT_CLS, Constants.FORMAT_CLO, Constants.FORMAT_STY, Constants.FORMAT_BIB, Constants.FORMAT_BST,
-            Constants.FORMAT_IDX, Constants.FORMAT_IST, Constants.FORMAT_GLO, Constants.FORMAT_EPS, Constants.FORMAT_PDF);
+    private static final String[] RESOURCES_DEFAULT_EXTENSTIONS = {
+            Constants.FORMAT_TEX, Constants.FORMAT_CLS, Constants.FORMAT_CLO, Constants.FORMAT_STY,
+            Constants.FORMAT_BIB, Constants.FORMAT_BST, Constants.FORMAT_IDX, Constants.FORMAT_IST,
+            Constants.FORMAT_GLO, Constants.FORMAT_EPS, Constants.FORMAT_PDF };
 
     /**
      * The defualt execution chain defines the order of the tool execution.
@@ -144,7 +145,7 @@ public class MathanLatexMojo extends AbstractMojo {
     private String texFile;
 
     @Parameter
-    private String dependencyIncludes;
+    private FileSet resources;
 
     /**
      * Parameter for controlling if build should be stopped in case the execution of a single step finished with an
@@ -201,10 +202,9 @@ public class MathanLatexMojo extends AbstractMojo {
         if (!workingDirectory.exists() && !workingDirectory.mkdirs()) {
             throw new MojoExecutionException(String.format("Could not create directory %s", workingDirectory.getAbsolutePath()));
         }
-        List<String> extensionsToInclude = Arrays.asList(dependencyIncludes.split(","));
         List<Dependency> dependencies = project.getDependencies();
         for (Dependency dependency : dependencies) {
-            resolveDependency(dependency, workingDirectory, extensionsToInclude);
+            resolveDependency(dependency, workingDirectory);
         }
         try {
             FileUtils.copyDirectory(source, workingDirectory);
@@ -299,7 +299,7 @@ public class MathanLatexMojo extends AbstractMojo {
         }
     }
 
-    private void resolveDependency(Dependency dependency, File workingDirectory, List<String> extensionsToInclude) throws MojoExecutionException {
+    private void resolveDependency(Dependency dependency, File workingDirectory) throws MojoExecutionException {
         //TODO: Check if zip should be supported also
         Artifact artifact = new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), "jar", dependency.getVersion());
         LocalArtifactRequest localRequest = new LocalArtifactRequest();
@@ -308,7 +308,7 @@ public class MathanLatexMojo extends AbstractMojo {
         LocalArtifactResult localResult = repoSession.getLocalRepositoryManager().find(repoSession, localRequest);
         if (localResult.isAvailable()) {
             try {
-                extractArchive(localResult.getFile(), workingDirectory, extensionsToInclude);
+                extractArchive(localResult.getFile(), workingDirectory);
             } catch (IOException e) {
                 throw new MojoExecutionException(String.format("Could not copy artifact %s", artifact), e);
             }
@@ -325,7 +325,7 @@ public class MathanLatexMojo extends AbstractMojo {
             }
             if (result.isResolved()) {
                 try {
-                    extractArchive(result.getArtifact().getFile(), workingDirectory, extensionsToInclude);
+                    extractArchive(result.getArtifact().getFile(), workingDirectory);
                 } catch (IOException e) {
                     throw new MojoExecutionException(String.format("Could not copy artifact %s", artifact), e);
                 }
@@ -336,23 +336,27 @@ public class MathanLatexMojo extends AbstractMojo {
 
     }
 
-    private void extractArchive(File archive, File workingDirectory, List<String> extensionsToInclude) throws IOException {
-        ZipFile zip = new ZipFile(archive);
-        Enumeration<? extends ZipEntry> entries = zip.entries();
-        while (entries.hasMoreElements()) {
-            ZipEntry entry = entries.nextElement();
-            if (entry.isDirectory() || entry.getName().contains("/")) {
-                continue;
+    private void extractArchive(File archive, File workingDirectory) throws IOException {
+        File archiveContent = Utils.extractArchive(archive);
+        FileSetManager fileSetManager = new FileSetManager();
+
+        resources.setDirectory(archiveContent.getAbsolutePath());
+
+        String[] includedFiles = fileSetManager.getIncludedFiles(resources);
+        for(String includedFile:includedFiles) {
+            File src = new File(archiveContent, includedFile);
+            File dest = new File(workingDirectory, includedFile);
+            getLog().info(String.format("[mathan] including resource %s", includedFile));
+            if(!dest.getParentFile().exists()&&!dest.getParentFile().mkdirs()) {
+                throw new IOException("Could not create directory "+dest.getParentFile().getAbsolutePath());
             }
-            if (entry.getName().indexOf('.') != -1 && extensionsToInclude.contains(entry.getName().substring(entry.getName().lastIndexOf('.') + 1))) {
-                getLog().info(String.format("[mathan] including resource %s", entry.getName()));
-                InputStream in = zip.getInputStream(entry);
-                OutputStream out = new FileOutputStream(new File(workingDirectory, entry.getName()));
-                IOUtils.copy(in, out);
-                in.close();
-                out.close();
-            }
+            FileInputStream in = new FileInputStream(src);
+            FileOutputStream out = new FileOutputStream(dest);
+            IOUtils.copy(in, out);
+            in.close();
+            out.close();
         }
+        FileUtils.deleteDirectory(archiveContent);
     }
 
     /**
@@ -373,8 +377,11 @@ public class MathanLatexMojo extends AbstractMojo {
         if (!Arrays.asList(Constants.FORMAT_DVI, Constants.FORMAT_PDF, Constants.FORMAT_PS).contains(outputFormat)) {
             throw new MojoExecutionException(String.format("Invalid outputFormat '%s' specified. Supported values are: dvi, pdf, ps.", outputFormat));
         }
-        if (dependencyIncludes == null) {
-            dependencyIncludes = DEPENDENCY_INCLUDES_DEFAULT;
+        if (resources == null) {
+            resources = new FileSet();
+            for(String include: RESOURCES_DEFAULT_EXTENSTIONS) {
+                resources.addInclude("**/*." + include);
+            }
         }
         // setup step registry
         DEFAULT_EXECUTABLES.forEach(e -> stepRegistry.put(e.getId(), e));

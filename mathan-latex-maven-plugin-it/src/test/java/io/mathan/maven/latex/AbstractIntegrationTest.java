@@ -21,7 +21,7 @@ public abstract class AbstractIntegrationTest {
         File dir = ResourceExtractor.simpleExtractResources(getClass(), String.format("/%s/%s", category, project));
         Verifier verifier = new Verifier(dir.getAbsolutePath());
         verifier.executeGoal(goal);
-        verifier.assertFilePresent(String.format("target/%s-0.0.2-SNAPSHOT.%s", project, extension));
+        verifier.assertFilePresent(String.format("target/%s-0.9.0.%s", project, extension));
         return new ITVerifier(verifier);
     }
 
