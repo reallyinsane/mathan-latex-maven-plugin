@@ -10,7 +10,7 @@ So this maven plugin changes this as the plugin will assume a lot of defaults fo
     <plugin>
       <groupId>io.mathan.maven</groupId>
       <artifactId>mathan-latex-maven-plugin</artifactId>
-      <version>1.0.0</version>
+      <version>0.9.0</version>
     </plugin>
   </plugins>
 </build>
