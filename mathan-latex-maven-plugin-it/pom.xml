@@ -22,7 +22,7 @@
         <dependency>
             <groupId>io.mathan.maven</groupId>
             <artifactId>mathan-latex-maven-plugin</artifactId>
-            <version>0.0.2-SNAPSHOT</version>
+            <version>0.9.0</version>
             <scope>test</scope>
         </dependency>
         <dependency>
