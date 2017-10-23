@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin.svg?branch=master)](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin)
+
 # mathan-latex-maven-plugin
 Maven plugin to generate PDF/PS/DVI from LaTeX sources.
 
