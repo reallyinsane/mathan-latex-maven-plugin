@@ -22,7 +22,7 @@ public class DependencyTest extends AbstractIntegrationTest {
 
     @Test
     public void includeTex() throws Exception {
-        verifier("dependencies", "dependency", "install", "jar");
-        verifier("dependencies", "main");
+        assertBuild("dependencies", "dependency", "install", "jar");
+        assertBuild("dependencies", "main");
     }
 }

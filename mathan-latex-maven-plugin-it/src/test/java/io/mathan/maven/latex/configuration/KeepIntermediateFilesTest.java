@@ -16,15 +16,13 @@
 package io.mathan.maven.latex.configuration;
 
 import io.mathan.maven.latex.AbstractIntegrationTest;
+import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
 public class KeepIntermediateFilesTest extends AbstractIntegrationTest {
     @Test
     public void keepintermediatefiles() throws Exception {
-        ITVerifier verifier = verifier("configuration", "keepintermediatefiles");
+        Verifier verifier = verifier("configuration", "keepintermediatefiles");
         assertFilePresent(verifier,"target/latex/mathan-latex-mojo.log");
-    }
-    private void assertFilePresent(ITVerifier verifier, String file) {
-        verifier.assertFilePresent(file);
     }
 }

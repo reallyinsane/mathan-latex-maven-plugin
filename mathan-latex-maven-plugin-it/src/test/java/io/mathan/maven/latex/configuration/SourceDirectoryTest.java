@@ -21,6 +21,6 @@ import org.junit.Test;
 public class SourceDirectoryTest extends AbstractIntegrationTest{
     @Test
     public void sourceDirectoryExists() throws Exception {
-        verifier("configuration", "sourcedirectory");
+        assertBuild("configuration", "sourcedirectory");
     }
 }

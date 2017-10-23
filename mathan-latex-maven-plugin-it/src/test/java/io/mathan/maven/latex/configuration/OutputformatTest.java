@@ -19,6 +19,7 @@ import io.mathan.maven.latex.AbstractIntegrationTest;
 import io.mathan.maven.latex.internal.Constants;
 import io.mathan.maven.latex.internal.Step;
 import org.apache.maven.it.VerificationException;
+import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
 /**
@@ -48,9 +49,9 @@ public class OutputformatTest extends AbstractIntegrationTest{
     }
 
     private void testSuccess(String outputFormat, Step... steps) throws Exception {
-        ITVerifier verifier = verifier("configuration/outputformat", outputFormat, "mathan:latex", outputFormat);
+        Verifier verifier = verifier("configuration/outputformat", outputFormat, "mathan:latex", outputFormat);
         for(Step step:steps) {
-            verifier.verifyExecution(step);
+            verifyExecution(verifier, step);
         }
     }
 
