@@ -1,4 +1,5 @@
 [![Build Status](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin.svg?branch=master)](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/911e2266a08840daa9e95c99ab2f9ab4)](https://www.codacy.com/app/reallyinsane/mathan-latex-maven-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reallyinsane/mathan-latex-maven-plugin&amp;utm_campaign=Badge_Grade)
 <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-apache2-blue.svg"></a>
 
 # mathan-latex-maven-plugin
