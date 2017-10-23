@@ -178,9 +178,6 @@ public class MathanLatexMojo extends AbstractMojo {
      */
     private Map<String, Step> stepRegistry = new HashMap<>();
 
-    public MathanLatexMojo() {
-    }
-
     public void execute() throws MojoExecutionException, MojoFailureException {
         List<Step> stepsToExecute = configureSteps();
         getLog().info("[mathan] bin directory of tex distribution: " + texBin);
@@ -415,6 +412,8 @@ public class MathanLatexMojo extends AbstractMojo {
                 case Constants.FORMAT_PDF:
                     latexSteps = new String[]{Step.STEP_PDFLATEX.getId()};
                     break;
+                default:
+                    throw new MojoExecutionException("Invalid output format");
             }
         }
         List<Step> listLatexSteps = new ArrayList<>();

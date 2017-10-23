@@ -22,6 +22,9 @@ public class KeepIntermediateFilesTest extends AbstractIntegrationTest {
     @Test
     public void keepintermediatefiles() throws Exception {
         ITVerifier verifier = verifier("configuration", "keepintermediatefiles");
-        verifier.assertFilePresent("target/latex/mathan-latex-mojo.log");
+        assertFilePresent(verifier,"target/latex/mathan-latex-mojo.log");
+    }
+    private void assertFilePresent(ITVerifier verifier, String file) {
+        verifier.assertFilePresent(file);
     }
 }
