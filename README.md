@@ -22,14 +22,30 @@ So this maven plugin changes this as the plugin will assume a lot of defaults fo
 
 Goal
 ----
-To run the build using LaTeX just use the goal:
+To run the build just use the goal:
 ```
 mvn mathan:latex
 ```
 
+LaTeX distribution
+------------------
+The maven plugin uses the executables of an existing LaTeX distribution. If the bin directory of this distribution is on the `PATH` environment variable, nothing has to be configured. You can change this using the configuration parameter `texBin` or using a environment variable named `texBin`.
+
 Tex sources
 -----------
-You should place the .tex document in the source folder `src/main/tex`. 
+You should place the .tex document in the source folder `src/main/tex`. This is the default directory, you can change it the behaviour with the configuration parameter `sourceDirectory`. If there is only one .tex file in this directory this is used as input file. If you have multiple .tex files you have to specify the main text file using the configuration parameter `texFile`.
+
+Common resources
+----------------
+If you want to share resources (.bib, .tex, .eps, etc.) for certain projects you can assemble them into a jar and use this as a dependency. Resources specified using the configuration parameter `resource` will be used for the build process.
+
+Features
+--------
+By default in addition to the pure latex commands (depending on the desired output format) bibtex, makeindex and makeindex with nomencl are supported. Bibtex can also be replaced by biber. For makeindex a style file can be configured. (later for nomencl too)
+
+Logging
+-------
+While building snapshot artifacts consider to set the configuration parameter `keepIntermediateFiles` to  `true` to be able to review the latex files created withing the build process. You will find a file `target/latex/mathan-latex-mojo.log` containing the log output of all latex steps executed.
 
 Configuration
 -------------
