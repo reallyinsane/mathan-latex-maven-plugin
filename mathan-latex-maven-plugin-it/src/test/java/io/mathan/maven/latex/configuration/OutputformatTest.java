@@ -29,17 +29,17 @@ public class OutputformatTest extends AbstractIntegrationTest{
 
     @Test
     public void pdf() throws Exception {
-        testSuccess(Constants.FORMAT_PDF, Step.STEP_PDFLATEX);
+        assertSuccess(Constants.FORMAT_PDF, Step.STEP_PDFLATEX);
     }
 
     @Test
     public void ps() throws Exception {
-        testSuccess(Constants.FORMAT_PS, Step.STEP_LATEX, Step.STEP_DVIPS);
+        assertSuccess(Constants.FORMAT_PS, Step.STEP_LATEX, Step.STEP_DVIPS);
     }
 
     @Test
     public void dvi() throws Exception {
-        testSuccess(Constants.FORMAT_DVI, Step.STEP_LATEX);
+        assertSuccess(Constants.FORMAT_DVI, Step.STEP_LATEX);
     }
 
 
@@ -48,10 +48,10 @@ public class OutputformatTest extends AbstractIntegrationTest{
         verifier("configuration/outputformat", "invalid");
     }
 
-    private void testSuccess(String outputFormat, Step... steps) throws Exception {
+    private void assertSuccess(String outputFormat, Step... steps) throws Exception {
         Verifier verifier = verifier("configuration/outputformat", outputFormat, "mathan:latex", outputFormat);
         for(Step step:steps) {
-            verifyExecution(verifier, step);
+            assertStepExecuted(verifier, step);
         }
     }
 

@@ -24,7 +24,7 @@ public class MakeindexTest extends AbstractIntegrationTest {
     @Test
     public void pdf() throws Exception {
         Verifier verifier = verifier("features","makeindex");
-        verifyExecution(verifier, Step.STEP_MAKEINDEX);
-        verifySkipped(verifier, Step.STEP_MAKEINDEXNOMENCL);
+        assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
+        assertStepSkipped(verifier, Step.STEP_MAKEINDEXNOMENCL);
     }
 }

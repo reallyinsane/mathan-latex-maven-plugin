@@ -53,10 +53,10 @@ public abstract class AbstractIntegrationTest {
     protected final void verifyTextInLog(Verifier verifier, String text) throws VerificationException {
         verifier.verifyTextInLog(text);
     }
-    protected final void verifyExecution(Verifier verifier, Step step) throws VerificationException {
+    protected final void assertStepExecuted(Verifier verifier, Step step) throws VerificationException {
         verifier.verifyTextInLog(String.format("[mathan] execution: %s", step.getId()));
     }
-    protected final void verifySkipped(Verifier verifier, Step step) throws VerificationException {
+    protected final void assertStepSkipped(Verifier verifier, Step step) throws VerificationException {
         verifier.verifyTextInLog(String.format("[mathan] execution skipped: %s", step.getId()));
     }
 }

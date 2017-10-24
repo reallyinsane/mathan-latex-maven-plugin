@@ -24,6 +24,6 @@ public class BibtexTest extends AbstractIntegrationTest {
     @Test
     public void pdf() throws Exception {
         Verifier verifier = verifier("features", "bibtex");
-        verifyExecution(verifier, Step.STEP_BIBTEX);
+        assertStepExecuted(verifier, Step.STEP_BIBTEX);
     }
 }

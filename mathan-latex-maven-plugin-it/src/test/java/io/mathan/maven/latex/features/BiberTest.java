@@ -24,6 +24,6 @@ public class BiberTest extends AbstractIntegrationTest{
     @Test
     public void pdf() throws Exception {
         Verifier verifier = verifier("features", "biber");
-        verifyExecution(verifier, Step.STEP_BIBER);
+        assertStepExecuted(verifier, Step.STEP_BIBER);
     }
 }

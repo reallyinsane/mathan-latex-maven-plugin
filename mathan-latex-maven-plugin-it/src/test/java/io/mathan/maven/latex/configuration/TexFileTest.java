@@ -24,7 +24,7 @@ public class TexFileTest extends AbstractIntegrationTest {
     @Test
     public void textfileExists() throws Exception {
         Verifier verifier = verifier("configuration", "texfile");
-        verifySkipped(verifier, Step.STEP_MAKEINDEX);
-        verifySkipped(verifier, Step.STEP_MAKEINDEXNOMENCL);
+        assertStepSkipped(verifier, Step.STEP_MAKEINDEX);
+        assertStepSkipped(verifier, Step.STEP_MAKEINDEXNOMENCL);
     }
 }

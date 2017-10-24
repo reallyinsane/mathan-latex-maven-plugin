@@ -24,6 +24,6 @@ public class MakeindexstylefileTest extends AbstractIntegrationTest {
     @Test
     public void stylefileExists() throws Exception {
         Verifier verifier = verifier("configuration","makeindexstylefile");
-        verifyExecution(verifier, Step.STEP_MAKEINDEX);
+        assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
     }
 }

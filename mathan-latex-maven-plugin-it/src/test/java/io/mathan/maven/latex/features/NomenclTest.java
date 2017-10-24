@@ -25,7 +25,7 @@ public class NomenclTest extends AbstractIntegrationTest {
     @Test
     public void pdf() throws Exception {
         Verifier verifier = verifier("features", "nomencl");
-        verifyExecution(verifier, Step.STEP_MAKEINDEX);
-        verifyExecution(verifier, Step.STEP_MAKEINDEXNOMENCL);
+        assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
+        assertStepExecuted(verifier, Step.STEP_MAKEINDEXNOMENCL);
     }
 }
