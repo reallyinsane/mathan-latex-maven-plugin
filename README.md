@@ -1,3 +1,4 @@
+     
 [![Build Status](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin.svg?branch=master)](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/911e2266a08840daa9e95c99ab2f9ab4)](https://www.codacy.com/app/reallyinsane/mathan-latex-maven-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reallyinsane/mathan-latex-maven-plugin&amp;utm_campaign=Badge_Grade)
 <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-apache2-blue.svg"></a>
@@ -8,10 +9,10 @@ This is **THE** maven plugin to generate PDF, PS or DVI from LaTeX sources.
 
 There have been some maven plugins around trying to provide an easy way to run LaTeX with maven. But it was never as easy as it should be. A lot of configuration had to be made to get the plugins working. And many of them are not maintained any more.
 
-<i class=" icon-right-open"></i> **mathan-latex-maven-plugin** changes this. It is very easy to to use and there is little or no configuration needed for the defaul use cases.
+**mathan-latex-maven-plugin** changes this. It is very easy to to use and there is little or no configuration needed for the defaul use cases.
 
-<i class="icon-right-open"></i> Usage
-------------------------------------------------------------------
+Usage
+-----
 Using mathan-latex-maven-plugin introduces the packaging **pdf**. Therefore in a single maven module using mathan-latex-maven-plugin a single PDF artifact is created. If you want to split the .tex sources or reuse them in multiple maven modules consider the [Dependencies](#dependencies) section.
 
 *The minimal configuration looks like this:*
@@ -29,12 +30,12 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. Therefore in a
   </plugins>
 </build>
 ```
-<i class=" icon-right-open"></i> Goal
-----------------------------------------------------------------
+Goal
+----
 If the packaging is set to **pdf** mathan-latex-maven-plugin will be executed in *package*, *install* and *deploy* phase. Otherwise the explizit goal *mathan:latex* can be used.
 
-<i class=" icon-right-open"></i>Tex source files
-------------------------------------------------------------------------------
+Tex source files
+----------------
 By default mathan-latex-maven-plugin will search for a *.tex file in the source directory *src/main/tex*. The default behaviour can be changed using the configuration parameter *sourceDirectory*. Please note that for setting configuration parameters the *extensions* have to be activated.
 
 *Example for using a non-default source directory.*
@@ -50,34 +51,34 @@ By default mathan-latex-maven-plugin will search for a *.tex file in the source 
   </configuration>
 </plugin>
 ```
-<i class=" icon-right-open"></i>LaTeX distribution
-----------------------------------------------------------------------------------
+LaTeX distribution
+------------------
 A LaTeX distribution is required to execute all LaTeX commands. By default mathan-latex-maven-plugin will assume that the bin directory of the LaTeX distribution is set on the **PATH** environment variable. As alternative the environment variable **texBin** can be used. It is also possible to use the configuration parameter *texBin* but this is not recommended as details about a local environment would become part of the Maven pom.xml.
 
-<i class=" icon-right-open"></i>Dependencies
-----------------------------------------------------------------------------------
+Dependencies
+------------
 To share resources (.bib, .tex, .eps, ...) for multiple maven modules they can be assembled in a jar module (zip modules to be supported soon) used as a dependency for the maven project building you LaTeX document. Using the configuration parameter *resources* filters can be used to identify the reources to use.
 
-<i class=" icon-right-open"></i>Features
----------------------------------------------------------------------
+Features
+--------
 The mathan-latex-maven-plugin supports the output formats **PDF**, **PS** and **DVI**. The build process also includes the execution of
 
  - bibtex or biber
  - makeindex including makeindex style file
  - nomencl (nomencl style file to be supported soon)
 
-<i class=" icon-right-open"></i>Logging / Debugging
----------------------------------------------------------------------
+Logging / Debugging
+-------------------
 While building snapshot artifacts consider to set the configuration parameter *keepIntermediateFiles* to true to be able to review the latex files created withing the build process. You will find a file target/latex/mathan-latex-mojo.log containing the log output of all latex steps executed.
 
-<i class=" icon-cog"></i>Configuration
----------------------------
+Configuration
+-------------
 The following configuration parameters can be used to change the default behaviour of the build.
 
 Parameter|Description|Default
 ---------|-----------|-------
 outputFormat|The desired output format. Can be either `dvi`, `ps` or `pdf`|`pdf`
-sourceDirectory|Where to find *.tex documents.|'src/main/tex`
+sourceDirectory|Where to find *.tex documents.|`src/main/tex`
 texBin|The bin directory of the tex distribution.|Searches on `PATH` environment and looks for system property `texBin`
 texFile|Name of the main *.tex file to use| defaults to a single .tex file found in `sourceDirectory`
 latexSteps|The latex commands to execute to generate the output document.|This is `latex` for `dvi`, `latex,dvips` for `ps` and `pdflatex` for `pdf`.
@@ -89,8 +90,8 @@ resources|A [FileSet](https://maven.apache.org/shared/file-management/apidocs/or
 haltOnError|Sets whether the build should be stopped in case a single step finished with a non-zero exit code|true
 
 
-<i class=" icon-right-open"></i>Samples / Integration tests
--------------
+Samples / Integration tests
+---------------------------
 The following integration tests are samples how to use mathan-latex-maven-plugin also.
 
 Project|Description
