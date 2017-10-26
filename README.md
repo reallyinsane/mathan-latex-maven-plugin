@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin.svg?branch=master)](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/911e2266a08840daa9e95c99ab2f9ab4)](https://www.codacy.com/app/reallyinsane/mathan-latex-maven-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reallyinsane/mathan-latex-maven-plugin&amp;utm_campaign=Badge_Grade)
+<a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-apache2-blue.svg"></a>
+
 mathan-latex-maven-plugin
 =======================
 This is **THE** maven plugin to generate PDF, PS or DVI from LaTeX sources.
@@ -6,7 +10,7 @@ There have been some maven plugins around trying to provide an easy way to run L
 
 <i class=" icon-right-open"></i> **mathan-latex-maven-plugin** changes this. It is very easy to to use and there is little or no configuration needed for the defaul use cases.
 
-<i class="icon-right-open"></i> Usage {#usage}
+<i class="icon-right-open"></i> Usage
 ------------------------------------------------------------------
 Using mathan-latex-maven-plugin introduces the packaging **pdf**. Therefore in a single maven module using mathan-latex-maven-plugin a single PDF artifact is created. If you want to split the .tex sources or reuse them in multiple maven modules consider the [Dependencies](#dependencies) section.
 
