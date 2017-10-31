@@ -13,7 +13,7 @@ There have been some maven plugins around trying to provide an easy way to run L
 
 Usage
 -----
-Using mathan-latex-maven-plugin introduces the packaging **pdf**. Therefore in a single maven module using mathan-latex-maven-plugin a single PDF artifact is created. If you want to split the .tex sources or reuse them in multiple maven modules consider the [Dependencies](#dependencies) section.
+Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single maven module using mathan-latex-maven-plugin a PDF artifact is created. If you want to split the .tex sources or reuse them in multiple maven modules consider the [Dependencies](#dependencies) section.
 
 *The minimal configuration looks like this:*
 ```
@@ -32,7 +32,7 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. Therefore in a
 ```
 Goal
 ----
-If the packaging is set to **pdf** mathan-latex-maven-plugin will be executed in *package*, *install* and *deploy* phase. Otherwise the explizit goal *mathan:latex* can be used.
+If the packaging is set to **pdf** mathan-latex-maven-plugin will be executed in *package*, *install* and *deploy* phase. Otherwise the explicit goal *mathan:latex* can be used.
 
 Tex source files
 ----------------
