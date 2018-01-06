@@ -1,35 +1,35 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>io.mathan.maven</groupId>
-    <artifactId>mathan-latex-maven-plugin-reactor</artifactId>
-	<version>0.9.0</version>
-    <packaging>pom</packaging>
-    <description>Reactor for plugin an integration tests</description>
-    <name>Mathan LaTeX Maven Plugin Rector</name>
-    <licenses>
-        <license>
-            <name>Apache License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-    <url>https://github.com/reallyinsane/mathan-latex-maven-plugin</url>
-    <developers>
-        <developer>
-            <name>Matthias Hanisch</name>
-            <email>matthias@mathan.io</email>
-            <url>https://github.com/reallyinsane</url>
-        </developer>
-    </developers>
-    <scm>
-        <connection>scm:git:https://github.com/reallyinsane/mathan-latex-maven-plugin.git</connection>
-        <developerConnection>scm:git:https://github.com/reallyinsane/mathan-latex-maven-plugin.git</developerConnection>
-        <url>scm:git:https://github.com/reallyinsane/mathan-latex-maven-plugin/tree/master</url>
-    </scm>
-    <modules>
-        <module>mathan-latex-maven-plugin</module>
-        <module>mathan-latex-maven-plugin-it</module>
-    </modules>
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.mathan.maven</groupId>
+  <artifactId>mathan-latex-maven-plugin-reactor</artifactId>
+  <version>0.9.0</version>
+  <packaging>pom</packaging>
+  <description>Reactor for plugin an integration tests</description>
+  <name>Mathan LaTeX Maven Plugin Rector</name>
+  <licenses>
+    <license>
+      <name>Apache License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <url>https://github.com/reallyinsane/mathan-latex-maven-plugin</url>
+  <developers>
+    <developer>
+      <name>Matthias Hanisch</name>
+      <email>matthias@mathan.io</email>
+      <url>https://github.com/reallyinsane</url>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/reallyinsane/mathan-latex-maven-plugin.git</connection>
+    <developerConnection>scm:git:https://github.com/reallyinsane/mathan-latex-maven-plugin.git</developerConnection>
+    <url>scm:git:https://github.com/reallyinsane/mathan-latex-maven-plugin/tree/master</url>
+  </scm>
+  <modules>
+    <module>mathan-latex-maven-plugin</module>
+    <module>mathan-latex-maven-plugin-it</module>
+  </modules>
 
 </project>
