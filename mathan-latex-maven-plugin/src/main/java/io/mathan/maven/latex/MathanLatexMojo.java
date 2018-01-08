@@ -182,6 +182,7 @@ public class MathanLatexMojo extends AbstractMojo {
    * {@inheritDoc}
    */
   public void execute() throws MojoExecutionException, MojoFailureException {
+    List<Step> stepsToExecute = configureSteps();
     getLog().info("[mathan] bin directory of tex distribution: " + texBin);
     getLog().info("[mathan] output format : " + outputFormat);
     getLog().info("[mathan] latex steps: " + String.join(",", latexSteps));
@@ -190,7 +191,6 @@ public class MathanLatexMojo extends AbstractMojo {
     File baseDirectory = project.getBasedir();
     File texDirectory = new File(baseDirectory, sourceDirectory);
 
-    List<Step> stepsToExecute = configureSteps();
     executeSteps(stepsToExecute, texDirectory);
     // remove intermediate files
     if (!keepIntermediateFiles) {
@@ -339,8 +339,7 @@ public class MathanLatexMojo extends AbstractMojo {
   }
 
   private void resolveDependency(Dependency dependency, File workingDirectory) throws MojoExecutionException {
-    //TODO: Check if zip should be supported also
-    Artifact artifact = new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), "jar", dependency.getVersion());
+    Artifact artifact = new DefaultArtifact(dependency.getGroupId(), dependency.getArtifactId(), dependency.getClassifier(), dependency.getType(), dependency.getVersion());
     LocalArtifactRequest localRequest = new LocalArtifactRequest();
     localRequest.setArtifact(artifact);
     getLog().info(String.format("[mathan] resolving artifact %s from local", artifact));

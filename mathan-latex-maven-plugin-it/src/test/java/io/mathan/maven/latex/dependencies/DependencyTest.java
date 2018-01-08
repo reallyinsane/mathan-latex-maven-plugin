@@ -20,9 +20,16 @@ import org.junit.Test;
 
 public class DependencyTest extends AbstractIntegrationTest {
 
-    @Test
-    public void includeTex() throws Exception {
-        assertBuild("dependencies", "dependency", "install", "jar");
-        assertBuild("dependencies", "main");
-    }
+  @Test
+  public void includeFromJar() throws Exception {
+    assertBuild("dependencies", "dependency", "install", "jar");
+    assertBuild("dependencies", "main");
+  }
+
+  @Test
+  public void includeFromZip() throws Exception {
+    assertBuild("dependencies", "zip-dependency", "install", "zip", "any");
+    assertBuild("dependencies", "zip-main");
+  }
+
 }

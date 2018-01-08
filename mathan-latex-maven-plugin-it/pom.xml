@@ -2,11 +2,11 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>mathan-latex-maven-plugin-it</artifactId>
-    <version>0.9.0</version>
+    <version>0.9.1-SNAPSHOT</version>
     <parent>
         <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin-reactor</artifactId>
-        <version>0.9.0</version>
+        <version>0.9.1-SNAPSHOT</version>
     </parent>
     <licenses>
         <license>
@@ -22,7 +22,7 @@
         <dependency>
             <groupId>io.mathan.maven</groupId>
             <artifactId>mathan-latex-maven-plugin</artifactId>
-            <version>0.9.0</version>
+            <version>0.9.1-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
         <dependency>

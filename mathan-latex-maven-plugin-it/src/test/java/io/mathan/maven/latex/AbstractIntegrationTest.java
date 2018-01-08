@@ -16,47 +16,64 @@
 package io.mathan.maven.latex;
 
 import io.mathan.maven.latex.internal.Step;
+import java.io.File;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.apache.maven.it.util.ResourceExtractor;
 
-import java.io.File;
-
 public abstract class AbstractIntegrationTest {
 
-    protected Verifier verifier(String category, String project) throws Exception {
-        return verifier(category, project, "mathan:latex");
-    }
+  private static final String VERSION = "0.9.1-SNAPSHOT";
 
-    protected Verifier verifier(String category, String project, String goal) throws Exception {
-        return verifier(category, project, goal, "pdf");
-    }
+  protected Verifier verifier(String category, String project) throws Exception {
+    return verifier(category, project, "mathan:latex");
+  }
 
-    protected Verifier verifier(String category, String project, String goal, String extension) throws Exception {
-        File dir = ResourceExtractor.simpleExtractResources(getClass(), String.format("/%s/%s", category, project));
-        Verifier verifier = new Verifier(dir.getAbsolutePath());
-        verifier.executeGoal(goal);
-        verifier.assertFilePresent(String.format("target/%s-0.9.0.%s", project, extension));
-        return verifier;
-    }
+  protected Verifier verifier(String category, String project, String goal) throws Exception {
+    return verifier(category, project, goal, "pdf");
+  }
 
-    protected final void assertBuild(String category, String project) throws Exception {
-        verifier(category, project);
-    }
+  protected Verifier verifier(String category, String project, String goal, String extension) throws Exception {
+    return verifier(category, project, goal, extension, null);
+  }
 
-    protected final void assertBuild(String category, String project, String goal, String extension) throws Exception {
-        verifier(category, project, goal, extension);
+  protected Verifier verifier(String category, String project, String goal, String extension, String classifier) throws Exception {
+    File dir = ResourceExtractor.simpleExtractResources(getClass(), String.format("/%s/%s", category, project));
+    Verifier verifier = new Verifier(dir.getAbsolutePath());
+    verifier.executeGoal(goal);
+    if (classifier == null) {
+      verifier.assertFilePresent(String.format("target/%s-%s.%s", project, VERSION, extension));
+    } else {
+      verifier.assertFilePresent(String.format("target/%s-%s-%s.%s", project, VERSION, classifier, extension));
     }
-    protected final void assertFilePresent(Verifier verifier, String file) {
-        verifier.assertFilePresent(file);
-    }
-    protected final void verifyTextInLog(Verifier verifier, String text) throws VerificationException {
-        verifier.verifyTextInLog(text);
-    }
-    protected final void assertStepExecuted(Verifier verifier, Step step) throws VerificationException {
-        verifier.verifyTextInLog(String.format("[mathan] execution: %s", step.getId()));
-    }
-    protected final void assertStepSkipped(Verifier verifier, Step step) throws VerificationException {
-        verifier.verifyTextInLog(String.format("[mathan] execution skipped: %s", step.getId()));
-    }
+    return verifier;
+  }
+
+  protected final void assertBuild(String category, String project) throws Exception {
+    verifier(category, project);
+  }
+
+  protected final void assertBuild(String category, String project, String goal, String extension, String classifier) throws Exception {
+    verifier(category, project, goal, extension, classifier);
+  }
+
+  protected final void assertBuild(String category, String project, String goal, String extension) throws Exception {
+    assertBuild(category, project, goal, extension, null);
+  }
+
+  protected final void assertFilePresent(Verifier verifier, String file) {
+    verifier.assertFilePresent(file);
+  }
+
+  protected final void verifyTextInLog(Verifier verifier, String text) throws VerificationException {
+    verifier.verifyTextInLog(text);
+  }
+
+  protected final void assertStepExecuted(Verifier verifier, Step step) throws VerificationException {
+    verifier.verifyTextInLog(String.format("[mathan] execution: %s", step.getId()));
+  }
+
+  protected final void assertStepSkipped(Verifier verifier, Step step) throws VerificationException {
+    verifier.verifyTextInLog(String.format("[mathan] execution skipped: %s", step.getId()));
+  }
 }

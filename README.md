@@ -57,7 +57,7 @@ A LaTeX distribution is required to execute all LaTeX commands. By default matha
 
 Dependencies
 ------------
-To share resources (.bib, .tex, .eps, ...) for multiple maven modules they can be assembled in a jar module (zip modules to be supported soon) used as a dependency for the maven project building you LaTeX document. Using the configuration parameter *resources* filters can be used to identify the reources to use.
+To share resources (.bib, .tex, .eps, ...) for multiple maven modules they can be assembled in a separate module (can be jar or zip or whatever) used as a dependency for the maven project building you LaTeX document. Using the configuration parameter *resources* filters can be used to identify the resources to use.
 
 Features
 --------
@@ -104,6 +104,8 @@ Project|Description
 [configuration/texfile](mathan-latex-maven-plugin-it/src/test/resources/configuration/texfile)| Sample specifying master tex file.
 [dependencies/dependency](mathan-latex-maven-plugin-it/src/test/resources/dependencies/dependency)| Dependency providing resource in a jar.
 [dependencies/main](mathan-latex-maven-plugin-it/src/test/resources/dependencies/main)| Sample using a resource from a dependency.
+[dependencies/zip-dependency](mathan-latex-maven-plugin-it/src/test/resources/dependencies/zip-dependency)| Dependency providing resource in a zip.
+[dependencies/zip-main](mathan-latex-maven-plugin-it/src/test/resources/dependencies/zip-main)| Sample using a resource from a zip dependency.
 [features/biber](mathan-latex-maven-plugin-it/src/test/resources/features/biber)| Sample using biber.
 [features/bibtex](mathan-latex-maven-plugin-it/src/test/resources/features/bibtex)| Sample using bibtex.
 [features/makeindex](mathan-latex-maven-plugin-it/src/test/resources/features/makeindex)| Sample using makeindex.
