@@ -4,4 +4,4 @@ before_install:
 language: java
 install: true
 
-script: mvn clean package
+script: mvn clean install
