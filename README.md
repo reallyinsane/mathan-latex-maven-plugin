@@ -9,7 +9,7 @@ This is **THE** maven plugin to generate PDF, PS or DVI from LaTeX sources.
 
 There have been some maven plugins around trying to provide an easy way to run LaTeX with maven. But it was never as easy as it should be. A lot of configuration had to be made to get the plugins working. And many of them are not maintained any more.
 
-**mathan-latex-maven-plugin** changes this. It is very easy to to use and there is little or no configuration needed for the defaul use cases.
+**mathan-latex-maven-plugin** changes this. It is very easy to to use and there is little or no configuration needed for the default use cases.
 
 Usage
 -----
