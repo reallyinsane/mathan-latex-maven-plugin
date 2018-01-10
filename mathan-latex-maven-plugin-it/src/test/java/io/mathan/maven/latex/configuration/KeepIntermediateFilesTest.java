@@ -20,9 +20,10 @@ import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
 public class KeepIntermediateFilesTest extends AbstractIntegrationTest {
-    @Test
-    public void keepintermediatefiles() throws Exception {
-        Verifier verifier = verifier("configuration", "keepintermediatefiles");
-        assertFilePresent(verifier,"target/latex/mathan-latex-mojo.log");
-    }
+
+  @Test
+  public void keepintermediatefiles() throws Exception {
+    Verifier verifier = verifier("configuration", "keepintermediatefiles");
+    assertFilePresent(verifier, "target/latex/mathan-latex-mojo.log");
+  }
 }

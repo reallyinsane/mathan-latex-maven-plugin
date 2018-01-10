@@ -25,34 +25,34 @@ import org.junit.Test;
 /**
  * Simple test generating an output file for each supported file without bibtex/makeindex.
  */
-public class OutputformatTest extends AbstractIntegrationTest{
+public class OutputformatTest extends AbstractIntegrationTest {
 
-    @Test
-    public void pdf() throws Exception {
-        assertSuccess(Constants.FORMAT_PDF, Step.STEP_PDFLATEX);
+  @Test
+  public void pdf() throws Exception {
+    assertSuccess(Constants.FORMAT_PDF, Step.STEP_PDFLATEX);
+  }
+
+  @Test
+  public void ps() throws Exception {
+    assertSuccess(Constants.FORMAT_PS, Step.STEP_LATEX, Step.STEP_DVIPS);
+  }
+
+  @Test
+  public void dvi() throws Exception {
+    assertSuccess(Constants.FORMAT_DVI, Step.STEP_LATEX);
+  }
+
+
+  @Test(expected = VerificationException.class)
+  public void invalid() throws Exception {
+    verifier("configuration/outputformat", "invalid");
+  }
+
+  private void assertSuccess(String outputFormat, Step... steps) throws Exception {
+    Verifier verifier = verifier("configuration/outputformat", outputFormat, "mathan:latex", outputFormat);
+    for (Step step : steps) {
+      assertStepExecuted(verifier, step);
     }
-
-    @Test
-    public void ps() throws Exception {
-        assertSuccess(Constants.FORMAT_PS, Step.STEP_LATEX, Step.STEP_DVIPS);
-    }
-
-    @Test
-    public void dvi() throws Exception {
-        assertSuccess(Constants.FORMAT_DVI, Step.STEP_LATEX);
-    }
-
-
-    @Test(expected = VerificationException.class)
-    public void invalid() throws Exception {
-        verifier("configuration/outputformat", "invalid");
-    }
-
-    private void assertSuccess(String outputFormat, Step... steps) throws Exception {
-        Verifier verifier = verifier("configuration/outputformat", outputFormat, "mathan:latex", outputFormat);
-        for(Step step:steps) {
-            assertStepExecuted(verifier, step);
-        }
-    }
+  }
 
 }

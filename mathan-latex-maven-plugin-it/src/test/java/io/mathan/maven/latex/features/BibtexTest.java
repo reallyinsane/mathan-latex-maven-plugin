@@ -21,9 +21,10 @@ import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
 public class BibtexTest extends AbstractIntegrationTest {
-    @Test
-    public void pdf() throws Exception {
-        Verifier verifier = verifier("features", "bibtex");
-        assertStepExecuted(verifier, Step.STEP_BIBTEX);
-    }
+
+  @Test
+  public void pdf() throws Exception {
+    Verifier verifier = verifier("features", "bibtex");
+    assertStepExecuted(verifier, Step.STEP_BIBTEX);
+  }
 }

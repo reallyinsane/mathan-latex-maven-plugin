@@ -21,9 +21,10 @@ import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
 public class MakeindexstylefileTest extends AbstractIntegrationTest {
-    @Test
-    public void stylefileExists() throws Exception {
-        Verifier verifier = verifier("configuration","makeindexstylefile");
-        assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
-    }
+
+  @Test
+  public void stylefileExists() throws Exception {
+    Verifier verifier = verifier("configuration", "makeindexstylefile");
+    assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
+  }
 }

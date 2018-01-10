@@ -21,10 +21,11 @@ import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
 public class MakeindexTest extends AbstractIntegrationTest {
-    @Test
-    public void pdf() throws Exception {
-        Verifier verifier = verifier("features","makeindex");
-        assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
-        assertStepSkipped(verifier, Step.STEP_MAKEINDEXNOMENCL);
-    }
+
+  @Test
+  public void pdf() throws Exception {
+    Verifier verifier = verifier("features", "makeindex");
+    assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
+    assertStepSkipped(verifier, Step.STEP_MAKEINDEXNOMENCL);
+  }
 }

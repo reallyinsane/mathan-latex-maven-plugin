@@ -187,7 +187,7 @@ public class MathanLatexMojo extends AbstractMojo {
    * {@inheritDoc}
    */
   public void execute() throws MojoExecutionException, MojoFailureException {
-    List<Step> stepsToExecute = configureSteps();
+    final List<Step> stepsToExecute = configureSteps();
     getLog().info("[mathan] bin directory of tex distribution: " + texBin);
     getLog().info("[mathan] output format : " + outputFormat);
     getLog().info("[mathan] latex steps: " + String.join(",", latexSteps));
@@ -420,7 +420,7 @@ public class MathanLatexMojo extends AbstractMojo {
     List<Step> listLatexSteps = configureLatexSteps();
     List<Step> listExecutables = new ArrayList<>(listLatexSteps);
     // setup build steps
-    List<Step> listBuildSteps = configureBuildSteps(listLatexSteps, listExecutables);
+    final List<Step> listBuildSteps = configureBuildSteps(listLatexSteps, listExecutables);
     // configure pre-defined steps
     configureStyleFile(Step.STEP_MAKEINDEX, makeIndexStyleFile);
     configureStyleFile(Step.STEP_MAKEINDEXNOMENCL, makeIndexNomenclStyleFile);

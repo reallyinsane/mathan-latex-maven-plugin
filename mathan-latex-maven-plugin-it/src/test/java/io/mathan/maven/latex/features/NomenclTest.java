@@ -22,10 +22,11 @@ import org.junit.Test;
 
 
 public class NomenclTest extends AbstractIntegrationTest {
-    @Test
-    public void pdf() throws Exception {
-        Verifier verifier = verifier("features", "nomencl");
-        assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
-        assertStepExecuted(verifier, Step.STEP_MAKEINDEXNOMENCL);
-    }
+
+  @Test
+  public void pdf() throws Exception {
+    Verifier verifier = verifier("features", "nomencl");
+    assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
+    assertStepExecuted(verifier, Step.STEP_MAKEINDEXNOMENCL);
+  }
 }

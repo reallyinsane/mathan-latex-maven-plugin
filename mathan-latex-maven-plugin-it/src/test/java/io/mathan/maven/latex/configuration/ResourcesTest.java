@@ -19,9 +19,10 @@ import io.mathan.maven.latex.AbstractIntegrationTest;
 import org.junit.Test;
 
 public class ResourcesTest extends AbstractIntegrationTest {
-    @Test
-    public void bibtex() throws Exception {
-        assertBuild("dependencies", "dependency", "install", "jar");
-        assertBuild("configuration", "resources");
-    }
+
+  @Test
+  public void bibtex() throws Exception {
+    assertBuild("dependencies", "dependency", "install", "jar");
+    assertBuild("configuration", "resources");
+  }
 }

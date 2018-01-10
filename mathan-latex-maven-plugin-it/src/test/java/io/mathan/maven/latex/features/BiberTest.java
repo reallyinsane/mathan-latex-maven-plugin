@@ -20,10 +20,11 @@ import io.mathan.maven.latex.internal.Step;
 import org.apache.maven.it.Verifier;
 import org.junit.Test;
 
-public class BiberTest extends AbstractIntegrationTest{
-    @Test
-    public void pdf() throws Exception {
-        Verifier verifier = verifier("features", "biber");
-        assertStepExecuted(verifier, Step.STEP_BIBER);
-    }
+public class BiberTest extends AbstractIntegrationTest {
+
+  @Test
+  public void pdf() throws Exception {
+    Verifier verifier = verifier("features", "biber");
+    assertStepExecuted(verifier, Step.STEP_BIBER);
+  }
 }
