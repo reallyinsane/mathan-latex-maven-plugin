@@ -65,7 +65,7 @@ The mathan-latex-maven-plugin supports the output formats **PDF**, **PS** and **
 
  - bibtex or biber
  - makeindex including makeindex style file
- - nomencl (nomencl style file to be supported soon)
+ - nomencl including nomencl style file
 
 Logging / Debugging
 -------------------
@@ -86,6 +86,7 @@ buildSteps|The build steps executed for a single document. The keyword `LaTeX` d
 steps|Configuration for user-defined steps.| none
 keepIntermediateFile|Sets whether intermediate files created during the build should be kept.|`false`
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
+makeIndexNomenclStyleFile|Name of the nomencl style file to use for makeindex| nomencl.ist from the TeX distribution
 resources|A [FileSet](https://maven.apache.org/shared/file-management/apidocs/org/apache/maven/shared/model/fileset/FileSet.html) defining the resources to include from given dependencies.| By default all files with the following extensions will be included: tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf
 haltOnError|Sets whether the build should be stopped in case a single step finished with a non-zero exit code|true
 
@@ -99,6 +100,7 @@ Project|Description
 [configuration/dependencyincludes](mathan-latex-maven-plugin-it/src/test/resources/configuration/dependencyincludes)| Sample using .bib resources from dependency only. 
 [configuration/keepintermediatefiles](mathan-latex-maven-plugin-it/src/test/resources/configuration/keepintermediatefiles)| Sample not removing intermediate files created.
 [configuration/makeindexstylefile](mathan-latex-maven-plugin-it/src/test/resources/configuration/makeindexstylefile)| Sample using a style file for makeindex.
+[configuration/makeindexnomenclstylefile](mathan-latex-maven-plugin-it/src/test/resources/configuration/makeindexnomenclstylefile)| Sample using a style file for makeindexnomencl.
 [configuration/outputformat](mathan-latex-maven-plugin-it/src/test/resources/configuration/outputformat)| Sample using all supported output formats.
 [configuration/sourcedirectory](mathan-latex-maven-plugin-it/src/test/resources/configuration/sourcedirectory)| Sample using custom source directory.
 [configuration/texfile](mathan-latex-maven-plugin-it/src/test/resources/configuration/texfile)| Sample specifying master tex file.
