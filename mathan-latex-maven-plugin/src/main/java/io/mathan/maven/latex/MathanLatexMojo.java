@@ -139,6 +139,11 @@ public class MathanLatexMojo extends AbstractMojo {
   @Parameter
   private String makeIndexStyleFile;
 
+  /**
+   * Parameter defining an optional index style file for nomencl.
+   */
+  @Parameter(defaultValue = "nomencl.ist")
+  private String makeIndexNomenclStyleFile;
 
   /**
    * The entry point to Maven Artifact Resolver, i.e. the component doing all the work.
@@ -417,7 +422,8 @@ public class MathanLatexMojo extends AbstractMojo {
     // setup build steps
     List<Step> listBuildSteps = configureBuildSteps(listLatexSteps, listExecutables);
     // configure pre-defined steps
-    configureMakeIndex();
+    configureStyleFile(Step.STEP_MAKEINDEX, makeIndexStyleFile);
+    configureStyleFile(Step.STEP_MAKEINDEXNOMENCL, makeIndexNomenclStyleFile);
     // check if executables are available
     checkExecutables(listExecutables);
     return listBuildSteps;
@@ -517,17 +523,17 @@ public class MathanLatexMojo extends AbstractMojo {
   }
 
   /**
-   * Special configuration fot the step {@link Step#STEP_MAKEINDEX}. If a {@link #makeIndexStyleFile} is set, this is appended to the arguments of the executable. Otherwise no makeindex style file
-   * will be used.
+   * Special configuration for a step with a placeholder %style. This can be used to specify a certain style file for either {@link Step#STEP_MAKEINDEX} or @{@link Step#STEP_MAKEINDEXNOMENCL}. If a
+   * style file is set, this is appended to the arguments of the executable. Otherwise no style file will be used.
    */
-  private void configureMakeIndex() {
-    String arguments = Step.STEP_MAKEINDEX.getArguments();
-    if (makeIndexStyleFile == null || makeIndexStyleFile.isEmpty()) {
+  private void configureStyleFile(Step step, String styleFile) {
+    String arguments = step.getArguments();
+    if (styleFile == null || styleFile.isEmpty()) {
       arguments = arguments.replaceAll("-s\\s+%style", "");
     } else {
-      arguments = arguments.replaceAll("%style", makeIndexStyleFile);
+      arguments = arguments.replaceAll("%style", styleFile);
     }
-    Step.STEP_MAKEINDEX.setArguments(arguments);
+    step.setArguments(arguments);
   }
 
   /**

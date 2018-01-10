@@ -35,7 +35,7 @@ public class Step {
   public static final Step STEP_DVIPS = new Step("dvips", "dvips", Constants.FORMAT_DVI, Constants.FORMAT_PS, "-R0 -o %output %input", false, "log");
   public static final Step STEP_DVIPDFM = new Step("dvipdfm", "dbipdfm", Constants.FORMAT_DVI, Constants.FORMAT_PDF, "%input", false, "log");
   public static final Step STEP_PS2PDF = new Step("ps2pdf", "ps2pdf", Constants.FORMAT_PS, Constants.FORMAT_PDF, "%input", false, "log");
-  public static final Step STEP_MAKEINDEXNOMENCL = new Step("makeindexnomencl", "makeindex", Constants.FORMAT_NLO, Constants.FORMAT_NLS, "%input -s nomencl.ist -o %output", true, "ilg");
+  public static final Step STEP_MAKEINDEXNOMENCL = new Step("makeindexnomencl", "makeindex", Constants.FORMAT_NLO, Constants.FORMAT_NLS, "%input -s %style -o %output", true, "ilg");
 
 
   /**
