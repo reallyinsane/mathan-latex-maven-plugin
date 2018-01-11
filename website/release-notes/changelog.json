@@ -1,8 +1,10 @@
 {
-  "unreleased": [
-    "[New] ZIP dependencies can be used regardless of the artifact type (jar, zip, war, etc.)",
-    "[New] indexnomencl can be used with a custom style file."
-  ],
+  "unreleased": {
+    "0.9.1": [
+      "[New] ZIP dependencies can be used regardless of the artifact type (jar, zip, war, etc.)",
+      "[New] indexnomencl can be used with a custom style file."
+    ]
+  },
   "releases": {
     "0.9.0": [
       "[New] First release with of mathan-latex-maven-plugin"
