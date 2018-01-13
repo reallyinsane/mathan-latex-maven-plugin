@@ -93,7 +93,7 @@ haltOnError|Sets whether the build should be stopped in case a single step finis
 
 Samples / Integration tests
 ---------------------------
-The following integration tests are samples how to use mathan-latex-maven-plugin also. On [Travis](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin) all integration tests are executed successfully.
+The following integration tests are samples how to use mathan-latex-maven-plugin also. All integration test are executed on [Travis](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin) - successfully.
 
 Project|Description
 -------|-----------
