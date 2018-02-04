@@ -1,4 +1,5 @@
      
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.mathan.maven/mathan-latex-maven-plugin/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.mathan.maven/mathan-latex-maven-plugin)
 [![Build Status](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin.svg?branch=master)](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/911e2266a08840daa9e95c99ab2f9ab4)](https://www.codacy.com/app/reallyinsane/mathan-latex-maven-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reallyinsane/mathan-latex-maven-plugin&amp;utm_campaign=Badge_Grade)
 <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-apache2-blue.svg"></a>
@@ -93,7 +94,7 @@ haltOnError|Sets whether the build should be stopped in case a single step finis
 
 Samples / Integration tests
 ---------------------------
-The following integration tests are samples how to use mathan-latex-maven-plugin also.
+The following integration tests are samples how to use mathan-latex-maven-plugin also. All integration test are executed on [Travis](https://travis-ci.org/reallyinsane/mathan-latex-maven-plugin) - successfully.
 
 Project|Description
 -------|-----------

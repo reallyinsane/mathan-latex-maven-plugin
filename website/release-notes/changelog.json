@@ -1,7 +1,7 @@
 {
   "unreleased": [],
   "releases": {
-    "0.9.1": [
+    "1.0.0": [
       "[New] ZIP dependencies can be used regardless of the artifact type (jar, zip, war, etc.)",
       "[New] indexnomencl can be used with a custom style file."
     ],
