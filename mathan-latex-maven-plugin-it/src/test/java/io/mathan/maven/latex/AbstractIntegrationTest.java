@@ -15,7 +15,7 @@
  */
 package io.mathan.maven.latex;
 
-import io.mathan.maven.latex.internal.Step;
+import io.mathan.latex.core.Step;
 import java.io.File;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;

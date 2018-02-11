@@ -15,9 +15,9 @@
  */
 package io.mathan.maven.latex.configuration;
 
+import io.mathan.latex.core.Constants;
+import io.mathan.latex.core.Step;
 import io.mathan.maven.latex.AbstractIntegrationTest;
-import io.mathan.maven.latex.internal.Constants;
-import io.mathan.maven.latex.internal.Step;
 import org.apache.maven.it.VerificationException;
 import org.apache.maven.it.Verifier;
 import org.junit.Test;

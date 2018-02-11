@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.mathan.maven.latex.internal;
+package io.mathan.latex.core;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +28,6 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  * Utility class.
@@ -75,14 +74,14 @@ public class Utils {
    * @param directory The directory to search a file in.
    * @param extension The file extension.
    * @return If a single file is found, the file is returned. If no file matching the file extension was found, <code>null</code> is returned.
-   * @throws MojoExecutionException If more than one file with the given file extension was found.
+   * @throws LatexExecutionException If more than one file with the given file extension was found.
    */
-  public static File getFile(File directory, String extension) throws MojoExecutionException {
+  public static File getFile(File directory, String extension) throws LatexExecutionException {
     File[] files = directory.listFiles(pathname -> pathname.getName().endsWith("." + extension));
     if (files == null || files.length == 0) {
       return null;
     } else if (files.length > 1) {
-      throw new MojoExecutionException("Multiple " + extension + " files found");
+      throw new LatexExecutionException("Multiple " + extension + " files found");
     } else {
       return files[0];
     }

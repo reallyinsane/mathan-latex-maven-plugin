@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.mathan.maven.latex.internal;
+package io.mathan.latex.core;
 
 import java.io.File;
 

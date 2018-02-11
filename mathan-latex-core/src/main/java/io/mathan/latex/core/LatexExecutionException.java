@@ -1,5 +1,5 @@
 /*
- * Copyright 2017 Matthias Hanisch
+ * Copyright 2018 Matthias Hanisch
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,18 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package io.mathan.maven.latex.configuration;
 
-import io.mathan.latex.core.Step;
-import io.mathan.maven.latex.AbstractIntegrationTest;
-import org.apache.maven.it.Verifier;
-import org.junit.Test;
+package io.mathan.latex.core;
 
-public class MakeindexstylefileTest extends AbstractIntegrationTest {
+public class LatexExecutionException extends Exception {
 
-  @Test
-  public void stylefileExists() throws Exception {
-    Verifier verifier = verifier("configuration", "makeindexstylefile");
-    assertStepExecuted(verifier, Step.STEP_MAKEINDEX);
+  public LatexExecutionException(String message) {
+    super(message);
+  }
+
+  public LatexExecutionException(String message, Throwable cause) {
+    super(message, cause);
   }
 }

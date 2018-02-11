@@ -28,6 +28,7 @@
     <url>scm:git:https://github.com/reallyinsane/mathan-latex-maven-plugin/tree/master</url>
   </scm>
   <modules>
+    <module>mathan-latex-core</module>
     <module>mathan-latex-maven-plugin</module>
     <module>mathan-latex-maven-plugin-it</module>
   </modules>
