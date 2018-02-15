@@ -29,8 +29,10 @@
   </scm>
   <modules>
     <module>mathan-latex-core</module>
+    <module>mathan-latex-gradle-plugin</module>
+    <module>mathan-latex-it</module>
+    <module>mathan-it-verifier</module>
     <module>mathan-latex-maven-plugin</module>
-    <module>mathan-latex-maven-plugin-it</module>
   </modules>
 
 </project>
