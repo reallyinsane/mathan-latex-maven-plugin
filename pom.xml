@@ -2,11 +2,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven</groupId>
-  <artifactId>mathan-latex-maven-plugin-reactor</artifactId>
+  <artifactId>mathan-latex-plugin-reactor</artifactId>
   <version>0.9.1-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <description>Reactor for plugin an integration tests</description>
-  <name>Mathan LaTeX Maven Plugin Rector</name>
+  <description>Reactor for plugins an integration tests</description>
+  <name>Mathan LaTeX Plugin Rector</name>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
