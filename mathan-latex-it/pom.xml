@@ -72,8 +72,21 @@
     </dependency>
     <dependency>
       <groupId>io.mathan.maven</groupId>
+      <artifactId>mathan-latex-maven-plugin</artifactId>
+      <version>0.9.1-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.mathan.maven</groupId>
+      <artifactId>mathan-latex-gradle-plugin</artifactId>
+      <version>0.9.1-SNAPSHOT</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.mathan.maven</groupId>
       <artifactId>mathan-it-verifier</artifactId>
       <version>0.9.1-SNAPSHOT</version>
+      <scope>test</scope>
     </dependency>
   </dependencies>
 
