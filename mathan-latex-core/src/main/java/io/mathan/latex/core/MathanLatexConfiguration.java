@@ -65,9 +65,6 @@ public class MathanLatexConfiguration {
 
   private String texFile;
 
-  private Object project; // maven project
-  private Object resources; // maven FileSet
-
   /**
    * Parameter for controlling if build should be stopped in case the execution of a single step finished with an unexpected (non-zero) exit code. By default this parameter is set to <code>true</code>
    * but in some cases it may be useful to set it to <code>false</code>. This can be necessary if a tool finishes successfully but returns a non-zero exit code.
@@ -152,22 +149,6 @@ public class MathanLatexConfiguration {
 
   public void setTexFile(String texFile) {
     this.texFile = texFile;
-  }
-
-  public Object getProject() {
-    return project;
-  }
-
-  public void setProject(Object project) {
-    this.project = project;
-  }
-
-  public Object getResources() {
-    return resources;
-  }
-
-  public void setResources(Object resources) {
-    this.resources = resources;
   }
 
   public boolean isHaltOnError() {
