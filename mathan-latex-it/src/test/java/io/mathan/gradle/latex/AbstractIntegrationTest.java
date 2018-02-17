@@ -22,21 +22,24 @@ import io.mathan.maven.it.Verifier;
 import io.mathan.maven.it.VerifierException;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
-import org.junit.Before;
 import org.junit.runners.Parameterized.Parameters;
 
 public abstract class AbstractIntegrationTest {
 
   protected Build build;
 
-  private File temporaryDirectory;
+  private List<File> temporaryDirectories = new ArrayList<>();
+
 
   protected AbstractIntegrationTest(Build build) {
     this.build = build;
@@ -47,16 +50,23 @@ public abstract class AbstractIntegrationTest {
     return Arrays.asList(new Object[]{Build.Maven}, new Object[]{Build.Gradle});
   }
 
-  @Before
-  public void setup() {
+
+  private File createTemporaryDirectory() {
     String tempDirPath = System.getProperty("maven.test.tmpdir", System.getProperty("java.io.tmpdir"));
     File tempDir = new File(tempDirPath);
-    temporaryDirectory = new File(tempDir, UUID.randomUUID().toString());
+    File temporaryDirectory = new File(tempDir, UUID.randomUUID().toString());
+    temporaryDirectories.add(temporaryDirectory);
+    return temporaryDirectory;
   }
 
   @After
   public void cleanUp() throws Exception {
-    FileUtils.deleteDirectory(temporaryDirectory);
+    temporaryDirectories.forEach(dir -> {
+      try {
+        FileUtils.deleteDirectory(dir);
+      } catch (IOException e) {
+      }
+    });
   }
 
 
@@ -105,8 +115,8 @@ public abstract class AbstractIntegrationTest {
   }
 
   protected Verifier verifier(String category, String project, String goal, String extension, String classifier) throws Exception {
-//    File dir = ResourceExtractor.simpleExtractResources(getClass(), String.format("/%s/%s", category, project));
-    extractResourcesToTempDir(String.format("%s/%s", category, project));
+    File temporaryDirectory = createTemporaryDirectory();
+    extractResourcesToTempDir(String.format("%s/%s", category, project), temporaryDirectory);
     Verifier verifier = createVerifier(temporaryDirectory.getAbsolutePath());
     verifier.execute(goal);
     if (classifier == null) {
@@ -115,6 +125,20 @@ public abstract class AbstractIntegrationTest {
       verifier.assertFilePresent(String.format("target/%s-%s-%s.%s", project, VERSION, classifier, extension));
     }
     return verifier;
+  }
+
+  protected void publish(String category, String project) throws Exception {
+    File temporaryDirectory = createTemporaryDirectory();
+    extractResourcesToTempDir(String.format("%s/%s", category, project), temporaryDirectory);
+    Verifier verifier = createVerifier(temporaryDirectory.getAbsolutePath());
+    switch (build) {
+      case Gradle:
+        verifier.execute("publishToMavenLocal");
+        break;
+      case Maven:
+        verifier.execute("install");
+        break;
+    }
   }
 
   private Verifier createVerifier(String baseDirectory) {
@@ -148,7 +172,7 @@ public abstract class AbstractIntegrationTest {
     verifier.assertLogContainsText(String.format("[mathan] execution skipped: %s", step.getId()));
   }
 
-  private final void extractResourcesToTempDir(String path) {
+  private final void extractResourcesToTempDir(String path, File temporaryDirectory) {
     FastClasspathScanner scanner = new FastClasspathScanner();
     scanner.matchFilenamePattern(path + "/.*", (classpathElt, relativePath, inputStream, lengthBytes) -> {
       if (build.ignore(relativePath)) {

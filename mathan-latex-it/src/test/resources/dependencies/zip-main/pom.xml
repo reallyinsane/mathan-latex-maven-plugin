@@ -23,7 +23,6 @@
         <extensions>true</extensions>
         <configuration>
           <texFile>main.tex</texFile>
-          <keepIntermediateFiles>true</keepIntermediateFiles>
         </configuration>
       </plugin>
     </plugins>

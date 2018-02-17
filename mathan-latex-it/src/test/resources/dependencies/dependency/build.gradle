@@ -1,0 +1,15 @@
+group = 'io.mathan.maven.test'
+version = '0.9.1-SNAPSHOT'
+
+apply plugin: 'java'
+apply plugin: 'maven-publish'
+
+sourceSets.main.java.srcDirs = ['src/main/tex']
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+}

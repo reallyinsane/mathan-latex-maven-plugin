@@ -16,7 +16,6 @@
 
 package io.mathan.gradle.latex;
 
-import io.mathan.latex.core.MathanLatexConfiguration;
 import java.util.HashMap;
 import java.util.Map;
 import org.gradle.api.Plugin;
@@ -26,7 +25,7 @@ public class MathanLatexPlugin implements Plugin<Project> {
 
   @Override
   public void apply(Project project) {
-    MathanLatexConfiguration extension = project.getExtensions().create("latex", MathanLatexConfiguration.class);
+    MathanGradleLatexConfiguration extension = project.getExtensions().create("latex", MathanGradleLatexConfiguration.class);
     Map<String, Object> map = new HashMap<>();
     map.put("type", MathanLatexTask.class);
     MathanLatexTask task = (MathanLatexTask) project.task(map, "latex");

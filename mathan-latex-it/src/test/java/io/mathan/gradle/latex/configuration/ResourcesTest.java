@@ -29,7 +29,7 @@ public class ResourcesTest extends AbstractIntegrationTest {
 
   @Test
   public void bibtex() throws Exception {
-    verifier("dependencies", "dependency", "install", "jar", null);
+    publish("dependencies", "dependency");
     verifier("configuration", "resources");
   }
 }

@@ -18,16 +18,15 @@ package io.mathan.gradle.latex;
 
 import io.mathan.gradle.latex.internal.GradleBuild;
 import io.mathan.latex.core.LatexExecutionException;
-import io.mathan.latex.core.MathanLatexConfiguration;
 import io.mathan.latex.core.MathanLatexRunner;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.tasks.TaskAction;
 
 public class MathanLatexTask extends DefaultTask {
 
-  private MathanLatexConfiguration configuration;
+  private MathanGradleLatexConfiguration configuration;
 
-  public void setConfiguration(MathanLatexConfiguration configuration) {
+  public void setConfiguration(MathanGradleLatexConfiguration configuration) {
     this.configuration = configuration;
   }
 

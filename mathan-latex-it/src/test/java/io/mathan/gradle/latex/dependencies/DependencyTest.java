@@ -29,13 +29,13 @@ public class DependencyTest extends AbstractIntegrationTest {
 
   @Test
   public void includeFromJar() throws Exception {
-    verifier("dependencies", "dependency", "install", "jar", null);
+    publish("dependencies", "dependency");
     verifier("dependencies", "main");
   }
 
   @Test
   public void includeFromZip() throws Exception {
-    verifier("dependencies", "zip-dependency", "install", "zip", "any");
+    publish("dependencies", "zip-dependency");
     verifier("dependencies", "zip-main");
   }
 

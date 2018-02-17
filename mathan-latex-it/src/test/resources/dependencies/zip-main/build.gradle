@@ -1,0 +1,21 @@
+version = '0.9.1-SNAPSHOT'
+apply plugin: 'java'
+
+dependencies {
+    compile('io.mathan.maven.test:zip-dependency:0.9.1-SNAPSHOT')
+}
+
+buildscript {
+    repositories {
+        mavenLocal()
+    }
+    dependencies {
+        classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
+                version: '0.9.1-SNAPSHOT'
+    }
+}
+apply plugin: 'io.mathan.latex'
+
+latex {
+    texFile = 'main.tex'
+}
