@@ -5,6 +5,7 @@ import org.gradle.api.file.ConfigurableFileTree;
 
 public class MathanGradleLatexConfiguration extends MathanLatexConfiguration {
 
+  private String configurationName = "compile";
   private ConfigurableFileTree resources;
 
   public ConfigurableFileTree getResources() {
@@ -13,5 +14,13 @@ public class MathanGradleLatexConfiguration extends MathanLatexConfiguration {
 
   public void setResources(ConfigurableFileTree resources) {
     this.resources = resources;
+  }
+
+  public String getConfigurationName() {
+    return configurationName;
+  }
+
+  public void setConfigurationName(String configurationName) {
+    this.configurationName = configurationName;
   }
 }

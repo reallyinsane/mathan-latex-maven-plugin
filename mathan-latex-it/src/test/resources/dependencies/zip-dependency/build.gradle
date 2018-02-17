@@ -1,15 +1,19 @@
 group = 'io.mathan.maven.test'
 version = '0.9.1-SNAPSHOT'
 
-apply plugin: 'java'
 apply plugin: 'maven-publish'
 
-sourceSets.main.java.srcDirs = ['src/main/tex']
+task makeZip(type: Zip) {
+    from('src/main/tex')
+}
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
-            from components.java
+        mavenZip(MavenPublication) {
+            artifact makeZip {
+                classifier "any"
+                extension "zip"
+            }
         }
     }
 }

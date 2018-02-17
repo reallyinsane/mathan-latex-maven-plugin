@@ -36,6 +36,8 @@ import org.junit.runners.Parameterized.Parameters;
 
 public abstract class AbstractIntegrationTest {
 
+  private static final boolean DELETE_TEMP_DIRECTORIES = true;
+
   protected Build build;
 
   private List<File> temporaryDirectories = new ArrayList<>();
@@ -61,12 +63,14 @@ public abstract class AbstractIntegrationTest {
 
   @After
   public void cleanUp() throws Exception {
-    temporaryDirectories.forEach(dir -> {
-      try {
-        FileUtils.deleteDirectory(dir);
-      } catch (IOException e) {
-      }
-    });
+    if (DELETE_TEMP_DIRECTORIES) {
+      temporaryDirectories.forEach(dir -> {
+        try {
+          FileUtils.deleteDirectory(dir);
+        } catch (IOException e) {
+        }
+      });
+    }
   }
 
 

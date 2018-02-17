@@ -5,6 +5,10 @@ dependencies {
     compile('io.mathan.maven.test:dependency:0.9.1-SNAPSHOT')
 }
 
+repositories {
+    mavenLocal()
+}
+
 buildscript {
     repositories {
         mavenLocal()

@@ -34,13 +34,12 @@ public class MathanLatexTask extends DefaultTask {
   public void latex() {
     configuration.setKeepIntermediateFiles(true);
 
-    MathanLatexRunner runner = new MathanLatexRunner(configuration, new GradleBuild(this.getProject(), this));
+    MathanLatexRunner runner = new MathanLatexRunner(configuration, new GradleBuild(this.getProject(), this, configuration));
     try {
       runner.execute();
     } catch (LatexExecutionException e) {
       e.printStackTrace();
     }
-    System.out.println("heyou");
   }
 
 }

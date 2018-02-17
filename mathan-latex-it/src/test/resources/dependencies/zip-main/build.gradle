@@ -2,7 +2,11 @@ version = '0.9.1-SNAPSHOT'
 apply plugin: 'java'
 
 dependencies {
-    compile('io.mathan.maven.test:zip-dependency:0.9.1-SNAPSHOT')
+    compile('io.mathan.maven.test:zip-dependency:0.9.1-SNAPSHOT:any@zip')
+}
+
+repositories {
+    mavenLocal()
 }
 
 buildscript {

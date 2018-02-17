@@ -16,23 +16,37 @@
 
 package io.mathan.gradle.latex.internal;
 
+import io.mathan.gradle.latex.MathanGradleLatexConfiguration;
 import io.mathan.latex.core.Build;
 import io.mathan.latex.core.BuildLog;
 import io.mathan.latex.core.LatexExecutionException;
+import io.mathan.latex.core.Utils;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.gradle.api.DefaultTask;
 import org.gradle.api.Project;
+import org.gradle.api.Task;
+import org.gradle.api.artifacts.Configuration;
+import org.gradle.api.file.ConfigurableFileTree;
+import org.gradle.api.file.FileVisitDetails;
+import org.gradle.api.file.FileVisitor;
 import org.zeroturnaround.exec.stream.LogOutputStream;
 
 public class GradleBuild implements Build {
 
   private Project project;
   private DefaultTask task;
+  private final MathanGradleLatexConfiguration configuration;
 
-  public GradleBuild(Project project, DefaultTask task) {
+  public GradleBuild(Project project, DefaultTask task, MathanGradleLatexConfiguration configuration) {
 
     this.project = project;
     this.task = task;
+    this.configuration = configuration;
   }
 
   @Override
@@ -61,6 +75,12 @@ public class GradleBuild implements Build {
 
   @Override
   public void resolveDependencies(File workingDirectory) throws LatexExecutionException {
+    Configuration compile = getProject().getConfigurations().findByName(this.configuration.getConfigurationName());
+    if (compile != null) {
+      for (File file : compile.getFiles()) {
+        extractArchive(file, workingDirectory);
+      }
+    }
   }
 
   @Override
@@ -71,5 +91,58 @@ public class GradleBuild implements Build {
   @Override
   public LogOutputStream getRedirectError(String prefix) {
     return GradleLogOutputStream.toError(task.getLogger(), prefix);
+  }
+
+  private Project getProject() {
+    return this.project;
+  }
+
+  private Task getTask() {
+    return this.task;
+  }
+
+  private void extractArchive(File archive, File workingDirectory) throws LatexExecutionException {
+    File archiveContent = null;
+    try {
+      archiveContent = Utils.extractArchive(archive);
+    } catch (IOException e) {
+      throw new LatexExecutionException(String.format("Could not copy artifact %s", archive.getName()), e);
+    }
+    ConfigurableFileTree fileTree = configuration.getResources();
+    if (fileTree == null) {
+      fileTree = project.fileTree(archiveContent.getAbsolutePath());
+    } else {
+      fileTree.setDir(archiveContent.getAbsolutePath());
+    }
+    fileTree.visit(new FileVisitor() {
+      @Override
+      public void visitDir(FileVisitDetails dirDetails) {
+
+      }
+
+      @Override
+      public void visitFile(FileVisitDetails fileDetails) {
+        try {
+          File dest = new File(workingDirectory, fileDetails.getRelativePath().getPathString());
+          getLog().info(String.format("[mathan] including resource %s", fileDetails.getRelativePath().getPathString()));
+          if (!dest.getParentFile().exists() && !dest.getParentFile().mkdirs()) {
+            throw new IOException("Could not create directory " + dest.getParentFile().getAbsolutePath());
+          }
+          FileInputStream in = new FileInputStream(fileDetails.getFile());
+          FileOutputStream out = new FileOutputStream(dest);
+          IOUtils.copy(in, out);
+          in.close();
+          out.close();
+        } catch (IOException e) {
+          e.printStackTrace();
+        }
+      }
+    });
+
+    try {
+      FileUtils.deleteDirectory(archiveContent);
+    } catch (IOException e) {
+      throw new LatexExecutionException(String.format("Could not copy artifact %s", archive.getName()), e);
+    }
   }
 }
