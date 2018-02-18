@@ -4,16 +4,19 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/911e2266a08840daa9e95c99ab2f9ab4)](https://www.codacy.com/app/reallyinsane/mathan-latex-maven-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reallyinsane/mathan-latex-maven-plugin&amp;utm_campaign=Badge_Grade)
 <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-apache2-blue.svg"></a>
 
-mathan-latex-maven-plugin
-=======================
+# mathan-latex-maven-plugin / mathan-latex-gradle-plugin
+
+Run LaTeX with this project either with Maven or Gradle.
+
+##mathan-latex-maven-plugin
+
 This is **THE** maven plugin to generate PDF, PS or DVI from LaTeX sources.
 
 There have been some maven plugins around trying to provide an easy way to run LaTeX with maven. But it was never as easy as it should be. A lot of configuration had to be made to get the plugins working. And many of them are not maintained any more.
 
 [**mathan-latex-maven-plugin**](maven.md) changes this. It is very easy to to use and there is little or no configuration needed for the default use cases.
 
-Usage
------
+### Usage
 Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single maven module using mathan-latex-maven-plugin a PDF artifact is created. If you want to split the .tex sources or reuse them in multiple maven modules consider the [Dependencies](#dependencies) section.
 
 *The minimal configuration looks like this:*
@@ -34,8 +37,7 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single ma
 
 You can find more details about the configuration [here](maven.md).
 
-mathan-latex-gradle-plugin
-==========================
+##mathan-latex-gradle-plugin
 
 This is **THE** alternative to generate PDF, PS, DVI from LaTeX sources with Gradle.
  
@@ -43,8 +45,7 @@ There have been a few gradle plugins around trying to provide a way to run LaTeX
 
 For gradle [**mathan-latex-gradle-plugin**](gradle.md) changes this. It is very easy to to use and there is little or no configuration needed for the default use cases.
 
-Usage
------
+### Usage
 
 After applying the plugin you can use the task **latex**.
 
