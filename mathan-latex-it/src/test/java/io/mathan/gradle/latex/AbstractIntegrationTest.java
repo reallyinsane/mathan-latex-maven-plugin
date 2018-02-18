@@ -32,11 +32,13 @@ import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.junit.After;
 import org.junit.Assert;
+import org.junit.Rule;
+import org.junit.rules.TestName;
 import org.junit.runners.Parameterized.Parameters;
 
 public abstract class AbstractIntegrationTest {
 
-  private static final boolean DELETE_TEMP_DIRECTORIES = true;
+  private static final boolean DELETE_TEMP_DIRECTORIES = Boolean.getBoolean("mathan-temp-dir");
 
   protected Build build;
 
@@ -52,11 +54,15 @@ public abstract class AbstractIntegrationTest {
     return Arrays.asList(new Object[]{Build.Maven}, new Object[]{Build.Gradle});
   }
 
+  @Rule
+  public TestName name = new TestName();
+
 
   private File createTemporaryDirectory() {
     String tempDirPath = System.getProperty("maven.test.tmpdir", System.getProperty("java.io.tmpdir"));
     File tempDir = new File(tempDirPath);
     File temporaryDirectory = new File(tempDir, UUID.randomUUID().toString());
+    System.out.println(String.format("temporary directory for %s: %s", name.getMethodName(), temporaryDirectory.getAbsolutePath()));
     temporaryDirectories.add(temporaryDirectory);
     return temporaryDirectory;
   }
