@@ -33,7 +33,7 @@ import org.apache.maven.shared.utils.cli.WriterStreamConsumer;
 import org.apache.maven.shared.utils.io.IOUtil;
 
 /**
- * Replacement for mathan-verifier supporting execution of any command. The Verifier executes a command and can then check for presence of files or checking the log content.
+ * Replacement for maven-verifier supporting execution of any command. The Verifier executes a command and can then check for presence of files or checking the log content.
  */
 public abstract class Verifier {
 

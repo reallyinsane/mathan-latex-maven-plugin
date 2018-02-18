@@ -42,4 +42,9 @@ public class Constants {
   public static final String FORMAT_BCF = "bcf";
   public static final String FORMAT_NLO = "nlo";
   public static final String FORMAT_NLS = "nls";
+
+  public static final String[] RESOURCES_DEFAULT_EXTENSTIONS = {
+      Constants.FORMAT_TEX, Constants.FORMAT_CLS, Constants.FORMAT_CLO, Constants.FORMAT_STY,
+      Constants.FORMAT_BIB, Constants.FORMAT_BST, Constants.FORMAT_IDX, Constants.FORMAT_IST,
+      Constants.FORMAT_GLO, Constants.FORMAT_EPS, Constants.FORMAT_PDF};
 }

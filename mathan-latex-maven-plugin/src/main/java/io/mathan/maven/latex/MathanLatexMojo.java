@@ -47,10 +47,6 @@ import org.eclipse.aether.repository.RemoteRepository;
 @Mojo(name = "latex")
 public class MathanLatexMojo extends AbstractMojo {
 
-  private static final String[] RESOURCES_DEFAULT_EXTENSTIONS = {
-      Constants.FORMAT_TEX, Constants.FORMAT_CLS, Constants.FORMAT_CLO, Constants.FORMAT_STY,
-      Constants.FORMAT_BIB, Constants.FORMAT_BST, Constants.FORMAT_IDX, Constants.FORMAT_IST,
-      Constants.FORMAT_GLO, Constants.FORMAT_EPS, Constants.FORMAT_PDF};
 
   /**
    * The defualt execution chain defines the order of the tool execution.
@@ -203,7 +199,7 @@ public class MathanLatexMojo extends AbstractMojo {
   private void configureResourcesOfDependencies() {
     if (resources == null) {
       resources = new FileSet();
-      for (String include : RESOURCES_DEFAULT_EXTENSTIONS) {
+      for (String include : Constants.RESOURCES_DEFAULT_EXTENSTIONS) {
         resources.addInclude("**/*." + include);
       }
     }

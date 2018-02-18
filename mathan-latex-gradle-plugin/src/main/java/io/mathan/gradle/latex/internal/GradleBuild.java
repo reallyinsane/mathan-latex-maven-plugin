@@ -19,6 +19,7 @@ package io.mathan.gradle.latex.internal;
 import io.mathan.gradle.latex.MathanGradleLatexConfiguration;
 import io.mathan.latex.core.Build;
 import io.mathan.latex.core.BuildLog;
+import io.mathan.latex.core.Constants;
 import io.mathan.latex.core.LatexExecutionException;
 import io.mathan.latex.core.Utils;
 import java.io.File;
@@ -111,6 +112,9 @@ public class GradleBuild implements Build {
     ConfigurableFileTree fileTree = configuration.getResources();
     if (fileTree == null) {
       fileTree = project.fileTree(archiveContent.getAbsolutePath());
+      for (String include : Constants.RESOURCES_DEFAULT_EXTENSTIONS) {
+        fileTree.include("**/*." + include);
+      }
     } else {
       fileTree.setDir(archiveContent.getAbsolutePath());
     }
