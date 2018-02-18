@@ -17,7 +17,7 @@ There have been some maven plugins around trying to provide an easy way to run L
 [**mathan-latex-maven-plugin**](maven.md) changes this. It is very easy to to use and there is little or no configuration needed for the default use cases.
 
 ### Usage
-Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single maven module using mathan-latex-maven-plugin a PDF artifact is created. If you want to split the .tex sources or reuse them in multiple maven modules consider the [Dependencies](#dependencies) section.
+Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single maven module using mathan-latex-maven-plugin a PDF artifact is created.
 
 *The minimal configuration looks like this:*
 ```
@@ -35,7 +35,7 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single ma
 </build>
 ```
 
-You can find more details about the configuration [here](maven.md).
+You can find more details about the configuration [**here**](maven.md).
 
 ##mathan-latex-gradle-plugin
 
@@ -58,3 +58,5 @@ buildscript {
 }
 apply plugin: 'io.mathan.latex'
 ``` 
+
+You can find more details about the configuration [**here**](gradle.md).
