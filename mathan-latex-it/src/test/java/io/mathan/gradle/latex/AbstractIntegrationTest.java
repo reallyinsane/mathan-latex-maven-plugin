@@ -38,7 +38,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 public abstract class AbstractIntegrationTest {
 
-  private static final boolean DELETE_TEMP_DIRECTORIES = Boolean.getBoolean("mathan-temp-dir");
+  private static final boolean KEEP_TEMP_DIR = Boolean.getBoolean("mathan-keep-temp-dir");
 
   protected Build build;
 
@@ -69,7 +69,7 @@ public abstract class AbstractIntegrationTest {
 
   @After
   public void cleanUp() throws Exception {
-    if (DELETE_TEMP_DIRECTORIES) {
+    if (!KEEP_TEMP_DIR) {
       temporaryDirectories.forEach(dir -> {
         try {
           FileUtils.deleteDirectory(dir);

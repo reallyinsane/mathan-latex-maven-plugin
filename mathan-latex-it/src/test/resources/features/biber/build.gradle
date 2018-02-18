@@ -3,6 +3,7 @@ version = '0.9.1-SNAPSHOT'
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
     }
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
