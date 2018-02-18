@@ -39,8 +39,8 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
 
 public class GradleBuild implements Build {
 
-  private Project project;
-  private DefaultTask task;
+  private final Project project;
+  private final DefaultTask task;
   private final MathanGradleLatexConfiguration configuration;
 
   public GradleBuild(Project project, DefaultTask task, MathanGradleLatexConfiguration configuration) {
@@ -52,22 +52,22 @@ public class GradleBuild implements Build {
 
   @Override
   public BuildLog getLog() {
-    return new GradleBuildLog(task.getLogger());
+    return new GradleBuildLog(getTask().getLogger());
   }
 
   @Override
   public File getBasedir() {
-    return project.getProjectDir();
+    return getProject().getProjectDir();
   }
 
   @Override
   public String getArtifactId() {
-    return project.getName();
+    return getProject().getName();
   }
 
   @Override
   public String getVersion() {
-    return project.getVersion().toString();
+    return getProject().getVersion().toString();
   }
 
   @Override
@@ -76,7 +76,7 @@ public class GradleBuild implements Build {
 
   @Override
   public void resolveDependencies(File workingDirectory) throws LatexExecutionException {
-    Configuration compile = getProject().getConfigurations().findByName(this.configuration.getConfigurationName());
+    Configuration compile = getProject().getConfigurations().findByName(getConfiguration().getConfigurationName());
     if (compile != null) {
       for (File file : compile.getFiles()) {
         extractArchive(file, workingDirectory);
@@ -86,12 +86,12 @@ public class GradleBuild implements Build {
 
   @Override
   public LogOutputStream getRedirectOutput(String prefix) {
-    return GradleLogOutputStream.toDebug(task.getLogger(), prefix);
+    return GradleLogOutputStream.toDebug(getTask().getLogger(), prefix);
   }
 
   @Override
   public LogOutputStream getRedirectError(String prefix) {
-    return GradleLogOutputStream.toError(task.getLogger(), prefix);
+    return GradleLogOutputStream.toError(getTask().getLogger(), prefix);
   }
 
   private Project getProject() {
@@ -102,16 +102,20 @@ public class GradleBuild implements Build {
     return this.task;
   }
 
+  public MathanGradleLatexConfiguration getConfiguration() {
+    return configuration;
+  }
+
   private void extractArchive(File archive, File workingDirectory) throws LatexExecutionException {
-    File archiveContent = null;
+    File archiveContent;
     try {
       archiveContent = Utils.extractArchive(archive);
     } catch (IOException e) {
       throw new LatexExecutionException(String.format("Could not copy artifact %s", archive.getName()), e);
     }
-    ConfigurableFileTree fileTree = configuration.getResources();
+    ConfigurableFileTree fileTree = getConfiguration().getResources();
     if (fileTree == null) {
-      fileTree = project.fileTree(archiveContent.getAbsolutePath());
+      fileTree = getProject().fileTree(archiveContent.getAbsolutePath());
       for (String include : Constants.RESOURCES_DEFAULT_EXTENSTIONS) {
         fileTree.include("**/*." + include);
       }

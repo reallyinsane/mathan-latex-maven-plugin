@@ -23,7 +23,7 @@ public class GradleBuildLog implements BuildLog {
 
   private final Logger logger;
 
-  public GradleBuildLog(Logger logger) {
+  GradleBuildLog(Logger logger) {
     this.logger = logger;
   }
 

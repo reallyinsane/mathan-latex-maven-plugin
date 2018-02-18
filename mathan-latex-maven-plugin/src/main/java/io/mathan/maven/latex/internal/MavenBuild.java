@@ -100,7 +100,7 @@ public class MavenBuild implements Build {
     return LatexPluginLogOutputStream.toMavenError(getMojo().getLog(), prefix);
   }
 
-  public AbstractMojo getMojo() {
+  private AbstractMojo getMojo() {
     return mojo;
   }
 
@@ -116,7 +116,7 @@ public class MavenBuild implements Build {
     this.project = project;
   }
 
-  public RepositorySystem getRepoSystem() {
+  private RepositorySystem getRepoSystem() {
     return repoSystem;
   }
 
@@ -124,7 +124,7 @@ public class MavenBuild implements Build {
     this.repoSystem = repoSystem;
   }
 
-  public RepositorySystemSession getRepoSession() {
+  private RepositorySystemSession getRepoSession() {
     return repoSession;
   }
 
@@ -132,7 +132,7 @@ public class MavenBuild implements Build {
     this.repoSession = repoSession;
   }
 
-  public List<RemoteRepository> getRemoteRepos() {
+  private List<RemoteRepository> getRemoteRepos() {
     return remoteRepos;
   }
 

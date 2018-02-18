@@ -23,7 +23,7 @@ public class MavenBuildLog implements BuildLog {
 
   private Log log;
 
-  public MavenBuildLog(Log log) {
+  MavenBuildLog(Log log) {
 
     this.log = log;
   }
