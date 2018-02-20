@@ -8,7 +8,7 @@
 
 Run LaTeX with this project either with Maven or Gradle.
 
-##mathan-latex-maven-plugin
+## mathan-latex-maven-plugin
 
 This is **THE** maven plugin to generate PDF, PS or DVI from LaTeX sources.
 
@@ -37,7 +37,7 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single ma
 
 You can find more details about the configuration [**here**](maven.md).
 
-##mathan-latex-gradle-plugin
+## mathan-latex-gradle-plugin
 
 This is **THE** alternative to generate PDF, PS, DVI from LaTeX sources with Gradle.
  
