@@ -137,7 +137,7 @@ public abstract class Verifier {
    */
   public static class Maven extends Verifier {
 
-    private String executable = System.getProperty("os.name", "generic").toLowerCase().contains("win") ? "mvn.cmd" : "mvn.sh";
+    private String executable = System.getProperty("os.name", "generic").toLowerCase().contains("win") ? "mvn.cmd" : "mvn";
 
     Maven(String baseDiretory) {
       this(baseDiretory, new Options());
@@ -170,7 +170,7 @@ public abstract class Verifier {
    */
   public static class Gradle extends Verifier {
 
-    private String executable = System.getProperty("os.name", "generic").toLowerCase().contains("win") ? "gradle.bat" : "gradle.sh";
+    private String executable = System.getProperty("os.name", "generic").toLowerCase().contains("win") ? "gradle.bat" : "gradle";
 
     Gradle(String baseDiretory) {
       this(baseDiretory, new Options());
