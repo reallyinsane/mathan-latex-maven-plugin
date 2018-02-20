@@ -145,11 +145,12 @@ public abstract class AbstractIntegrationTest {
   }
 
   private Verifier createVerifier(String baseDirectory) {
+    Options options = new Options();
+    options.setWorkingDirectory(baseDirectory);
     switch (build) {
       case Maven:
-        return Verifier.Maven.create(baseDirectory);
+        return Verifier.Maven.create(baseDirectory, options);
       case Gradle:
-        Options options = new Options();
         // enable log output for level INFO
         options.getCommandLineArguments().add("-i");
         return Verifier.Gradle.create(baseDirectory, options);

@@ -16,21 +16,16 @@
 
 package io.mathan.maven.it;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.Writer;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.maven.shared.utils.cli.CommandLineException;
-import org.apache.maven.shared.utils.cli.CommandLineUtils;
-import org.apache.maven.shared.utils.cli.Commandline;
-import org.apache.maven.shared.utils.cli.StreamConsumer;
-import org.apache.maven.shared.utils.cli.WriterStreamConsumer;
-import org.apache.maven.shared.utils.io.IOUtil;
+import org.zeroturnaround.exec.ProcessExecutor;
 
 /**
  * Replacement for maven-verifier supporting execution of any command. The Verifier executes a command and can then check for presence of files or checking the log content.
@@ -67,7 +62,7 @@ public abstract class Verifier {
    *
    * @return The command line.
    */
-  protected abstract Commandline createCommandline();
+  protected abstract String getExecutable();
 
   /**
    * Executes the given action with this Verifier.
@@ -77,25 +72,24 @@ public abstract class Verifier {
    * @throws VerifierException If the execution failed.
    */
   public int execute(String action) throws VerifierException {
-    Commandline cmd = createCommandline();
-    processOptions(cmd);
-    cmd.createArg().setValue(action);
-    Writer logWriter = null;
+    List<String> commands = new ArrayList<>();
+    commands.add(getExecutable());
+    commands.addAll(options.getCommandLineArguments());
+    commands.add(action);
+    ProcessExecutor executor = new ProcessExecutor(commands);
+    if (options.getWorkingDirectory() != null) {
+      executor.directory(new File(options.getWorkingDirectory()));
+    }
+    OutputStream logStream = null;
     try {
-      logWriter = new FileWriter(new File(baseDirectory, LOG_FILENAME));
-      StreamConsumer out = new WriterStreamConsumer(logWriter);
-      StreamConsumer err = new WriterStreamConsumer(logWriter);
-      return CommandLineUtils.executeCommandLine(cmd, out, err);
-    } catch (IOException | CommandLineException e) {
+      logStream = new FileOutputStream(new File(baseDirectory, LOG_FILENAME));
+      executor.redirectOutput(logStream);
+      executor.redirectError(logStream);
+      return executor.execute().getExitValue();
+    } catch (IOException | InterruptedException | TimeoutException e) {
       throw new VerifierException(String.format("Could not execute '%s'", action), e);
     } finally {
-      IOUtils.closeQuietly(logWriter);
-    }
-  }
-
-  private void processOptions(Commandline cmd) {
-    for (String commandLineArgument : options.getCommandLineArguments()) {
-      cmd.createArg().setValue(commandLineArgument);
+      IOUtils.closeQuietly(logStream);
     }
   }
 
@@ -120,7 +114,12 @@ public abstract class Verifier {
    */
   public void assertLogContainsText(String text) throws VerifierException {
     File logFile = new File(baseDirectory, LOG_FILENAME);
-    List<String> lines = loadFile(logFile);
+    List<String> lines = null;
+    try {
+      lines = FileUtils.readLines(logFile, "UTF-8");
+    } catch (IOException e) {
+      throw new VerifierException(String.format("Could not read log file %s", logFile.getAbsolutePath()), e);
+    }
     boolean result = false;
     for (String line : lines) {
       if (line.contains(text)) {
@@ -133,42 +132,12 @@ public abstract class Verifier {
     }
   }
 
-  private List<String> loadFile(File file)
-      throws VerifierException {
-    List<String> lines = new ArrayList<String>();
-
-    BufferedReader reader = null;
-
-    if (file.exists()) {
-      try {
-        reader = new BufferedReader(new FileReader(file));
-
-        String line = reader.readLine();
-
-        while (line != null) {
-          line = line.trim();
-
-          if (!line.startsWith("#") && line.length() != 0) {
-            lines.add(line);
-          }
-          line = reader.readLine();
-        }
-
-        reader.close();
-      } catch (IOException e) {
-        throw new VerifierException("Could not read log file", e);
-      } finally {
-        IOUtil.close(reader);
-      }
-    }
-
-    return lines;
-  }
-
   /**
    * Verifier executing the maven command.
    */
   public static class Maven extends Verifier {
+
+    private String executable = System.getProperty("os.name", "generic").toLowerCase().contains("win") ? "mvn.cmd" : "mvn.sh";
 
     Maven(String baseDiretory) {
       this(baseDiretory, new Options());
@@ -178,12 +147,13 @@ public abstract class Verifier {
       super(baseDiretory, options);
     }
 
+    public void setExecutable(String executable) {
+      this.executable = executable;
+    }
+
     @Override
-    protected Commandline createCommandline() {
-      Commandline cmd = new Commandline();
-      cmd.setExecutable("mvn");
-      cmd.setWorkingDirectory(getBaseDirectory());
-      return cmd;
+    public String getExecutable() {
+      return executable;
     }
 
     public static Verifier create(String baseDiretory) {
@@ -200,6 +170,8 @@ public abstract class Verifier {
    */
   public static class Gradle extends Verifier {
 
+    private String executable = System.getProperty("os.name", "generic").toLowerCase().contains("win") ? "gradle.bat" : "gradle.sh";
+
     Gradle(String baseDiretory) {
       this(baseDiretory, new Options());
     }
@@ -209,11 +181,12 @@ public abstract class Verifier {
     }
 
     @Override
-    protected Commandline createCommandline() {
-      Commandline cmd = new Commandline();
-      cmd.setExecutable("gradle");
-      cmd.setWorkingDirectory(getBaseDirectory());
-      return cmd;
+    public String getExecutable() {
+      return executable;
+    }
+
+    public void setExecutable(String executable) {
+      this.executable = executable;
     }
 
     public static Verifier create(String baseDiretory) {

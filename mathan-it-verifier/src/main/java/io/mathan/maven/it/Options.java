@@ -24,6 +24,7 @@ import java.util.List;
  */
 public class Options {
 
+  private String workingDirectory;
   private List<String> commandLineArguments = new ArrayList<>();
 
   /**
@@ -33,5 +34,13 @@ public class Options {
    */
   public List<String> getCommandLineArguments() {
     return commandLineArguments;
+  }
+
+  public String getWorkingDirectory() {
+    return workingDirectory;
+  }
+
+  public void setWorkingDirectory(String workingDirectory) {
+    this.workingDirectory = workingDirectory;
   }
 }
