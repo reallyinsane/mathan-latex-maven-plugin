@@ -22,10 +22,7 @@ import io.mathan.latex.core.MathanLatexConfiguration;
 import io.mathan.latex.core.MathanLatexRunner;
 import io.mathan.latex.core.Step;
 import io.mathan.maven.latex.internal.MavenBuild;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -46,22 +43,6 @@ import org.eclipse.aether.repository.RemoteRepository;
  */
 @Mojo(name = "latex")
 public class MathanLatexMojo extends AbstractMojo {
-
-
-  /**
-   * The defualt execution chain defines the order of the tool execution.
-   */
-  private static final String[] DEFAULT_BUILD_STEPS = {
-      Constants.LaTeX, Step.STEP_BIBTEX.getId(), Step.STEP_MAKEINDEX.getId(), Step.STEP_MAKEINDEXNOMENCL.getId(), Constants.LaTeX,
-      Constants.LaTeX};
-
-  /**
-   * This list includes the predefined execution steps supported by this plugin.
-   */
-  private static final List<Step> DEFAULT_EXECUTABLES = Arrays.asList(
-      Step.STEP_BIBER, Step.STEP_BIBTEX, Step.STEP_DVIPDFM, Step.STEP_DVIPS, Step.STEP_LATEX, Step.STEP_LULATEX,
-      Step.STEP_MAKEINDEX, Step.STEP_MAKEINDEXNOMENCL, Step.STEP_PDFLATEX, Step.STEP_PS2PDF,
-      Step.STEP_XELATEX);
 
   /**
    * The output format. Supported are dvi, pdf and ps.
@@ -156,12 +137,6 @@ public class MathanLatexMojo extends AbstractMojo {
 
 
   /**
-   * The registry of all steps available. This registry will contain the default steps provided by the mathan-latex-maven-plugin itself and the user defined steps provided with the parameter {@link
-   * #steps}.
-   */
-  private Map<String, Step> stepRegistry = new HashMap<>();
-
-  /**
    * {@inheritDoc}
    */
   public void execute() throws MojoExecutionException, MojoFailureException {
@@ -180,13 +155,7 @@ public class MathanLatexMojo extends AbstractMojo {
     latexConfiguration.setTexBin(texBin);
     latexConfiguration.setTexFile(texFile);
 
-    MavenBuild build = new MavenBuild();
-    build.setMojo(this);
-    build.setProject(project);
-    build.setRemoteRepos(remoteRepos);
-    build.setRepoSession(repoSession);
-    build.setRepoSystem(repoSystem);
-    build.setResources(resources);
+    MavenBuild build = new MavenBuild(this);
 
     MathanLatexRunner runner = new MathanLatexRunner(latexConfiguration, build);
     try {
@@ -203,5 +172,25 @@ public class MathanLatexMojo extends AbstractMojo {
         resources.addInclude("**/*." + include);
       }
     }
+  }
+
+  public MavenProject getProject() {
+    return project;
+  }
+
+  public List<RemoteRepository> getRemoteRepos() {
+    return remoteRepos;
+  }
+
+  public RepositorySystem getRepoSystem() {
+    return repoSystem;
+  }
+
+  public RepositorySystemSession getRepoSession() {
+    return repoSession;
+  }
+
+  public FileSet getResources() {
+    return resources;
   }
 }

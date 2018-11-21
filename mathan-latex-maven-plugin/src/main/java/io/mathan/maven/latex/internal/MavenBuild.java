@@ -20,6 +20,7 @@ import io.mathan.latex.core.Build;
 import io.mathan.latex.core.BuildLog;
 import io.mathan.latex.core.LatexExecutionException;
 import io.mathan.latex.core.Utils;
+import io.mathan.maven.latex.MathanLatexMojo;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -46,14 +47,10 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
 
 public class MavenBuild implements Build {
 
-  private AbstractMojo mojo;
-  private MavenProject project;
-  private RepositorySystem repoSystem;
-  private RepositorySystemSession repoSession;
-  private List<RemoteRepository> remoteRepos;
-  private FileSet resources;
+  private final MathanLatexMojo mojo;
 
-  public MavenBuild() {
+  public MavenBuild(MathanLatexMojo mojo) {
+    this.mojo = mojo;
   }
 
   @Override
@@ -104,48 +101,24 @@ public class MavenBuild implements Build {
     return mojo;
   }
 
-  public void setMojo(AbstractMojo mojo) {
-    this.mojo = mojo;
-  }
-
   public MavenProject getProject() {
-    return project;
-  }
-
-  public void setProject(MavenProject project) {
-    this.project = project;
+    return mojo.getProject();
   }
 
   private RepositorySystem getRepoSystem() {
-    return repoSystem;
-  }
-
-  public void setRepoSystem(RepositorySystem repoSystem) {
-    this.repoSystem = repoSystem;
+    return mojo.getRepoSystem();
   }
 
   private RepositorySystemSession getRepoSession() {
-    return repoSession;
-  }
-
-  public void setRepoSession(RepositorySystemSession repoSession) {
-    this.repoSession = repoSession;
+    return mojo.getRepoSession();
   }
 
   private List<RemoteRepository> getRemoteRepos() {
-    return remoteRepos;
-  }
-
-  public void setRemoteRepos(List<RemoteRepository> remoteRepos) {
-    this.remoteRepos = remoteRepos;
+    return mojo.getRemoteRepos();
   }
 
   public FileSet getResources() {
-    return resources;
-  }
-
-  public void setResources(FileSet resources) {
-    this.resources = resources;
+    return mojo.getResources();
   }
 
   private void resolveDependency(Dependency dependency, File workingDirectory) throws LatexExecutionException {

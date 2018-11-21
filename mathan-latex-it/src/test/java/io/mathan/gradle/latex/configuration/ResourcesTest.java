@@ -16,6 +16,8 @@
 package io.mathan.gradle.latex.configuration;
 
 import io.mathan.gradle.latex.AbstractIntegrationTest;
+import io.mathan.latex.core.Step;
+import io.mathan.maven.it.Verifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -30,6 +32,7 @@ public class ResourcesTest extends AbstractIntegrationTest {
   @Test
   public void bibtex() throws Exception {
     publish("dependencies", "dependency");
-    verifier("configuration", "resources");
+    Verifier verifier = verifier("configuration", "resources");
+    assertStepExecuted(verifier, Step.STEP_BIBTEX);
   }
 }

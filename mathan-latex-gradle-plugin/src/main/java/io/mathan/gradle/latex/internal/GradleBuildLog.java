@@ -33,16 +33,6 @@ public class GradleBuildLog implements BuildLog {
   }
 
   @Override
-  public void info(String message) {
-    this.logger.info(message);
-  }
-
-  @Override
-  public void warn(String message) {
-    this.logger.warn(message);
-  }
-
-  @Override
   public void error(String message, Exception ex) {
     this.logger.error(message, ex);
   }
@@ -50,6 +40,16 @@ public class GradleBuildLog implements BuildLog {
   @Override
   public void info(String message, Exception ex) {
     this.logger.info(message, ex);
+  }
+
+  @Override
+  public void info(String message) {
+    this.logger.info(message);
+  }
+
+  @Override
+  public void warn(String message) {
+    this.logger.warn(message);
   }
 
   @Override

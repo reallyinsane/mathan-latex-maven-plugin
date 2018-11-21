@@ -34,23 +34,23 @@ public class MavenBuildLog implements BuildLog {
   }
 
   @Override
-  public void info(String message) {
-    this.log.info(message);
-  }
-
-  @Override
-  public void warn(String message) {
-    this.log.warn(message);
-  }
-
-  @Override
   public void error(String message, Exception ex) {
     this.log.error(message, ex);
   }
 
   @Override
+  public void info(String message) {
+    this.log.info(message);
+  }
+
+  @Override
   public void info(String message, Exception ex) {
     this.log.info(message, ex);
+  }
+
+  @Override
+  public void warn(String message) {
+    this.log.warn(message);
   }
 
   @Override

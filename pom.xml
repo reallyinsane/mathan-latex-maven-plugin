@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven</groupId>
   <artifactId>mathan-latex-plugin-reactor</artifactId>
-  <version>0.9.1-SNAPSHOT</version>
+  <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
   <description>Reactor for plugins an integration tests</description>
   <name>Mathan LaTeX Plugin Rector</name>

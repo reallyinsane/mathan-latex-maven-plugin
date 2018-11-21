@@ -16,6 +16,8 @@
 package io.mathan.gradle.latex.dependencies;
 
 import io.mathan.gradle.latex.AbstractIntegrationTest;
+import io.mathan.latex.core.Step;
+import io.mathan.maven.it.Verifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -30,13 +32,15 @@ public class DependencyTest extends AbstractIntegrationTest {
   @Test
   public void includeFromJar() throws Exception {
     publish("dependencies", "dependency");
-    verifier("dependencies", "main");
+    Verifier verifier = verifier("dependencies", "main");
+    assertStepExecuted(verifier, Step.STEP_PDFLATEX);
   }
 
   @Test
   public void includeFromZip() throws Exception {
     publish("dependencies", "zip-dependency");
-    verifier("dependencies", "zip-main");
+    Verifier verifier = verifier("dependencies", "zip-main");
+    assertStepExecuted(verifier, Step.STEP_PDFLATEX);
   }
 
 }

@@ -30,6 +30,9 @@ public class MathanLatexTask extends DefaultTask {
     this.configuration = configuration;
   }
 
+  /**
+   * Task executing the latex process for the current gradle project.
+   */
   @TaskAction
   public void latex() {
     configuration.setKeepIntermediateFiles(true);

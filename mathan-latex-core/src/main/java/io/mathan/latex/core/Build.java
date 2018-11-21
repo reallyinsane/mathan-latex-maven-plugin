@@ -25,7 +25,7 @@ import org.zeroturnaround.exec.stream.LogOutputStream;
 public interface Build {
 
   /**
-   * Returns the log of the build system
+   * Returns the log of the build system.
    *
    * @return The log of the build system.
    */

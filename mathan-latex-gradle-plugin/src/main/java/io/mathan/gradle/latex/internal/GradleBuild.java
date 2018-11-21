@@ -43,6 +43,13 @@ public class GradleBuild implements Build {
   private final DefaultTask task;
   private final MathanGradleLatexConfiguration configuration;
 
+  /**
+   * Creates a build implementation for accessing build-specfic information of a Gradle build.
+   *
+   * @param project The gradle project the build is executed for.
+   * @param task The task executed.
+   * @param configuration The configuration for the mathan latex plugin.
+   */
   public GradleBuild(Project project, DefaultTask task, MathanGradleLatexConfiguration configuration) {
 
     this.project = project;
@@ -72,6 +79,7 @@ public class GradleBuild implements Build {
 
   @Override
   public void setArtifact(File artifact) {
+    // artifact is attached automaticall when using publishToMavenLocal in the gradle build
   }
 
   @Override
@@ -125,7 +133,7 @@ public class GradleBuild implements Build {
     fileTree.visit(new FileVisitor() {
       @Override
       public void visitDir(FileVisitDetails dirDetails) {
-
+        // only files need to be extracted, directories will be created automatically with visitFile
       }
 
       @Override

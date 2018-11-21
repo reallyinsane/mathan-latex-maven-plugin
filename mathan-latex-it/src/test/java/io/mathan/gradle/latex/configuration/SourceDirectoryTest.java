@@ -16,6 +16,8 @@
 package io.mathan.gradle.latex.configuration;
 
 import io.mathan.gradle.latex.AbstractIntegrationTest;
+import io.mathan.latex.core.Step;
+import io.mathan.maven.it.Verifier;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -29,6 +31,7 @@ public class SourceDirectoryTest extends AbstractIntegrationTest {
 
   @Test
   public void sourceDirectoryExists() throws Exception {
-    verifier("configuration", "sourcedirectory");
+    Verifier verifier = verifier("configuration", "sourcedirectory");
+    assertStepExecuted(verifier, Step.STEP_PDFLATEX);
   }
 }

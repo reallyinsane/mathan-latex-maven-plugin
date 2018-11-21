@@ -36,10 +36,20 @@ import org.junit.runners.Parameterized.Parameters;
 
 public abstract class AbstractIntegrationTest {
 
+  private static final String VERSION = "1.0.0-SNAPSHOT";
+  /**
+   * System property to prevent the temporary directories to be removed. (For debugging purpose).
+   */
   private static final boolean KEEP_TEMP_DIR = Boolean.getBoolean("mathan-keep-temp-dir");
 
+  /**
+   * The build to use for the test. Can be {@link Build#Gradle Gradle} or {@link Build#Maven Maven}.
+   */
   protected Build build;
 
+  /**
+   * During the test multiple instances of {@link Verifier} can be used. Therefor multiple temporary directories are created. They're all stored to be able to clean them up.
+   */
   private List<File> temporaryDirectories = new ArrayList<>();
 
 
@@ -47,15 +57,24 @@ public abstract class AbstractIntegrationTest {
     this.build = build;
   }
 
+  /**
+   * All sub tests should be annotated with {@link org.junit.runner.RunWith} and {@link org.junit.runners.Parameterized} so that they are executed with a Gradle and a Maven build.
+   */
   @Parameters(name = "build={0}")
   public static Collection<Object[]> data() {
     return Arrays.asList(new Object[]{Build.Maven}, new Object[]{Build.Gradle});
   }
 
+  /**
+   * Creates a temporary directory with a {@link UUID} as name and returns it.
+   *
+   * @return The created temporary directory.
+   */
   private File createTemporaryDirectory() {
     String tempDirPath = System.getProperty("maven.test.tmpdir", System.getProperty("java.io.tmpdir"));
     File tempDir = new File(tempDirPath);
     File temporaryDirectory = new File(tempDir, UUID.randomUUID().toString());
+    temporaryDirectory.mkdirs();
     temporaryDirectories.add(temporaryDirectory);
     return temporaryDirectory;
   }
@@ -66,7 +85,7 @@ public abstract class AbstractIntegrationTest {
       temporaryDirectories.forEach(dir -> {
         try {
           FileUtils.deleteDirectory(dir);
-        } catch (IOException e) {
+        } catch (IOException ignored) {
         }
       });
     }
@@ -81,6 +100,11 @@ public abstract class AbstractIntegrationTest {
       this.filesToIgnore = filesToIgnore;
     }
 
+    /**
+     * Returns true if the given file should be ignored when moving the test resources to the temporary directory. This is used to not copy maven resources for a gradle build and vice versa.
+     *
+     * @return <code>True</code> if the file should be ignored.
+     */
     boolean ignore(String name) {
       for (String fileToIgnore : filesToIgnore) {
         if (name.endsWith(fileToIgnore)) {
@@ -91,8 +115,9 @@ public abstract class AbstractIntegrationTest {
     }
   }
 
-  private static final String VERSION = "0.9.1-SNAPSHOT";
-
+  /**
+   * Returns the goal/task to execute for the test. This is the goal <i>mathan:latex</i> for the maven build and the task <i>latex</i> for the gradle build.
+   */
   protected String latexGoal() {
     switch (build) {
       case Maven:
@@ -130,6 +155,12 @@ public abstract class AbstractIntegrationTest {
     return verifier;
   }
 
+  /**
+   * Publishs the artifact of the given project into the local repository.
+   *
+   * @param category The category of the test. (First level of directory structure)
+   * @param project The project to publish. (Second level of directory structure)
+   */
   protected void publish(String category, String project) throws Exception {
     File temporaryDirectory = createTemporaryDirectory();
     extractResourcesToTempDir(String.format("%s/%s", category, project), temporaryDirectory);
@@ -176,7 +207,13 @@ public abstract class AbstractIntegrationTest {
     verifier.assertLogContainsText(String.format("[mathan] execution skipped: %s", step.getId()));
   }
 
-  private final void extractResourcesToTempDir(String path, File temporaryDirectory) {
+  /**
+   * Extracts all resources below the given path from the classpath into a temporary directory.
+   *
+   * @param path The path specifying which resources to extract from the classpath.
+   * @param temporaryDirectory The temporary directory to extract the resources to.
+   */
+  private void extractResourcesToTempDir(String path, File temporaryDirectory) {
     FastClasspathScanner scanner = new FastClasspathScanner();
     scanner.matchFilenamePattern(path + "/.*", (classpathElt, relativePath, inputStream, lengthBytes) -> {
       if (build.ignore(relativePath)) {

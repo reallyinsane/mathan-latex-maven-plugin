@@ -1,8 +1,8 @@
-version = '0.9.1-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
 apply plugin: 'java'
 
 dependencies {
-    compile('io.mathan.maven.test:dependency:0.9.1-SNAPSHOT')
+    compile('io.mathan.maven.test:dependency:1.0.0-SNAPSHOT')
 }
 
 repositories {
@@ -16,7 +16,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
-                version: '0.9.1-SNAPSHOT'
+                version: '1.0.0-SNAPSHOT'
     }
 }
 apply plugin: 'io.mathan.latex'

@@ -32,7 +32,7 @@ import org.zeroturnaround.exec.ProcessExecutor;
  */
 public abstract class Verifier {
 
-  private final String LOG_FILENAME = "verifier.log";
+  private static final String LOG_FILENAME = "verifier.log";
 
   private final String baseDirectory;
   private final Options options;
