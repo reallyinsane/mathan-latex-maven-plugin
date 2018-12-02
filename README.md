@@ -52,7 +52,7 @@ After applying the plugin you can use the task **latex**.
 buildscript {
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
-                version: '1.0.0-SNAPSHOT'
+                version: '1.0.0'
     }
 }
 apply plugin: 'io.mathan.latex'
