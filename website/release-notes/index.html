@@ -1,12 +1,14 @@
-<title>Kactus - Release Notes</title>
+<title>Release Notes</title>
 <link href="./style.css" rel="stylesheet" type="text/css">
 <link href="./notes.css" rel="stylesheet" type="text/css">
+<!--
 <header class="container text-center">
   <ul class="nav">
     <li><a href="/">Overview</a></li>
     <li><a href="/release-notes/" class="current">Release Notes</a></li>
   </ul>
 </header>
+-->
 <div class="container text-center hero">
   <h1>Release notes for mathan-latex-maven-plugin</h1>
   <hr>
@@ -14,42 +16,79 @@
 </div>
 <hr/>
 <script>
-	var tagColor = {
+  var colors = {
 		improved: '#0366d6',
 		fixed: '#0366d6',
-		new: '#28a745'
-	}
-	var version = '#6f42c1';
+		new: '#28a745',
+    version:'#6f42c1'
+  }
+	var json='{	"releases": [		{			"version":"2.9.1",			"changes": [				"[New] ZIP dependencies can be used regardless of the artifact type (jar, zip, war, etc.)",				"[New] indexnomencl can be used with a custom style file."			]		},		{			"version":"2.9.0",			"date":"October 25th 2017",			"changes": [				"[New] First release with of mathan-latex-maven-plugin"			]		}	]}';
 
 	fetch('https://api.github.com/repos/reallyinsane/mathan-latex-maven-plugin/contents/website/release-notes/changelog.json')
 		.then(function (res) { return res.json() })
-		.then(function (res) { return JSON.parse(window.atob(res.content)) })
+		.then(function (res) { return JSON.parse(json) })
 		.then(function (res) {
-			var html = Object.keys(res.releases).reduce(function (prev, k) {
-				prev += '<section class="release-note">'
-				prev +=   '<div class="release-note__header"><span class="badge" style="background: '+(version)+'">'
-				prev +=     k
-				prev +=   '</span>'+k+'</div>'
-				prev +=   '<ul class="release-note__notes">'
-				prev += res.releases[k].reduce(function (s, n) {
-					var parts = n.split(']')
-					var tag = parts.shift().replace('[', '').trim().toLowerCase()
-					var note = parts.join(']').trim().replace(/#[0-9]+/, '<a href="https://github.com/kactus-io/kactus/issues/$&" class="link" target="_black">$&</a>')
-					s += '<li class="note">'
-					s +=   '<div class="badge" style="background: ' + (tagColor[tag] || '#3EAD3F') + '">' + tag + '</div>'
-					s +=   '<div class="description">' + note + '</div>'
-					s += '</li>'
-					return s
-				}, '')
-				prev +=   '</ul>'
-				prev += '</section>'
-				return prev
-			}, '')
+			var html='';
+      res.releases.forEach(function(release){
+	      html += '<section class="release-note">'
+	      html +=   '<div class="release-note__header"><span class="badge" style="background: '+colors['version']+'">'
+	      html +=     release.version
+	      html +=   '</span><div class="description" style="padding:10px;">'+release.date+'</div></div>'
+	      html +=   '<ul class="release-note__notes">'
+	      html +=  release.changes.reduce(function (s, n) {
+  		    var parts = n.split(']')
+  		    var tag = parts.shift().replace('[', '').trim().toLowerCase()
+  		    var note = parts.join(']').trim()
+    	    s += '<li class="note">'
+  		    s +=   '<div class="badge" style="background: ' + (colors[tag] || '#3EAD3F') + '">' + tag + '</div>'
+    		  s +=   '<div class="description">' + note + '</div>'
+    		  s += '</li>'
+    		  return s
+    	  }, '')
+  	    html +=   '</ul>'
+  	    html += '</section>'
+      });
 			document.getElementById('notes').innerHTML = html
 			return html
 		})
 		.then(console.log)
 		.catch(console.error)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
