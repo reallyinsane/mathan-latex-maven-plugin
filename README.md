@@ -28,11 +28,13 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single ma
     <plugin>
       <groupId>io.mathan.maven</groupId>
       <artifactId>mathan-latex-maven-plugin</artifactId>
-      <version>0.9.0</version>
+      <version>1.0.1</version>
     </plugin>
   </plugins>
 </build>
 ```
+
+> Please use version 1.0.1 as version 1.0.0 contained a corrupted pom.xml.
 
 You can find more details about the configuration [**here**](maven.md).
 
@@ -52,10 +54,12 @@ After applying the plugin you can use the task **latex**.
 buildscript {
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
-                version: '1.0.0'
+                version: '1.0.1'
     }
 }
 apply plugin: 'io.mathan.latex'
 ``` 
+
+> Please use version 1.0.1 as version 1.0.0 contained a corrupted pom.xml.
 
 You can find more details about the configuration [**here**](gradle.md).
