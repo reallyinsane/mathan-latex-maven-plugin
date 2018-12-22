@@ -1,0 +1,39 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>io.mathan.maven.test</groupId>
+  <artifactId>xelatex</artifactId>
+  <version>1.0.1</version>
+  <packaging>pdf</packaging>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>io.mathan.maven</groupId>
+        <artifactId>mathan-latex-maven-plugin</artifactId>
+        <version>1.0.1</version>
+        <extensions>true</extensions>
+        <configuration>
+          <!-- definiert eigene steps (d.h. kommandozeilenaufrufe)-->
+          <steps>
+            <!-- überschreibt xelatex und fügt -shell-escape ein -->
+            <step>
+              <id>xelatex</id>
+              <name>xelatex</name>
+              <inputFormat>tex</inputFormat>
+              <outputFormat>pdf</outputFormat>
+              <arguments>-synctex=1 -shell-escape -interaction=nonstopmode --src-specials %input</arguments>
+              <!-- muss bei mir true sein, da xelatex "kanjix.map" nicht finden konnte (liegt wahrscheinlich an einer
+                   unvollständigen konfiguration bei mir)
+                   Dies führt nur dazu, dass bei der Fehlermeldung von xelatex nicht abgebochen wird
+              -->
+              <optional>true</optional>
+              <logExtension>log</logExtension>
+            </step>
+          </steps>
+          <!-- definiert das xelatex genutzt werden soll-->
+          <latexSteps>xelatex</latexSteps>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
+</project>

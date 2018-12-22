@@ -108,6 +108,7 @@ Project|Description
 [configuration/outputformat](mathan-latex-it/src/test/resources/configuration/outputformat)| Sample using all supported output formats.
 [configuration/sourcedirectory](mathan-latex-it/src/test/resources/configuration/sourcedirectory)| Sample using custom source directory.
 [configuration/texfile](mathan-latex-it/src/test/resources/configuration/texfile)| Sample specifying master tex file.
+[configuration/xelatex](mathan-latex-it/src/test/resources/configuration/xelatex)| Overriding step configuration for xelatex.
 [dependencies/dependency](mathan-latex-it/src/test/resources/dependencies/dependency)| Dependency providing resource in a jar.
 [dependencies/main](mathan-latex-it/src/test/resources/dependencies/main)| Sample using a resource from a dependency.
 [dependencies/zip-dependency](mathan-latex-it/src/test/resources/dependencies/zip-dependency)| Dependency providing resource in a zip.

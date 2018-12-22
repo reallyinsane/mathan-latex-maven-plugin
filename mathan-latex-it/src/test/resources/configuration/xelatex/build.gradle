@@ -1,0 +1,29 @@
+import io.mathan.latex.core.Step
+
+version = '1.0.1'
+
+buildscript {
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
+                version: '1.0.1'
+    }
+}
+apply plugin: 'io.mathan.latex'
+
+def xelatex = new Step()
+xelatex.id = 'xelatex'
+xelatex.name = 'xelatex'
+xelatex.inputFormat = 'tex'
+xelatex.outputFormat = 'pdf'
+xelatex.arguments = '-synctex=1 -shell-escape -interaction=nonstopmode --src-specials %input'
+xelatex.optional = 'true'
+xelatex.logExtension = 'log'
+
+latex {
+    latexSteps = ['xelatex']
+    steps = [xelatex]
+}
