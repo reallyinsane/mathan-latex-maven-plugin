@@ -13,24 +13,20 @@
         <version>1.0.1</version>
         <extensions>true</extensions>
         <configuration>
-          <!-- definiert eigene steps (d.h. kommandozeilenaufrufe)-->
+          <!-- defines/overrides step definitions-->
           <steps>
-            <!-- überschreibt xelatex und fügt -shell-escape ein -->
+            <!-- overrides xelatex and adds '-shell-escape' parameter -->
             <step>
               <id>xelatex</id>
               <name>xelatex</name>
               <inputFormat>tex</inputFormat>
               <outputFormat>pdf</outputFormat>
               <arguments>-synctex=1 -shell-escape -interaction=nonstopmode --src-specials %input</arguments>
-              <!-- muss bei mir true sein, da xelatex "kanjix.map" nicht finden konnte (liegt wahrscheinlich an einer
-                   unvollständigen konfiguration bei mir)
-                   Dies führt nur dazu, dass bei der Fehlermeldung von xelatex nicht abgebochen wird
-              -->
               <optional>true</optional>
               <logExtension>log</logExtension>
             </step>
           </steps>
-          <!-- definiert das xelatex genutzt werden soll-->
+          <!-- xelatex should be used for processing tex files -->
           <latexSteps>xelatex</latexSteps>
         </configuration>
       </plugin>

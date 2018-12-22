@@ -14,6 +14,7 @@ buildscript {
 }
 apply plugin: 'io.mathan.latex'
 
+// step definition for xelatex with additional argument '-shell-escape'
 def xelatex = new Step()
 xelatex.id = 'xelatex'
 xelatex.name = 'xelatex'
@@ -24,6 +25,8 @@ xelatex.optional = 'true'
 xelatex.logExtension = 'log'
 
 latex {
+    // using xelatex for processing tex files
     latexSteps = ['xelatex']
+    // overrides xelatex step definition
     steps = [xelatex]
 }
