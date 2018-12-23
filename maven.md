@@ -87,7 +87,7 @@ texBin|The bin directory of the tex distribution.|Searches on `PATH` environment
 texFile|Name of the main *.tex file to use| defaults to a single .tex file found in `sourceDirectory`
 latexSteps|The latex commands to execute to generate the output document.|This is `latex` for `dvi`, `latex,dvips` for `ps` and `pdflatex` for `pdf`.
 buildSteps|The build steps executed for a single document. The keyword `LaTeX` defines all steps configured with `latexSteps`|`LaTeX`, `bibtex`, `makeindex`, `makeindexnomencl`, `LaTeX`, `LaTeX`
-steps|Configuration for user-defined steps.| none
+steps|[Configuration](steps.md) for user-defined steps.| none
 keepIntermediateFile|Sets whether intermediate files created during the build should be kept.|`false`
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
 makeIndexNomenclStyleFile|Name of the nomencl style file to use for makeindex| nomencl.ist from the TeX distribution
