@@ -36,7 +36,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 public abstract class AbstractIntegrationTest {
 
-  private static final String VERSION = "1.0.1";
+  private static final String VERSION = "1.0.2";
   /**
    * System property to prevent the temporary directories to be removed. (For debugging purpose).
    */

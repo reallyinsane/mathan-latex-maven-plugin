@@ -26,13 +26,13 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single ma
     <plugin>
       <groupId>io.mathan.maven</groupId>
       <artifactId>mathan-latex-maven-plugin</artifactId>
-      <version>1.0.1</version>
+      <version>1.0.2</version>
     </plugin>
   </plugins>
 </build>
 ```
 
-> Please use version 1.0.1 as version 1.0.0 contained a corrupted pom.xml.
+> Please use version 1.0.2 as version 1.0.0 contained a corrupted pom.xml.
 
 Goal
 ----
@@ -48,7 +48,7 @@ By default mathan-latex-maven-plugin will search for a *.tex file in the source 
 <plugin>
   <groupId>io.mathan.maven</groupId>
   <artifactId>mathan-latex-maven-plugin</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <extensions>true</extensions>
   <configuration>
     <sourceDirectory>src/main/custom</sourceDirectory>

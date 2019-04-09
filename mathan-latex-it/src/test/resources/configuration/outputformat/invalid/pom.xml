@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven.test</groupId>
   <artifactId>invalid</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <build>
     <plugins>
       <plugin>
         <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <configuration>
           <outputFormat>invalid</outputFormat>
         </configuration>
