@@ -3,18 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven.test</groupId>
   <artifactId>main</artifactId>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <packaging>pdf</packaging>
   <dependencies>
     <dependency>
       <groupId>io.mathan.maven.test</groupId>
       <artifactId>dependency</artifactId>
-      <version>1.0.1</version>
-    </dependency>
-    <dependency>
-      <groupId>com.typesafe.play</groupId>
-      <artifactId>play_2.11</artifactId>
-      <version>2.3.9</version>
+      <version>1.0.2</version>
     </dependency>
   </dependencies>
   <build>
@@ -22,7 +17,7 @@
       <plugin>
         <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2</version>
         <extensions>true</extensions>
         <configuration>
           <texFile>main.tex</texFile>
