@@ -20,11 +20,11 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.zeroturnaround.exec.ProcessExecutor;
 
 /**
@@ -80,16 +80,15 @@ public abstract class Verifier {
     if (options.getWorkingDirectory() != null) {
       executor.directory(new File(options.getWorkingDirectory()));
     }
-    OutputStream logStream = null;
-    try {
-      logStream = new FileOutputStream(new File(baseDirectory, LOG_FILENAME));
+    try (OutputStream logStream = new FileOutputStream(new File(baseDirectory, LOG_FILENAME))) {
       executor.redirectOutput(logStream);
       executor.redirectError(logStream);
       return executor.execute().getExitValue();
-    } catch (IOException | InterruptedException | TimeoutException e) {
+    } catch (IOException | TimeoutException e) {
       throw new VerifierException(String.format("Could not execute '%s'", action), e);
-    } finally {
-      IOUtils.closeQuietly(logStream);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
+      throw new VerifierException(String.format("Could not execute '%s'", action), e);
     }
   }
 
@@ -116,7 +115,7 @@ public abstract class Verifier {
     File logFile = new File(baseDirectory, LOG_FILENAME);
     List<String> lines = null;
     try {
-      lines = FileUtils.readLines(logFile, "UTF-8");
+      lines = FileUtils.readLines(logFile, StandardCharsets.UTF_8);
     } catch (IOException e) {
       throw new VerifierException(String.format("Could not read log file %s", logFile.getAbsolutePath()), e);
     }

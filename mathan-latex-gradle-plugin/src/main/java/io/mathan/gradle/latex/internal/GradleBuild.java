@@ -144,11 +144,11 @@ public class GradleBuild implements Build {
           if (!dest.getParentFile().exists() && !dest.getParentFile().mkdirs()) {
             throw new IOException("Could not create directory " + dest.getParentFile().getAbsolutePath());
           }
-          FileInputStream in = new FileInputStream(fileDetails.getFile());
-          FileOutputStream out = new FileOutputStream(dest);
-          IOUtils.copy(in, out);
-          in.close();
-          out.close();
+          try (FileInputStream in = new FileInputStream(fileDetails.getFile())) {
+            FileOutputStream out = new FileOutputStream(dest);
+            IOUtils.copy(in, out);
+            out.close();
+          }
         } catch (IOException e) {
           e.printStackTrace();
         }

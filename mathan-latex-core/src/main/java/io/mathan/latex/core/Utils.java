@@ -36,6 +36,9 @@ import org.apache.commons.io.IOUtils;
  */
 public class Utils {
 
+  private Utils() {
+  }
+
   /**
    * Splits the given string into tokens so that sections of the string that are enclosed into quotes will form one token (without the quotes).
    *
@@ -90,7 +93,7 @@ public class Utils {
   /**
    * Returns the File for the executable or <code>null</code> if the executable could not be found.
    *
-   * @param texBin The bin directory of the LaTeX distribution.
+   * @param texBin The bin directory of the LATEX distribution.
    * @param name The name of the executable to find.
    * @return The executable file or <code>null</code>.
    */
@@ -136,23 +139,24 @@ public class Utils {
     if (!temporaryDirectory.mkdir()) {
       throw new IOException("Could not create temporary directory " + temporaryDirectory.getAbsolutePath());
     }
-    ZipFile zip = new ZipFile(archive);
-    Enumeration<? extends ZipEntry> entries = zip.entries();
+    try (ZipFile zip = new ZipFile(archive)) {
+      Enumeration<? extends ZipEntry> entries = zip.entries();
 
-    while (entries.hasMoreElements()) {
-      ZipEntry entry = entries.nextElement();
-      if (entry.isDirectory()) {
-        File directory = new File(temporaryDirectory, entry.getName());
-        if (!directory.mkdirs()) {
-          throw new IOException("Could not create directory " + directory.getAbsolutePath());
+      while (entries.hasMoreElements()) {
+        ZipEntry entry = entries.nextElement();
+        if (entry.isDirectory()) {
+          File directory = new File(temporaryDirectory, entry.getName());
+          if (!directory.mkdirs()) {
+            throw new IOException("Could not create directory " + directory.getAbsolutePath());
+          }
+        } else {
+          InputStream in = zip.getInputStream(entry);
+          File file = new File(temporaryDirectory, entry.getName());
+          FileOutputStream out = new FileOutputStream(file);
+          IOUtils.copy(in, out);
+          in.close();
+          out.close();
         }
-      } else {
-        InputStream in = zip.getInputStream(entry);
-        File file = new File(temporaryDirectory, entry.getName());
-        FileOutputStream out = new FileOutputStream(file);
-        IOUtils.copy(in, out);
-        in.close();
-        out.close();
       }
     }
     return temporaryDirectory;

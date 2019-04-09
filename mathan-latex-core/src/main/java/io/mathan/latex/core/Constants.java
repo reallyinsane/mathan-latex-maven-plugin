@@ -18,6 +18,9 @@ package io.mathan.latex.core;
 
 public class Constants {
 
+  private Constants() {
+  }
+
   /**
    * Identifier used as placeholder for the exeution of the latex tools to produce the output documment.
    */

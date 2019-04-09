@@ -7,6 +7,11 @@
   <packaging>pom</packaging>
   <description>Reactor for plugins an integration tests</description>
   <name>Mathan LaTeX Plugin Rector</name>
+  <properties>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -38,7 +43,7 @@
 
   <build>
     <plugins>
-     
+
 
     </plugins>
   </build>
