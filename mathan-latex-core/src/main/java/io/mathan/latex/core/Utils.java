@@ -152,6 +152,9 @@ public class Utils {
         } else {
           InputStream in = zip.getInputStream(entry);
           File file = new File(temporaryDirectory, entry.getName());
+          if (file.getParentFile() != null && !file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+          }
           FileOutputStream out = new FileOutputStream(file);
           IOUtils.copy(in, out);
           in.close();
