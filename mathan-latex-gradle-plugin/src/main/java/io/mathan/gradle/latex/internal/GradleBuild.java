@@ -55,8 +55,6 @@ public class GradleBuild implements Build {
     this.project = project;
     this.task = task;
     this.configuration = configuration;
-    this.task.setOnlyIf(t -> true);
-    this.task.getOutputs().upToDateWhen(t -> false);
   }
 
   @Override

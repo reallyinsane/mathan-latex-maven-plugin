@@ -28,6 +28,9 @@ public class MathanLatexTask extends DefaultTask {
 
   public void setConfiguration(MathanGradleLatexConfiguration configuration) {
     this.configuration = configuration;
+    this.setOnlyIf(t -> true);
+    this.getOutputs().upToDateWhen(t -> false);
+
   }
 
   /**
