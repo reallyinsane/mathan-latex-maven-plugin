@@ -1,6 +1,6 @@
 import io.mathan.latex.core.Step
 
-version = '1.0.2'
+version = '1.0.3'
 
 buildscript {
     repositories {
@@ -9,7 +9,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
-                version: '1.0.2'
+                version: '1.0.3'
     }
 }
 apply plugin: 'io.mathan.latex'

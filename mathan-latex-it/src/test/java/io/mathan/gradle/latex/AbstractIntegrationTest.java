@@ -15,7 +15,8 @@
  */
 package io.mathan.gradle.latex;
 
-import io.github.lukehutch.fastclasspathscanner.FastClasspathScanner;
+import io.github.classgraph.ClassGraph;
+import io.github.classgraph.Resource;
 import io.mathan.latex.core.Step;
 import io.mathan.maven.it.Options;
 import io.mathan.maven.it.Verifier;
@@ -36,7 +37,7 @@ import org.junit.runners.Parameterized.Parameters;
 
 public abstract class AbstractIntegrationTest {
 
-  private static final String VERSION = "1.0.2";
+  private static final String VERSION = "1.0.3";
   /**
    * System property to prevent the temporary directories to be removed. (For debugging purpose).
    */
@@ -214,7 +215,26 @@ public abstract class AbstractIntegrationTest {
    * @param temporaryDirectory The temporary directory to extract the resources to.
    */
   private void extractResourcesToTempDir(String path, File temporaryDirectory) {
-    FastClasspathScanner scanner = new FastClasspathScanner();
+    ClassGraph scanner = new ClassGraph();
+    scanner.whitelistPaths(path);
+    scanner.scan().getAllResources().forEachInputStream(((resource, inputStream) -> {
+      String filePath = resource.getPath().substring((path + "/").length());
+      File file = new File(temporaryDirectory, filePath);
+      File parent = file.getParentFile();
+      if (!parent.exists()) {
+        parent.mkdirs();
+      }
+      try {
+        FileOutputStream out = new FileOutputStream(file);
+        IOUtils.copy(inputStream, out);
+        out.close();
+        inputStream.close();
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
+
+    }));
+    /*
     scanner.matchFilenamePattern(path + "/.*", (classpathElt, relativePath, inputStream, lengthBytes) -> {
       if (build.ignore(relativePath)) {
         return;
@@ -230,5 +250,10 @@ public abstract class AbstractIntegrationTest {
       out.close();
       inputStream.close();
     }).scan();
+     */
+  }
+
+  private void extract(String path, Resource consumer) {
+
   }
 }
