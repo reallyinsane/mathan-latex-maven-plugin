@@ -102,9 +102,21 @@ public abstract class Verifier {
     File expectedDirectory = new File(baseDirectory);
     File expectedFile = new File(expectedDirectory, fileName);
     if (!expectedFile.exists()) {
+      logFileContent();
       throw new VerifierException(
           String.format("Expected file '%s' not found in directory %s.", fileName, expectedDirectory));
     }
+  }
+
+  private void logFileContent() throws VerifierException {
+    File logFile = new File(baseDirectory, LOG_FILENAME);
+    List<String> lines = null;
+    try {
+      FileUtils.readLines(logFile, StandardCharsets.UTF_8).forEach(line -> System.err.println(line));
+    } catch (IOException e) {
+      throw new VerifierException(String.format("Could not read log file %s", logFile.getAbsolutePath()), e);
+    }
+
   }
 
   /**
