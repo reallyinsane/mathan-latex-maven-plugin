@@ -185,6 +185,7 @@ public abstract class AbstractIntegrationTest {
       case Gradle:
         // enable log output for level INFO
         options.getCommandLineArguments().add("-i");
+        options.getCommandLineArguments().add("-Prerun");
         return Verifier.Gradle.create(baseDirectory, options);
       default:
         Assert.fail(String.format("Unknown build: %s", build));
