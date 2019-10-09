@@ -22,10 +22,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
-import java.util.stream.Collectors;
 import org.apache.commons.io.FileUtils;
 import org.zeroturnaround.exec.ProcessExecutor;
 
@@ -104,11 +102,8 @@ public abstract class Verifier {
     File expectedDirectory = new File(baseDirectory);
     File expectedFile = new File(expectedDirectory, fileName);
     if (!expectedFile.exists()) {
-      File parentDirectory = expectedFile.getParentFile();
-      List<String> files = Arrays.asList(parentDirectory.listFiles()).stream().map(file -> file.getAbsolutePath()).collect(Collectors.toList());
       throw new VerifierException(
-          String.format("Expected file '%s' not found in directory %s. Following files available in direct parent directory %s: %s", fileName, expectedDirectory, parentDirectory.getAbsolutePath(),
-              files));
+          String.format("Expected file '%s' not found in directory %s.", fileName, expectedDirectory));
     }
   }
 
