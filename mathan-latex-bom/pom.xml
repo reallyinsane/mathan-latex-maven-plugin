@@ -15,7 +15,7 @@
     <commons.io.version>2.6</commons.io.version>
     <zt.exec.version>1.10</zt.exec.version>
     <gradle.version>3.0</gradle.version>
-    <groovy.version>2.4.7</groovy.version>
+    <groovy.version>2.4.21</groovy.version>
     <junit.version>4.13.1</junit.version>
     <fast.classpath.scanner.version>3.1.13</fast.classpath.scanner.version>
     <maven.resolver.version>1.3.3</maven.resolver.version>
