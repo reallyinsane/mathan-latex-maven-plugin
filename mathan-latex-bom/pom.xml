@@ -12,7 +12,7 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <commons.io.version>2.6</commons.io.version>
+    <commons.io.version>2.7</commons.io.version>
     <zt.exec.version>1.10</zt.exec.version>
     <gradle.version>3.0</gradle.version>
     <groovy.version>2.4.21</groovy.version>
