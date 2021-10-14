@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven.test</groupId>
   <artifactId>resources</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4-SNAPSHOT</version>
   <packaging>pdf</packaging>
   <dependencies>
     <dependency>
       <groupId>io.mathan.maven.test</groupId>
       <artifactId>dependency</artifactId>
-      <version>1.0.3</version>
+      <version>1.0.4-SNAPSHOT</version>
     </dependency>
   </dependencies>
   <build>
@@ -17,7 +17,7 @@
       <plugin>
         <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin</artifactId>
-        <version>1.0.3</version>
+        <version>1.0.4-SNAPSHOT</version>
         <extensions>true</extensions>
         <configuration>
           <resources>
