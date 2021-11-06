@@ -20,15 +20,7 @@ jobs:
         java-version: '8'
         distribution: 'adopt'
         cache: maven
-    - name: apt multiarch helper action
-      # You may pin to the exact commit or the version.
-      # uses: ryankurte/action-apt@11a0cca067862d5d78e757e7d38fdb988d5c5a97
-      uses: ryankurte/action-apt@v0.3.0
-      with:
-        # Foreign architecture to configure
-        #arch: 
-        # List of packages to install
-        packages: texlive texlive-latex-extra texlive-publishers biber       
-        
+    - name: Install tex
+      run: sudo apt-get install -y texlive texlive-latex-extra texlive-publishers biber
     - name: Build with Maven
       run: mvn -B package --file pom.xml
