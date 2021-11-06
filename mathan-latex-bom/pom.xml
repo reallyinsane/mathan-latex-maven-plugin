@@ -2,27 +2,27 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mathan-latex-bom</artifactId>
-  <version>1.0.3</version>
+  <version>1.0.4-SNAPSHOT</version>
   <parent>
     <groupId>io.mathan.maven</groupId>
     <artifactId>mathan-latex-plugin-reactor</artifactId>
-    <version>1.0.3</version>
+    <version>1.0.4-SNAPSHOT</version>
   </parent>
   <packaging>pom</packaging>
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <commons.io.version>2.6</commons.io.version>
-    <zt.exec.version>1.11</zt.exec.version>
-    <gradle.version>5.6.2</gradle.version>
-    <groovy.version>2.5.8</groovy.version>
-    <junit.version>4.12</junit.version>
+    <commons.io.version>2.11.0</commons.io.version>
+    <zt.exec.version>1.12</zt.exec.version>
+    <gradle.version>6.1.1</gradle.version>
+    <groovy.version>3.0.8</groovy.version>
+    <junit.version>4.13.2</junit.version>
     <fast.classpath.scanner.version>3.1.13</fast.classpath.scanner.version>
-    <class.graph.version>4.8.47</class.graph.version>
-    <maven.resolver.version>1.4.1</maven.resolver.version>
+    <class.graph.version>4.8.112</class.graph.version>
+    <maven.resolver.version>1.7.1</maven.resolver.version>
     <maven.shared.version>3.0.0</maven.shared.version>
-    <maven.maven-plugin.version>3.6.2</maven.maven-plugin.version>
-    <maven.maven-plugin-annotations.version>3.6.0</maven.maven-plugin-annotations.version>
+    <maven.maven-plugin.version>3.8.1</maven.maven-plugin.version>
+    <maven.maven-plugin-annotations.version>3.6.1</maven.maven-plugin-annotations.version>
     <maven.project.version>3.0-alpha-2</maven.project.version>
     <aether.version>1.1.0</aether.version>
   </properties>
@@ -203,6 +203,7 @@
       </plugin>
     </plugins>
   </build>
+
   <distributionManagement>
     <snapshotRepository>
       <id>ossrh</id>
