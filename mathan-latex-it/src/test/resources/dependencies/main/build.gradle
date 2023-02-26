@@ -24,4 +24,5 @@ apply plugin: 'io.mathan.latex'
 latex {
     texFile = 'main.tex'
     keepIntermediateFiles = true
+    enableDependencyScan = true
 }

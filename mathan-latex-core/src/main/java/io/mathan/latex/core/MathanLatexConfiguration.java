@@ -65,6 +65,8 @@ public class MathanLatexConfiguration {
 
   private String texFile;
 
+  private boolean enableDependencyScan = false;
+
   /**
    * Parameter for controlling if build should be stopped in case the execution of a single step finished with an unexpected (non-zero) exit code. By default this parameter is set to <code>true</code>
    * but in some cases it may be useful to set it to <code>false</code>. This can be necessary if a tool finishes successfully but returns a non-zero exit code.
@@ -157,5 +159,13 @@ public class MathanLatexConfiguration {
 
   public void setHaltOnError(boolean haltOnError) {
     this.haltOnError = haltOnError;
+  }
+
+  public boolean isEnableDependencyScan() {
+    return enableDependencyScan;
+  }
+
+  public void setEnableDependencyScan(boolean enableDependencyScan) {
+    this.enableDependencyScan = enableDependencyScan;
   }
 }

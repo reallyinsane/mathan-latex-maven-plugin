@@ -97,7 +97,9 @@ public class MathanLatexRunner {
    */
   private void executeSteps(List<Step> stepsToExecute, File source) throws LatexExecutionException {
     File workingDirectory = createWorkingDirectory();
-    build.resolveDependencies(workingDirectory);
+    if (configuration.isEnableDependencyScan()) {
+      build.resolveDependencies(workingDirectory);
+    }
     copySources(source, workingDirectory);
     File mainFile = resolveMainFile(source, workingDirectory);
     build.getLog().info(String.format("[mathan] processing %s", mainFile.getName()));

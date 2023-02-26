@@ -21,6 +21,7 @@
         <extensions>true</extensions>
         <configuration>
           <texFile>main.tex</texFile>
+          <enableDependencyScan>true</enableDependencyScan>
         </configuration>
       </plugin>
     </plugins>
