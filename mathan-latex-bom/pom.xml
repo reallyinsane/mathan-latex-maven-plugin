@@ -12,17 +12,17 @@
   <properties>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <commons.io.version>2.11.0</commons.io.version>
+    <commons.io.version>2.15.1</commons.io.version>
     <zt.exec.version>1.12</zt.exec.version>
     <gradle.version>6.1.1</gradle.version>
-    <groovy.version>3.0.8</groovy.version>
+    <groovy.version>3.0.20</groovy.version>
     <junit.version>4.13.2</junit.version>
     <fast.classpath.scanner.version>3.1.13</fast.classpath.scanner.version>
-    <class.graph.version>4.8.112</class.graph.version>
+    <class.graph.version>4.8.165</class.graph.version>
     <maven.resolver.version>1.7.1</maven.resolver.version>
-    <maven.shared.version>3.0.0</maven.shared.version>
+    <maven.shared.version>3.1.0</maven.shared.version>
     <maven.maven-plugin.version>3.8.1</maven.maven-plugin.version>
-    <maven.maven-plugin-annotations.version>3.6.1</maven.maven-plugin-annotations.version>
+    <maven.maven-plugin-annotations.version>3.10.2</maven.maven-plugin-annotations.version>
     <maven.project.version>3.0-alpha-2</maven.project.version>
     <aether.version>1.1.0</aether.version>
   </properties>
