@@ -1,6 +1,6 @@
 import io.mathan.latex.core.Step
 
-version = '1.0.2'
+version = '1.0.4'
 
 buildscript {
     repositories {
@@ -9,7 +9,7 @@ buildscript {
     }
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
-                version: '1.0.2'
+                version: '1.0.4'
     }
 }
 apply plugin: 'io.mathan.latex'
@@ -20,7 +20,7 @@ xelatex.id = 'xelatex'
 xelatex.name = 'xelatex'
 xelatex.inputFormat = 'tex'
 xelatex.outputFormat = 'pdf'
-xelatex.arguments = '-synctex=1 -shell-escape -interaction=nonstopmode --src-specials %input'
+xelatex.arguments = '-synctex=1 -shell-escape -interaction=nonstopmode %input'
 xelatex.optional = 'true'
 xelatex.logExtension = 'log'
 

@@ -146,7 +146,7 @@ public class Utils {
         ZipEntry entry = entries.nextElement();
         if (entry.isDirectory()) {
           File directory = new File(temporaryDirectory, entry.getName());
-          if (!directory.mkdirs()) {
+          if (!directory.exists() && !directory.mkdirs()) {
             throw new IOException("Could not create directory " + directory.getAbsolutePath());
           }
         } else {

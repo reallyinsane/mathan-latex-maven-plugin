@@ -3,14 +3,14 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven.test</groupId>
   <artifactId>xelatex</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.4</version>
   <packaging>pdf</packaging>
   <build>
     <plugins>
       <plugin>
         <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin</artifactId>
-        <version>1.0.2</version>
+        <version>1.0.4</version>
         <extensions>true</extensions>
         <configuration>
           <!-- defines/overrides step definitions-->
@@ -21,7 +21,7 @@
               <name>xelatex</name>
               <inputFormat>tex</inputFormat>
               <outputFormat>pdf</outputFormat>
-              <arguments>-synctex=1 -shell-escape -interaction=nonstopmode --src-specials %input</arguments>
+              <arguments>-synctex=1 -shell-escape -interaction=nonstopmode %input</arguments>
               <optional>true</optional>
               <logExtension>log</logExtension>
             </step>

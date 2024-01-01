@@ -126,6 +126,9 @@ public class MathanLatexMojo extends AbstractMojo {
   private String texFile;
 
   @Parameter
+  private boolean enableDependencyScan = false;
+
+  @Parameter
   private FileSet resources;
 
   /**
@@ -154,6 +157,7 @@ public class MathanLatexMojo extends AbstractMojo {
     latexConfiguration.setSteps(steps);
     latexConfiguration.setTexBin(texBin);
     latexConfiguration.setTexFile(texFile);
+    latexConfiguration.setEnableDependencyScan(enableDependencyScan);
 
     MavenBuild build = new MavenBuild(this);
 

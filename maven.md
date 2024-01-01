@@ -26,13 +26,11 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single ma
     <plugin>
       <groupId>io.mathan.maven</groupId>
       <artifactId>mathan-latex-maven-plugin</artifactId>
-      <version>1.0.2</version>
+      <version>1.0.4</version>
     </plugin>
   </plugins>
 </build>
 ```
-
-> Please use version 1.0.2 as version 1.0.0 contained a corrupted pom.xml.
 
 Goal
 ----
@@ -48,7 +46,7 @@ By default mathan-latex-maven-plugin will search for a *.tex file in the source 
 <plugin>
   <groupId>io.mathan.maven</groupId>
   <artifactId>mathan-latex-maven-plugin</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.4</version>
   <extensions>true</extensions>
   <configuration>
     <sourceDirectory>src/main/custom</sourceDirectory>
@@ -61,7 +59,7 @@ A LaTeX distribution is required to execute all LaTeX commands. By default matha
 
 Dependencies
 ------------
-To share resources (.bib, .tex, .eps, ...) for multiple maven modules they can be assembled in a separate module (can be jar or zip or whatever) used as a dependency for the maven project building you LaTeX document. Using the configuration parameter *resources* filters can be used to identify the resources to use.
+To share resources (.bib, .tex, .eps, ...) for multiple maven modules they can be assembled in a separate module (can be jar or zip or whatever) used as a dependency for the maven project building you LaTeX document. Using the configuration parameter *resources* filters can be used to identify the resources to use. Dependency scanning has to be enabled with the property `enableDependencyScan`.
 
 Features
 --------
@@ -91,7 +89,8 @@ steps|[Configuration](steps.md) for user-defined steps.| none
 keepIntermediateFile|Sets whether intermediate files created during the build should be kept.|`false`
 makeIndexStyleFile|Name of the index style file to use for makeindex| none
 makeIndexNomenclStyleFile|Name of the nomencl style file to use for makeindex| nomencl.ist from the TeX distribution
-resources|A [FileSet](https://maven.apache.org/shared/file-management/apidocs/org/apache/maven/shared/model/fileset/FileSet.html) defining the resources to include from given dependencies.| By default all files with the following extensions will be included: tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf
+enableDependencyScan|Enables the scan for resources to include from dependencies.
+resources|A [FileSet](https://maven.apache.org/shared/file-management/apidocs/org/apache/maven/shared/model/fileset/FileSet.html) defining the resources to include from given dependencies.| By default all files with the following extensions will be included: tex,cls,clo,sty,bib,bst,idx,ist,glo,eps,pdf. `enableDependencyScan` needs to be enabled.
 haltOnError|Sets whether the build should be stopped in case a single step finished with a non-zero exit code|true
 
 

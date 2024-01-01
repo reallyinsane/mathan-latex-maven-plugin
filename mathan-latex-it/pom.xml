@@ -2,11 +2,11 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <artifactId>mathan-latex-it</artifactId>
-  <version>1.0.2</version>
+  <version>1.0.4</version>
   <parent>
     <groupId>io.mathan.maven</groupId>
     <artifactId>mathan-latex-plugin-reactor</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.4</version>
   </parent>
   <packaging>jar</packaging>
   <properties>
@@ -50,8 +50,8 @@
       <artifactId>junit</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.github.lukehutch</groupId>
-      <artifactId>fast-classpath-scanner</artifactId>
+      <groupId>io.github.classgraph</groupId>
+      <artifactId>classgraph</artifactId>
     </dependency>
     <dependency>
       <groupId>io.mathan.maven</groupId>

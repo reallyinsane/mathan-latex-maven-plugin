@@ -99,10 +99,28 @@ public abstract class Verifier {
    * @throws VerifierException If the file does not exist.
    */
   public void assertFilePresent(String fileName) throws VerifierException {
-    File expectedFile = new File(baseDirectory, fileName);
+    File expectedDirectory = new File(baseDirectory);
+    File expectedFile = new File(expectedDirectory, fileName);
     if (!expectedFile.exists()) {
-      throw new VerifierException(String.format("Expected file '%s' not found", fileName));
+      logFileContent("target/latex/mathan-latex-mojo.log");
+      logFileContent(LOG_FILENAME);
+      throw new VerifierException(
+          String.format("Expected file '%s' not found in directory %s.", fileName, expectedDirectory));
     }
+  }
+
+  private void logFileContent(String fileName) throws VerifierException {
+    File logFile = new File(baseDirectory, fileName);
+    if (!logFile.exists()) {
+      return;
+    }
+    List<String> lines = null;
+    try {
+      FileUtils.readLines(logFile, StandardCharsets.UTF_8).forEach(line -> System.err.println(line));
+    } catch (IOException e) {
+      throw new VerifierException(String.format("Could not read log file %s", logFile.getAbsolutePath()), e);
+    }
+
   }
 
   /**
