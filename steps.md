@@ -8,7 +8,7 @@ ID|Command|Input format|Output format|Arguments|Optional|Log extension
 --|-------|------------|-------------|---------|--------|-------------
 latex|latex|tex|dvi|-interaction=nonstopmode --src-specials %input|false|log 
 pdflatex|pdflatex|tex|pdf|-synctex=1 -interaction=nonstopmode --src-specials %input|false|log
-xelatex|xelatex|tex|pdf|-synctex=1 -interaction=nonstopmode --src-specials %input|false|log
+xelatex|xelatex|tex|pdf|-synctex=1 -interaction=nonstopmode  %input|false|log
 lulatex|lulatex|tex|pdf|-synctex=1 -interaction=nonstopmode --src-specials %input|false|log
 bibtex|bibtex|bib|aux|%base|true|blg
 biber|biber|bib|bbl|%base|true|blg

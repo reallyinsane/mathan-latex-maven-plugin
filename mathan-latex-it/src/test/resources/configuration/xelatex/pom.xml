@@ -21,7 +21,7 @@
               <name>xelatex</name>
               <inputFormat>tex</inputFormat>
               <outputFormat>pdf</outputFormat>
-              <arguments>-synctex=1 -shell-escape -interaction=nonstopmode --src-specials %input</arguments>
+              <arguments>-synctex=1 -shell-escape -interaction=nonstopmode %input</arguments>
               <optional>true</optional>
               <logExtension>log</logExtension>
             </step>
