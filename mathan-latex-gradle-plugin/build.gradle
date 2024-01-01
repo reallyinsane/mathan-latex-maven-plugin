@@ -7,7 +7,7 @@ repositories {
     jcenter()
 }
 
-version = "1.0.4-SNAPSHOT"
+version = "1.0.5-SNAPSHOT"
 group = "io.mathan.maven"
 
 gradlePlugin {

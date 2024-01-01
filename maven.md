@@ -26,7 +26,7 @@ Using mathan-latex-maven-plugin introduces the packaging **pdf**. In a single ma
     <plugin>
       <groupId>io.mathan.maven</groupId>
       <artifactId>mathan-latex-maven-plugin</artifactId>
-      <version>1.0.4-SNAPSHOT</version>
+      <version>1.0.5-SNAPSHOT</version>
     </plugin>
   </plugins>
 </build>
@@ -46,7 +46,7 @@ By default mathan-latex-maven-plugin will search for a *.tex file in the source 
 <plugin>
   <groupId>io.mathan.maven</groupId>
   <artifactId>mathan-latex-maven-plugin</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.5-SNAPSHOT</version>
   <extensions>true</extensions>
   <configuration>
     <sourceDirectory>src/main/custom</sourceDirectory>

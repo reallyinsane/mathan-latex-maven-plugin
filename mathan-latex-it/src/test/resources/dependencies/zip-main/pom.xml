@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven.test</groupId>
   <artifactId>zip-main</artifactId>
-  <version>1.0.4-SNAPSHOT</version>
+  <version>1.0.5-SNAPSHOT</version>
   <packaging>pdf</packaging>
   <dependencies>
     <dependency>
       <groupId>io.mathan.maven.test</groupId>
       <artifactId>zip-dependency</artifactId>
-      <version>1.0.4-SNAPSHOT</version>
+      <version>1.0.5-SNAPSHOT</version>
       <classifier>any</classifier>
       <type>zip</type>
     </dependency>
@@ -19,7 +19,7 @@
       <plugin>
         <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin</artifactId>
-        <version>1.0.4-SNAPSHOT</version>
+        <version>1.0.5-SNAPSHOT</version>
         <extensions>true</extensions>
         <configuration>
           <texFile>main.tex</texFile>

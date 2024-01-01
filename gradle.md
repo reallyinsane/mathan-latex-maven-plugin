@@ -15,7 +15,7 @@ After applying the plugin you can use the task **latex**.
 buildscript {
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
-                version: '1.0.4-SNAPSHOT'
+                version: '1.0.5-SNAPSHOT'
     }
 }
 apply plugin: 'io.mathan.latex'
@@ -43,7 +43,7 @@ By default mathan-latex-gradle-plugin will search for a *.tex file in the source
 buildscript {
     dependencies {
         classpath group: 'io.mathan.maven', name: 'mathan-latex-gradle-plugin',
-                version: '1.0.4-SNAPSHOT'
+                version: '1.0.5-SNAPSHOT'
     }
 }
 apply plugin: 'io.mathan.latex'
