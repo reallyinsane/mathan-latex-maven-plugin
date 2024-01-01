@@ -26,7 +26,7 @@ import java.io.File;
 public class Step {
 
   public static final Step STEP_LATEX = new Step("latex", "latex", Constants.FORMAT_TEX, Constants.FORMAT_DVI, "-interaction=nonstopmode --src-specials %input", false, "log");
-  public static final Step STEP_PDFLATEX = new Step("pdflatex", "pdflatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %input", false, "log");
+  public static final Step STEP_PDFLATEX = new Step("pdflatex", "pdflatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %base", false, "log");
   public static final Step STEP_XELATEX = new Step("xelatex", "xelatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %input", false, "log");
   public static final Step STEP_LULATEX = new Step("lulatex", "lulatex", Constants.FORMAT_TEX, Constants.FORMAT_PDF, "-synctex=1 -interaction=nonstopmode --src-specials %input", false, "log");
   public static final Step STEP_BIBTEX = new Step("bibtex", "bibtex", Constants.FORMAT_BIB, Constants.FORMAT_AUX, "%base", true, "blg");
