@@ -14,14 +14,15 @@ jobs:
     strategy:
       matrix:
         jdk: [8, 11, 17, 21]
+        maven: ['3.9.6']
     steps:
       - uses: actions/checkout@v2
-      - name: Set up JDK ${{ matrix.jdk }}
-        uses: actions/setup-java@v2
+      - name: Set up Java and Maven
+        uses: s4u/setup-maven-action@< version >
         with:
-          java-version: '${{ matrix.jdk }}'
-          distribution: 'adopt'
-          cache: maven
+          java-version: ${{ matrix.jdk }}
+          java-distribution: 'temurin'
+          maven-version: ${{ matrix.maven }}
       - name: Install tex
         run: sudo apt-get install -y texlive texlive-latex-extra texlive-publishers biber
       - name: Build with Maven
