@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Set up Java and Maven
-        uses: s4u/setup-maven-action@1.11.0
+        uses: s4u/setup-maven-action@v1.11.0
         with:
           java-version: ${{ matrix.jdk }}
           java-distribution: 'temurin'
