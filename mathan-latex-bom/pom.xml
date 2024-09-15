@@ -15,7 +15,7 @@
     <commons.io.version>2.15.1</commons.io.version>
     <zt.exec.version>1.12</zt.exec.version>
     <gradle.version>6.1.1</gradle.version>
-    <groovy.version>3.0.20</groovy.version>
+    <groovy.version>4.0.0</groovy.version>
     <junit.version>4.13.2</junit.version>
     <fast.classpath.scanner.version>3.1.13</fast.classpath.scanner.version>
     <class.graph.version>4.8.165</class.graph.version>
@@ -131,7 +131,7 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
-        <groupId>org.codehaus.groovy</groupId>
+        <groupId>org.apache.groovy</groupId>
         <artifactId>groovy</artifactId>
         <version>${groovy.version}</version>
         <scope>provided</scope>
