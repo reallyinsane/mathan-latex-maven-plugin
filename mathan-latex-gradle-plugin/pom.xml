@@ -63,7 +63,7 @@
     </dependency>
     <dependency>
       <groupId>org.gradle</groupId>
-      <artifactId>gradle-logging</artifactId>
+      <artifactId>gradle-logging-api</artifactId>
     </dependency>
     <dependency>
       <groupId>org.gradle</groupId>
@@ -81,9 +81,12 @@
   </dependencies>
 
   <repositories>
+    <!--
+    Gradle dependencies will be resolved in a local m2 repository.
+    -->
     <repository>
-      <id>repo.gradle.org</id>
-      <url>https://repo.gradle.org/gradle/libs-releases-local/</url>
+      <id>local-gradle-m2</id>
+      <url>file://${project.basedir}/../target/gradle-m2</url>
     </repository>
   </repositories>
   <build>
