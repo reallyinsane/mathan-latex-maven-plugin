@@ -205,8 +205,8 @@
         </configuration>
       </plugin>
       <!--
-      Gradle dependencies are not available in a public repository. As it is part of the Gradle distribution
-      we donwload it and use the dependencies from there.
+      Gradle dependencies are not available in a public repository. As they are part of the Gradle distribution
+      we donwload the distribution to extract them from there.
       -->
       <plugin>
         <groupId>com.googlecode.maven-download-plugin</groupId>
