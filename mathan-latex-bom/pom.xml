@@ -85,6 +85,12 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
+        <groupId>org.gradle</groupId>
+        <artifactId>gradle-stdlib-java-extensions</artifactId>
+        <version>${gradle.version}</version>
+        <scope>provided</scope>
+      </dependency>
+      <dependency>
         <groupId>org.apache.maven.resolver</groupId>
         <artifactId>maven-resolver-api</artifactId>
         <version>${maven.resolver.version}</version>
@@ -338,6 +344,24 @@
                   <directory>${project.basedir}/../target/gradle-distribution/gradle-${gradle.version}/lib</directory>
                   <includes>
                     <include>gradle-tooling-api-${gradle.version}.jar</include>
+                  </includes>
+                </resource>
+              </resources>
+            </configuration>
+          </execution>
+          <execution>
+            <id>copy-gradle-stdlib-java-extensions</id>
+            <phase>validate</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.basedir}/../target/gradle-m2/org/gradle/gradle-stdlib-java-extensions/${gradle.version}</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.basedir}/../target/gradle-distribution/gradle-${gradle.version}/lib</directory>
+                  <includes>
+                    <include>gradle-stdlib-java-extensions-${gradle.version}.jar</include>
                   </includes>
                 </resource>
               </resources>
