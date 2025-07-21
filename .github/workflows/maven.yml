@@ -1,6 +1,4 @@
 # This workflow will build a Java project with Maven, and cache/restore any dependencies to improve the workflow execution time
-# For more information see: https://help.github.com/actions/language-and-framework-guides/building-and-testing-java-with-maven
-
 name: Java CI with Maven
 
 on:
@@ -9,18 +7,39 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        jdk: [ 8, 11, 17, 21 ]
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Set up JDK 11
-        uses: actions/setup-java@v2
+      # 1. Checkout code
+      - uses: actions/checkout@v4
+
+      # 2. Set up JDK
+      - name: Set up JDK ${{ matrix.jdk }}
+        uses: actions/setup-java@v4
         with:
-          java-version: '8'
-          distribution: 'adopt'
-          cache: maven
-      - name: Install tex
-        run: sudo apt-get install -y texlive texlive-latex-extra texlive-publishers biber
+          distribution: temurin
+          java-version: ${{ matrix.jdk }}
+          cache: maven  # uses actions/cache@v4 internally
+
+      # 3. Install Maven 3.9.9 manually
+      - name: Install Maven 3.9.9
+        run: |
+          curl -s https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz \
+          | tar -xz -C /tmp
+          sudo mv /tmp/apache-maven-3.9.9 /opt/maven
+          echo "M2_HOME=/opt/maven" >> $GITHUB_ENV
+          echo "/opt/maven/bin" >> $GITHUB_PATH
+          mvn -version
+
+      # 4. Install TeX dependencies
+      - name: Install TeX packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y texlive texlive-latex-extra texlive-publishers biber
+
+      # 5. Build with Maven
       - name: Build with Maven
         run: mvn -B install --file pom.xml
