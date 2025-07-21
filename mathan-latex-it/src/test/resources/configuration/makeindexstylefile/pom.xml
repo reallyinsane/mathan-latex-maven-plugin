@@ -3,13 +3,13 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>io.mathan.maven.test</groupId>
   <artifactId>makeindexstylefile</artifactId>
-  <version>1.0.4</version>
+  <version>1.0.5</version>
   <build>
     <plugins>
       <plugin>
         <groupId>io.mathan.maven</groupId>
         <artifactId>mathan-latex-maven-plugin</artifactId>
-        <version>1.0.4</version>
+        <version>1.0.5</version>
         <configuration>
           <makeIndexStyleFile>sample.ist</makeIndexStyleFile>
         </configuration>
