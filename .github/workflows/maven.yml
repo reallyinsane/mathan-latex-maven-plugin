@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        jdk: [ 8, 11, 17, 21 ]
+        jdk: [ 8, 11, 17, 21, 25 ]
         include:
           - jdk: 8
             gradle: 6.9.4
@@ -19,6 +19,8 @@ jobs:
           - jdk: 17
             gradle: 9.1.0
           - jdk: 21
+            gradle: 9.1.0
+          - jdk: 25
             gradle: 9.1.0
     steps:
       # 1. Checkout code
