@@ -11,7 +11,15 @@ jobs:
     strategy:
       matrix:
         jdk: [ 8, 11, 17, 21 ]
-
+        include:
+          - jdk: 8
+            gradle: 6.9.4
+          - jdk: 11
+            gradle: 8.3.1
+          - jdk: 17
+            gradle: 9.6.1
+          - jdk: 21
+            gradle: 9.6.1
     steps:
       # 1. Checkout code
       - uses: actions/checkout@v4
@@ -23,8 +31,15 @@ jobs:
           distribution: temurin
           java-version: ${{ matrix.jdk }}
           cache: maven  # uses actions/cache@v4 internally
-
-      # 3. Install Maven 3.9.9 manually
+      # 3. Install Gradle
+      - name: Set up Gradle ${{ matrix.gradle }}
+        uses: gradle/gradle-build-action@v3
+        with:
+          gradle-version: ${{ matrix.gradle }}
+      # 4. Verify Gradle version
+      - name: Check Gradle version
+        run: gradle --version
+      # 5. Install Maven 3.9.9 manually
       - name: Install Maven 3.9.9
         run: |
           curl -s https://archive.apache.org/dist/maven/maven-3/3.9.9/binaries/apache-maven-3.9.9-bin.tar.gz \
@@ -34,12 +49,12 @@ jobs:
           echo "/opt/maven/bin" >> $GITHUB_PATH
           mvn -version
 
-      # 4. Install TeX dependencies
+      # 6. Install TeX dependencies
       - name: Install TeX packages
         run: |
           sudo apt-get update
           sudo apt-get install -y texlive texlive-latex-extra texlive-publishers biber
 
-      # 5. Build with Maven
+      # 7. Build with Maven
       - name: Build with Maven
         run: mvn -B install --file pom.xml
