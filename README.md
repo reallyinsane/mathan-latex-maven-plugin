@@ -1,4 +1,4 @@
-![Maven metadata URI](https://maven-badges.herokuapp.com/maven-central/io.mathan.maven/mathan-latex-maven-plugin/badge.svg)
+[![Maven Central](https://img.shields.io/maven-central/v/io.mathan.maven/mathan-latex-maven-plugin.svg?label=Maven%20Central)](https://search.maven.org/artifact/io.mathan.maven/mathan-latex-maven-plugin)
 ![example branch parameter](https://github.com/reallyinsane/mathan-latex-maven-plugin/actions/workflows/maven.yml/badge.svg)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/911e2266a08840daa9e95c99ab2f9ab4)](https://www.codacy.com/app/reallyinsane/mathan-latex-maven-plugin?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=reallyinsane/mathan-latex-maven-plugin&amp;utm_campaign=Badge_Grade)
 <a href="https://opensource.org/licenses/Apache-2.0"><img src="https://img.shields.io/badge/license-apache2-blue.svg"></a>
