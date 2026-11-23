@@ -14,7 +14,7 @@
     <maven.compiler.target>1.8</maven.compiler.target>
     <commons.io.version>2.15.1</commons.io.version>
     <zt.exec.version>1.12</zt.exec.version>
-    <gradle.version>6.1.1</gradle.version>
+    <gradle.version>8.14.4</gradle.version>
     <groovy.version>3.0.20</groovy.version>
     <junit.version>4.13.2</junit.version>
     <fast.classpath.scanner.version>3.1.13</fast.classpath.scanner.version>
